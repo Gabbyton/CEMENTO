@@ -1,0 +1,8 @@
+        <mxCell id="${connector_id}" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=${start_pos_x};exitY=${start_pos_y};entryX=${end_pos_x};entryY=${end_pos_y};startArrow=classic;endArrow=none;curved=${is_curved};dashed=${is_dashed}" edge="1" parent="1" source="${source_id}" target="${target_id}">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="${connector_label_id}" value="${connector_val}" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="${connector_id}">
+          <mxGeometry x="${rel_x_pos}" y="${rel_y_pos}" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>

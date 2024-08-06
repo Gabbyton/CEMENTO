@@ -1,0 +1,3 @@
+        <mxCell id="${shape_id}" value="${shape_content}" style="ellipse;rounded=0;whiteSpace=wrap;html=1;fillColor=${fill_color};strokeColor=#000000;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="${x_pos}" y="${y_pos}" width="${shape_width}" height="${shape_height}" as="geometry" />
+        </mxCell>

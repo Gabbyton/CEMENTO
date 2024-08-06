@@ -1,0 +1,13 @@
+<mxfile modified="${modify_date}" type="device">
+  <diagram name="${diagram_name}" id="${diagram_id}">
+    <mxGraphModel dx="${grid_dx}" dy="${grid_dy}" grid="1" gridSize="${grid_size}" guides="1" tooltips="1" connect="1"
+      arrows="1" fold="1" page="1" pageScale="1" pageWidth="${page_width}" pageHeight="${page_height}" math="0"
+      shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+${diagram_content}
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

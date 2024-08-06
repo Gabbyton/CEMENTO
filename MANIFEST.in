@@ -1,0 +1,4 @@
+recursive-include cemento *.ini
+recursive-include cemento templates
+exclude cemento/__pycache__/*
+exclude cemento/*.egg-info
