@@ -1,3 +1,5 @@
 in/
 .CEMENTO
 __pycache__
+cemento.egg-info
+dist
