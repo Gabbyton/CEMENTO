@@ -33,6 +33,7 @@ class Tree(Graph):
             input_tree.subgraph(c).copy()
             for c in nx.weakly_connected_components(input_tree)
         ]
+
         subgraphs = [Tree(graph=subgraph, ref=self.get_ref(), invert_tree=self.get_invert_tree()) for subgraph in subgraphs]
         return subgraphs
 
