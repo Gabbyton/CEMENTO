@@ -12,7 +12,8 @@ class Tree(Graph):
         ref=None,
         do_gen_ids=False,
         infer_rank=False,
-        invert_tree=False
+        invert_tree=False,
+        defer_layout=False
     ):
         super().__init__(
             file_path=file_path,
@@ -24,6 +25,7 @@ class Tree(Graph):
         )
         self._root = None
         self._invert_tree = invert_tree
+        self._defer_layout = defer_layout
 
     def get_subgraphs(self, input_tree=None):
         if not input_tree:
@@ -34,7 +36,7 @@ class Tree(Graph):
             for c in nx.weakly_connected_components(input_tree)
         ]
 
-        subgraphs = [Tree(graph=subgraph, ref=self.get_ref(), invert_tree=self.get_invert_tree()) for subgraph in subgraphs]
+        subgraphs = [Tree(graph=subgraph, ref=self.get_ref(), invert_tree=self.get_invert_tree(), defer_layout=self.get_defer_layout()) for subgraph in subgraphs]
         return subgraphs
 
     def _compute_grid_allocs(self):
@@ -107,8 +109,15 @@ class Tree(Graph):
             write_diagram.update_graph_count(1)
             current_tree_ct = write_diagram.get_graph_count()
 
-            subgraph._compute_grid_allocs()
-            subgraph._compute_draw_pos()
+            if self.get_defer_layout():
+                for term_id in subgraph.get_nodes():
+                    subgraph.set_attr(term_id, "draw_x", 0)
+                    subgraph.set_attr(term_id, "draw_y", 0)
+                    subgraph.set_attr(term_id, "reserved_x", 0)
+                    subgraph.set_attr(term_id, "reserved_y", 0)
+            else:
+                subgraph._compute_grid_allocs()
+                subgraph._compute_draw_pos()
 
             # draw each node
             for term_id in subgraph.get_nodes():
@@ -133,7 +142,10 @@ class Tree(Graph):
                     inverted=self.get_invert_tree()
                 )
 
-            subgraph_size = subgraph.get_size()
+            if self.get_defer_layout():
+                subgraph_size = (0,0)
+            else:
+                subgraph_size = subgraph.get_size()
             subgraph_sizes[write_diagram.get_graph_count()] = subgraph_size
             if self.get_invert_tree():
                 translate_x += subgraph_size[1]
@@ -203,3 +215,6 @@ class Tree(Graph):
             self._compute_grid_allocs()
 
         return (self.get_attr(root, "reserved_x"), self.get_attr(root, "reserved_y"))
+
+    def get_defer_layout(self):
+        return self._defer_layout
