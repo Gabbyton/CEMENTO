@@ -4,3 +4,4 @@ __pycache__
 cemento.egg-info
 dist
 .*
+test_cases/out/
