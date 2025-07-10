@@ -1,7 +1,9 @@
 import networkx as nx
 import pandas as pd
+
 from cemento.draw_io.diagram_ref import DiagramRef
 from cemento.graphref import GraphRef
+
 
 class Graph:
 
@@ -28,7 +30,10 @@ class Graph:
                 "Too many or too few arguments were provided. Either use file_path, graph or rels_df."
             )
 
-        if file_path or rels_df is not None:
+        if file_path and rels_df is None:
+            pass
+        elif file_path or rels_df is not None:
+
             if file_path:
                 terms, rels, rels_id, edges = self._read_edges(
                     do_gen_ids, infer_rank, file_path=self._file_path
@@ -44,7 +49,9 @@ class Graph:
             self._rank_edges = [edge for edge in edges if edge[2] == "rank"]
             unclassifed = [edge for edge in edges if edge[2] is None]
 
-            self._edges = self.get_predicate_edges() + self.get_rank_edges() + unclassifed
+            self._edges = (
+                self.get_predicate_edges() + self.get_rank_edges() + unclassifed
+            )
             self._graph = self._create_graph(self._edges)
 
         if graph:
@@ -52,14 +59,26 @@ class Graph:
             self._nodes = self._graph.nodes()
 
             if do_gen_ids:
-                terms = {term_id: term for term_id, term in enumerate(self._graph.nodes)}
+                terms = {
+                    term_id: term for term_id, term in enumerate(self._graph.nodes)
+                }
                 inv_terms = {term: term_id for term_id, term in terms.items()}
                 # rels_id = {edge: rel_id for rel_id, edge in enumerate(self._graph.edges)}
-                all_rels = {edge_id: (self._graph.get_edge_data(parent, child)['label'], parent, child) for edge_id, (parent, child) in enumerate(self._graph.edges)}
+                all_rels = {
+                    edge_id: (
+                        self._graph.get_edge_data(parent, child)["label"],
+                        parent,
+                        child,
+                    )
+                    for edge_id, (parent, child) in enumerate(self._graph.edges)
+                }
                 # assume rank for drawing
                 # TODO: change to more sophisticated screening once graph conmplete
-                rels_id = {(inv_terms[parent], inv_terms[child]):edge_id for  edge_id, (_, parent, child) in all_rels.items()}
-                rels = {edge_id:label for  edge_id, (label, _, _) in all_rels.items()}
+                rels_id = {
+                    (inv_terms[parent], inv_terms[child]): edge_id
+                    for edge_id, (_, parent, child) in all_rels.items()
+                }
+                rels = {edge_id: label for edge_id, (label, _, _) in all_rels.items()}
 
                 edges = [(parent, child, "rank") for (parent, child) in rels_id.keys()]
                 ref = GraphRef(terms, rels, rels_id)
@@ -79,7 +98,9 @@ class Graph:
         if rels_df is not None:
             df = rels_df
 
-        if not do_gen_ids and ("parent_id" not in df or "child_id" not in df or "rel_id" not in df):
+        if not do_gen_ids and (
+            "parent_id" not in df or "child_id" not in df or "rel_id" not in df
+        ):
             raise AttributeError(
                 "Not enough information in file. Consider using the gen_ids option or creating the parent_id, child_id or rel_id column in your file"
             )
@@ -117,9 +138,17 @@ class Graph:
         }
 
         if "is_rank" in df:
-            edges = [(parent, child, "rank" if is_rank else "predicate") for parent, child, is_rank in zip(df["parent_id"], df["child_id"], df["is_rank"])]
+            edges = [
+                (parent, child, "rank" if is_rank else "predicate")
+                for parent, child, is_rank in zip(
+                    df["parent_id"], df["child_id"], df["is_rank"]
+                )
+            ]
         else:
-            edges = [(parent, child, None) for parent, child in zip(df["parent_id"], df["child_id"])]
+            edges = [
+                (parent, child, None)
+                for parent, child in zip(df["parent_id"], df["child_id"])
+            ]
 
         return terms, rels, rels_id, edges
 
@@ -136,7 +165,9 @@ class Graph:
 
     def get_rels_df(self):
         if self._rels_df is None:
-            raise ValueError("the relationship dataframe is not set. Please consider setting or reinitializing the object.")
+            raise ValueError(
+                "the relationship dataframe is not set. Please consider setting or reinitializing the object."
+            )
         return self._rels_df
 
     def set_attr(self, node, attr, value):
