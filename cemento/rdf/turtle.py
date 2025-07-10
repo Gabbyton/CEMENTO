@@ -7,11 +7,11 @@ from cemento.graph import Graph
 
 class Turtle(Graph):
 
-    def __init__(self, file_path):
+    def __init__(self, file_path, graph=None, prefixes=None):
         super().__init__(
             file_path=file_path,
             rels_df=None,
-            graph=None,
+            graph=graph,
             ref=None,
             do_gen_ids=True,
             infer_rank=False,
@@ -19,7 +19,7 @@ class Turtle(Graph):
         self._file_path = file_path
         self._rdf_graph = None
         self._rename_vars = defaultdict(list)
-        self._prefixes = dict()
+        self._prefixes = None
 
     def get_rdf_graph(self):
         return self._rdf_graph
