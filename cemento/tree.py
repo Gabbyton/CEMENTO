@@ -1,4 +1,5 @@
 import networkx as nx
+
 from cemento.graph import Graph
 
 
@@ -13,7 +14,7 @@ class Tree(Graph):
         do_gen_ids=False,
         infer_rank=False,
         invert_tree=False,
-        defer_layout=False
+        defer_layout=False,
     ):
         super().__init__(
             file_path=file_path,
@@ -21,7 +22,7 @@ class Tree(Graph):
             graph=graph,
             ref=ref,
             do_gen_ids=do_gen_ids,
-            infer_rank=infer_rank
+            infer_rank=infer_rank,
         )
         self._root = None
         self._invert_tree = invert_tree
@@ -36,8 +37,71 @@ class Tree(Graph):
             for c in nx.weakly_connected_components(input_tree)
         ]
 
-        subgraphs = [Tree(graph=subgraph, ref=self.get_ref(), invert_tree=self.get_invert_tree(), defer_layout=self.get_defer_layout()) for subgraph in subgraphs]
+        subgraphs = [
+            Tree(
+                graph=subgraph,
+                ref=self.get_ref(),
+                invert_tree=self.get_invert_tree(),
+                defer_layout=self.get_defer_layout(),
+            )
+            for subgraph in subgraphs
+        ]
         return subgraphs
+
+    def split_subgraph(self, subgraph):
+        # create a dummy graph and connect root nodes to a dummy node
+        dummy_graph = subgraph.copy()
+        root_nodes = [
+            node for node in dummy_graph.nodes if dummy_graph.in_degree(node) == 0
+        ]
+
+        dummy_graph.add_edges_from(("dummy", root_node) for root_node in root_nodes)
+        fork_nodes = [
+            node
+            for node in nx.dfs_postorder_nodes(dummy_graph, source="dummy")
+            if len(list(dummy_graph.predecessors(node))) > 1
+        ]
+
+        if len(fork_nodes) == 0:
+            return [subgraph], []
+
+        fork_levels = {
+            node: nx.shortest_path_length(dummy_graph, source="dummy", target=node)
+            for node in fork_nodes
+        }
+        sorted(fork_nodes, key=lambda x: fork_levels[x])
+        dummy_graph.remove_node("dummy")
+
+        diamond_heads = set()
+        for root in root_nodes:
+            for fork in fork_nodes:
+                paths = list(nx.all_simple_paths(dummy_graph, source=root, target=fork))
+                if len(paths) > 1:
+                    diamond_heads.add(paths[0][0])
+
+        severed_links = list()
+        for fork_node in fork_nodes:
+            fork_predecessors = list(dummy_graph.predecessors(fork_node))
+            edges_to_cut = [
+                (predecessor, fork_node) for predecessor in fork_predecessors[1:]
+            ]
+            dummy_graph.remove_edges_from(edges_to_cut)
+            severed_links.extend(edges_to_cut)
+
+        for diamond_head in diamond_heads:
+            diamond_successors = list(dummy_graph.successors(diamond_head))
+            edges_to_cut = [
+                (diamond_head, successor) for successor in diamond_successors[1:]
+            ]
+            dummy_graph.remove_edges_from(edges_to_cut)
+            severed_links.extend(edges_to_cut)
+
+        subtrees = [
+            dummy_graph.subgraph(nodes).copy()
+            for nodes in nx.weakly_connected_components(dummy_graph)
+        ]
+
+        return subtrees, severed_links
 
     def _compute_grid_allocs(self):
         for node in self.get_nodes():
@@ -93,29 +157,27 @@ class Tree(Graph):
         remaining_nodes = self.get_nodes() - nodes_drawn
 
         for node in remaining_nodes:
-            reserved_x = self.get_attr(node, 'reserved_x')
+            reserved_x = self.get_attr(node, "reserved_x")
             try:
-                cursor_x = self.get_attr(node, 'cursor_x')
+                cursor_x = self.get_attr(node, "cursor_x")
             except (KeyError, ValueError):
                 cursor_x = 0
-            self.set_attr(node, 'draw_x', cursor_x + reserved_x)
+            self.set_attr(node, "draw_x", cursor_x + reserved_x)
 
-            reserved_y = self.get_attr(node, 'reserved_y')
+            reserved_y = self.get_attr(node, "reserved_y")
             try:
-                cursor_y = self.get_attr(node, 'cursor_y')
+                cursor_y = self.get_attr(node, "cursor_y")
             except (KeyError, ValueError):
                 cursor_y = 0
-            self.set_attr(node, 'draw_y', cursor_y + reserved_y)
-        if len(remaining_nodes) > 0:
-            print(len(remaining_nodes), self._ref.get_term(self.get_root()))
+            self.set_attr(node, "draw_y", cursor_y + reserved_y)
 
         if self.get_invert_tree():
             for node in self.get_nodes():
-                draw_x = self.get_attr(node, 'draw_x')
-                draw_y = self.get_attr(node, 'draw_y')
+                draw_x = self.get_attr(node, "draw_x")
+                draw_y = self.get_attr(node, "draw_y")
 
-                self.set_attr(node, 'draw_x', draw_y)
-                self.set_attr(node, 'draw_y', draw_x)
+                self.set_attr(node, "draw_x", draw_y)
+                self.set_attr(node, "draw_y", draw_x)
 
     def draw_tree(
         self, write_diagram, translate_x=0, translate_y=0, draw_predicates=True
@@ -124,50 +186,67 @@ class Tree(Graph):
         term_uids = dict()
         subgraph_sizes = dict()
         ranked_graph = self._create_graph(self.get_rank_edges())
-        ranked_subgraphs = self.get_subgraphs(input_tree=ranked_graph)
+        ranked_subtrees = self.get_subgraphs(input_tree=ranked_graph)
+        all_ranked_subtrees = []
+        all_severed_links = []
 
-        for subgraph in ranked_subgraphs:
+        for subtree in ranked_subtrees:
+            extra_subgraphs, severed_links = self.split_subgraph(subtree.get_graph())
+            all_ranked_subtrees.extend(
+                [
+                    Tree(
+                        graph=subgraph,
+                        ref=self.get_ref(),
+                        invert_tree=self.get_invert_tree(),
+                        defer_layout=self.get_defer_layout(),
+                    )
+                    for subgraph in extra_subgraphs
+                ]
+            )
+            all_severed_links.extend(severed_links)
+
+        for subtree in all_ranked_subtrees:
             # compute draw positions
             write_diagram.update_graph_count(1)
             current_tree_ct = write_diagram.get_graph_count()
 
             if self.get_defer_layout():
-                for term_id in subgraph.get_nodes():
-                    subgraph.set_attr(term_id, "draw_x", 0)
-                    subgraph.set_attr(term_id, "draw_y", 0)
-                    subgraph.set_attr(term_id, "reserved_x", 0)
-                    subgraph.set_attr(term_id, "reserved_y", 0)
+                for term_id in subtree.get_nodes():
+                    subtree.set_attr(term_id, "draw_x", 0)
+                    subtree.set_attr(term_id, "draw_y", 0)
+                    subtree.set_attr(term_id, "reserved_x", 0)
+                    subtree.set_attr(term_id, "reserved_y", 0)
             else:
-                subgraph._compute_grid_allocs()
-                subgraph._compute_draw_pos()
+                subtree._compute_grid_allocs()
+                subtree._compute_draw_pos()
 
             # draw each node
-            for term_id in subgraph.get_nodes():
-                term_content = subgraph._ref.get_term(term_id)
+            for term_id in subtree.get_nodes():
+                term_content = subtree._ref.get_term(term_id)
                 pos_x, pos_y = (
-                    subgraph.get_attr(term_id, "draw_x") + translate_x,
-                    subgraph.get_attr(term_id, "draw_y") + translate_y,
+                    subtree.get_attr(term_id, "draw_x") + translate_x,
+                    subtree.get_attr(term_id, "draw_y") + translate_y,
                 )
                 self.set_attr(term_id, "pos_x", pos_x)
                 self.set_attr(term_id, "pos_y", pos_y)
                 self.set_attr(term_id, "tree_number", current_tree_ct)
                 term_uids[term_id] = write_diagram.add_shape(term_content, pos_x, pos_y)
 
-            for edge in subgraph.get_edges():
+            for edge in subtree.get_edges():
                 parent_id, child_id = edge
-                rel_content = subgraph._ref.get_rel_from_edge(edge)
+                rel_content = subtree._ref.get_rel_from_edge(edge)
                 write_diagram.add_connector(
                     term_uids[parent_id],
                     term_uids[child_id],
                     rel_content,
                     is_rank=True,
-                    inverted=self.get_invert_tree()
+                    inverted=self.get_invert_tree(),
                 )
 
             if self.get_defer_layout():
-                subgraph_size = (0,0)
+                subgraph_size = (0, 0)
             else:
-                subgraph_size = subgraph.get_size()
+                subgraph_size = subtree.get_size()
             subgraph_sizes[write_diagram.get_graph_count()] = subgraph_size
             if self.get_invert_tree():
                 translate_x += subgraph_size[1]
@@ -176,6 +255,17 @@ class Tree(Graph):
 
         if draw_predicates:
             self._draw_predicates(term_uids, write_diagram, subgraph_sizes)
+
+        for parent_id, child_id in all_severed_links:
+            rel_content = self._ref.get_rel_from_edge((parent_id, child_id))
+
+            write_diagram.add_connector(
+                term_uids[parent_id],
+                term_uids[child_id],
+                rel_content,
+                is_rank=True,
+                inverted=self.get_invert_tree(),
+            )
 
     def _draw_predicates(self, term_uids, write_diagram, subgraph_sizes):
         y_offset = dict()
@@ -207,7 +297,7 @@ class Tree(Graph):
                 y_offset[created_id] += 0.5
 
             # create new connector
-            edge = (parent_id, child_id) = edge[:2] # only key with the id tuple
+            edge = (parent_id, child_id) = edge[:2]  # only key with the id tuple
             rel_content = self._ref.get_rel_from_edge(edge)
 
             write_diagram.add_connector(
@@ -215,7 +305,7 @@ class Tree(Graph):
                 term_uids[child_id],
                 rel_content,
                 is_rank=False,
-                inverted=self.get_invert_tree()
+                inverted=self.get_invert_tree(),
             )
 
     def get_invert_tree(self):
@@ -233,7 +323,9 @@ class Tree(Graph):
     def get_size(self):
         root = self.get_root()
 
-        if not self.get_attr(root, "reserved_x") or not self.get_attr(root, "reserved_y"):
+        if not self.get_attr(root, "reserved_x") or not self.get_attr(
+            root, "reserved_y"
+        ):
             self._compute_grid_allocs()
 
         return (self.get_attr(root, "reserved_x"), self.get_attr(root, "reserved_y"))
