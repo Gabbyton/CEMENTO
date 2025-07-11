@@ -5,3 +5,4 @@ cemento.egg-info
 dist
 .*
 test_cases/out/
+sandbox/
