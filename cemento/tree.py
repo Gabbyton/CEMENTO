@@ -61,12 +61,14 @@ class Tree(Graph):
                 self.set_attr(node, "reserved_y", new_reserved_y)
 
     def _compute_draw_pos(self):
+        nodes_drawn = set()
         for level, nodes_in_level in enumerate(
             nx.bfs_layers(self.get_graph(), self.get_root())
         ):
             for node in nodes_in_level:
                 # assign y-level to current level
                 self.set_attr(node, "draw_y", level)
+                nodes_drawn.add(node)
 
         # start cursor at a zero-origin
         self.set_attr(self.get_root(), "cursor_x", 0)
@@ -86,6 +88,26 @@ class Tree(Graph):
             self.set_attr(
                 node, "draw_x", (2 * cursor_x + self.get_attr(node, "reserved_x")) / 2
             )  # assign draw position at midpoint between x-span and cursor
+            nodes_drawn.add(node)
+
+        remaining_nodes = self.get_nodes() - nodes_drawn
+
+        for node in remaining_nodes:
+            reserved_x = self.get_attr(node, 'reserved_x')
+            try:
+                cursor_x = self.get_attr(node, 'cursor_x')
+            except (KeyError, ValueError):
+                cursor_x = 0
+            self.set_attr(node, 'draw_x', cursor_x + reserved_x)
+
+            reserved_y = self.get_attr(node, 'reserved_y')
+            try:
+                cursor_y = self.get_attr(node, 'cursor_y')
+            except (KeyError, ValueError):
+                cursor_y = 0
+            self.set_attr(node, 'draw_y', cursor_y + reserved_y)
+        if len(remaining_nodes) > 0:
+            print(len(remaining_nodes), self._ref.get_term(self.get_root()))
 
         if self.get_invert_tree():
             for node in self.get_nodes():
