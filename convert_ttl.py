@@ -82,16 +82,14 @@ if __name__ == "__main__":
                 # get the prefix from the namespace of the term
                 ns, _ = split_uri(subj)
                 prefix = inv_prefixes[str(ns)]
-                # save the alias as a search term with its actual prefix and the local file prefix, and map to the term
+                # save the alias as a search term with its actual prefix, and map to the term
                 search_terms[f"{prefix}:{str(term)}"] = subj
-                # search_terms[f"{local_prefix}:{str(term)}"] = subj
-        # for all collected terms in the file, also save the abbreviated uri as a search term with the actual and local file prefix
+        # for all collected terms in the file, also save the abbreviated uri as a search term with the actual prefix
         for term in all_terms:
             if isinstance(term, rdflib.URIRef):
                 ns, abbrev_term = split_uri(term)
                 prefix = inv_prefixes[str(ns)]
                 search_terms[f"{prefix}:{abbrev_term}"] = term
-                # search_terms[f"{local_prefix}:{abbrev_term}"] = term
 
     # read the diagram and retrieve the relationship triples as a dataframe
     diagram = ReadDiagram(INPUT_PATH)
@@ -117,6 +115,7 @@ if __name__ == "__main__":
             # split the term between the prefix and the abbreviated uri
             if ":" in term:
                 prefix, abbrev_term = term.split(":")
+                raw_abbrev_term = abbrev_term
             else:
                 prefix = None
                 abbrev_term = term
@@ -160,11 +159,12 @@ if __name__ == "__main__":
             # if the term already exists in the input ontologies, defer to use those terms
             if prefix in prefixes and "*" not in term:
                 # search for the closest term to the input from the list of collected search terms
+                term_search_key = f"{prefix}{raw_abbrev_term}"
                 sub = process.extractOne(
-                    f"{prefix}:{abbrev_term}",
+                    term_search_key,
                     search_terms.keys(),
                     scorer=fuzz.token_sort_ratio,
-                    score_cutoff=80,  # arbitrarily set but functional
+                    score_cutoff=75,  # arbitrarily set but functional
                     # TODO: determine an ideal cutoff for terms
                     # TODO: output substituted terms to the user to verify if within the warning
                 )
