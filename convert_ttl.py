@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from collections import defaultdict
 from pathlib import Path
 
@@ -103,7 +104,6 @@ if __name__ == "__main__":
     predicate_terms = set()
 
     substituted_terms = []
-    used_prefixes = set()
 
     # iterate through the relationship triples (df rows)
     for _, row in rels.iterrows():
@@ -132,9 +132,6 @@ if __name__ == "__main__":
             else:
                 ns_uri = prefixes[prefix]
 
-            # add used prefix to set of used prefixes to bind later
-            used_prefixes.add(inv_prefixes[str(ns_uri)])
-
             # if the term is a predicate, replace underscores with spaces and enforce lowercase start
             strict_camel_case = False
             if idx == len(term_items) - 1:
@@ -159,16 +156,27 @@ if __name__ == "__main__":
             # if the term already exists in the input ontologies, defer to use those terms
             if prefix in prefixes and "*" not in term:
                 # search for the closest term to the input from the list of collected search terms
-                term_search_key = f"{prefix}{raw_abbrev_term}"
-                sub = process.extractOne(
-                    term_search_key,
-                    search_terms.keys(),
-                    scorer=fuzz.token_sort_ratio,
-                    score_cutoff=75,  # arbitrarily set but functional
-                    # TODO: determine an ideal cutoff for terms
-                    # TODO: output substituted terms to the user to verify if within the warning
+                subs = []
+                undo_camel_case_term = " ".join(
+                    re.findall(
+                        r"[A-Z]+(?=[A-Z][a-z]|\b)|[A-Z][a-z]+|[0-9]+", abbrev_term
+                    )
                 )
-                if sub:
+                for search_key in [raw_abbrev_term, abbrev_term, undo_camel_case_term]:
+                    term_search_key = f"{prefix}:{search_key.strip()}"
+                    sub = process.extractOne(
+                        term_search_key,
+                        search_terms.keys(),
+                        scorer=fuzz.token_sort_ratio,
+                        score_cutoff=75,  # arbitrarily set but functional
+                        # TODO: determine an ideal cutoff for terms
+                        # TODO: output substituted terms to the user to verify if within the warning
+                    )
+                    if sub:
+                        subs.append(sub)
+                if subs:
+                    sorted(subs, key=lambda x: x[1], reverse=True)
+                    sub = next(iter(subs))
                     # if a substitution is made, use that terms URIRef object instead
                     term_key, score = sub
                     term_uri = search_terms[term_key]
@@ -202,7 +210,7 @@ if __name__ == "__main__":
     rdf_graph = rdflib.Graph()
 
     # bind prefixes to namespaces for the rdf graph
-    for prefix in used_prefixes:
+    for prefix in prefixes:
         rdf_graph.bind(prefix, prefixes[prefix])
 
     # collect edge inputs and outputs on object properties and consider them the domains and ranges
@@ -284,6 +292,11 @@ if __name__ == "__main__":
         rdf_graph.add((domain_term, predicate_term, range_term))
     # serialize the output as a turtle file
     rdf_graph.serialize("output.ttl")
+    print(
+        "\n".join(
+            [f"{term} -> {key} ({score})" for term, key, score in substituted_terms]
+        )
+    )
 
     # evaluate output by converting back to drawio
     ex = ReadTurtle("output.ttl")
