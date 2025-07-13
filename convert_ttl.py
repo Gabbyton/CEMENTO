@@ -1,3 +1,4 @@
+import inspect
 import json
 import os
 import re
@@ -9,6 +10,8 @@ from pathlib import Path
 
 import networkx as nx
 import rdflib
+from networkx import DiGraph
+from pandas import DataFrame
 from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS, Graph, Namespace, URIRef
 from rdflib.collection import Collection
 from rdflib.namespace import split_uri
@@ -80,7 +83,7 @@ def get_search_terms_from_graph(
     for subj, pred, obj in rdf_graph:
         all_terms.update([subj, pred, obj])
 
-        if pred == RDFS.label and pred == SKOS.altLabel:
+        if pred == RDFS.label or pred == SKOS.altLabel:
             ns, _ = split_uri(subj)
             prefix = inv_prefixes[ns]
             search_terms[f"{prefix}:{str(obj)}"] = subj
@@ -94,8 +97,10 @@ def get_search_terms_from_graph(
     return search_terms
 
 
-def get_abbrev_term(term: str, is_predicate=False) -> tuple[str, str]:
-    prefix = None
+def get_abbrev_term(
+    term: str, is_predicate=False, default_prefix="mds"
+) -> tuple[str, str]:
+    prefix = default_prefix
     abbrev_term = term
     strict_camel_case = False
 
@@ -126,17 +131,14 @@ def construct_term_uri(
     prefix: str,
     abbrev_term: str,
     prefixes: dict[str, URIRef | Namespace],
-    default_prefix: str = "mds",
-):
-    if prefix is None:
-        prefix = default_prefix
+) -> URIRef:
     ns_uri = prefixes[prefix]
     return rdflib.URIRef(f"{ns_uri}{abbrev_term}")
 
 
 def substitute_term(
-    term: URIRef, search_keys: Iterable[str], search_terms: dict[str, URIRef]
-):
+    search_keys: Iterable[str], search_terms: dict[str, URIRef]
+) -> URIRef:
     best_match, score = max(
         (
             result
@@ -144,7 +146,7 @@ def substitute_term(
             if (
                 result := process.extractOne(
                     search_key,
-                    search_terms,
+                    search_terms.keys(),
                     scorer=fuzz.token_sort_ratio,
                     score_cutoff=75,
                 )
@@ -152,9 +154,59 @@ def substitute_term(
             is not None
         ),
         key=lambda x: x[1] if x is not None else -1,
-        default=(term, -1),
+        default=(None, -1),
     )
-    return search_terms[best_match] if best_match != term else term
+    return search_terms[best_match] if best_match else None
+
+
+def bind_prefixes(rdf_graph: Graph, prefixes: dict[str, URIRef | Namespace]) -> Graph:
+    for prefix, ns in prefixes.items():
+        rdf_graph.bind(prefix, ns)
+    return rdf_graph
+
+
+def get_class_terms(graph: DiGraph) -> set[URIRef]:
+    class_terms = set()
+    for subj, term, data in graph.edges(data=True):
+        predicate = data["label"]
+
+        if predicate == RDFS.subClassOf:
+            # we assume terms between RDFS.subClassOf is a class
+            class_terms.update([subj, term])
+
+        if predicate == RDF.type:
+            # we assume the object of an RDF.type is also a class
+            class_terms.add(term)
+
+    return class_terms
+
+
+def iter_terms(
+    relationships: DataFrame,
+    term_function: (
+        Callable[[str | URIRef, bool], str | URIRef]
+        | Callable[[str | URIRef], str | URIRef]
+    ),
+) -> list[any]:
+    results = []
+    for _, row in relationships.iterrows():
+        for term in (row["parent"], row["child"], row["rel"]):
+            is_predicate = term == row["rel"]
+            if "is_predicate" in inspect.signature(term_function).parameters:
+                result = term_function(term, is_predicate)
+            else:
+                result = term_function(term)
+            results.append(result)
+    return results
+
+
+def get_term_search_keys(term: str, inv_prefix: dict[URIRef, str]) -> list[str]:
+    prefix, abbrev_term = get_abbrev_term(term)
+    undo_camel_case_term = " ".join(
+        re.findall(r"[A-Z]+(?=[A-Z][a-z]|\b)|[A-Z][a-z]+|[0-9]+", abbrev_term)
+    )
+    search_keys = [term, f"{prefix}:{abbrev_term}", f"{prefix}:{undo_camel_case_term}"]
+    return [key.strip() for key in search_keys]
 
 
 if __name__ == "__main__":
@@ -175,32 +227,40 @@ if __name__ == "__main__":
     file_search_terms = iterate_ttl_graphs(
         ONTO_FOLDER, partial(get_search_terms_from_graph, inv_prefixes=inv_prefixes)
     )
-    search_terms |= merge_dictionaries(file_prefixes)
+    search_terms |= merge_dictionaries(file_search_terms)
 
     # read the diagram and retrieve the relationship triples as a dataframe
     diagram = ReadDiagram(INPUT_PATH)
     rels = diagram.get_relationships()
 
-    terms = {
-        (term, term == row["rel"])
-        for _, row in rels.iterrows()
-        for term in (row["parent"], row["child"], row["rel"])
-    }
-
     constructed_terms = {
-        term: construct_term_uri(
-            *get_abbrev_term(term, is_predicate=is_predicate), prefixes=prefixes
+        term: term_uri_ref
+        for term, term_uri_ref in iter_terms(
+            rels,
+            lambda term, is_predicate: (
+                term,
+                construct_term_uri(
+                    *get_abbrev_term(term, is_predicate=is_predicate), prefixes=prefixes
+                ),
+            ),
         )
-        for term, is_predicate in terms
     }
-
-    for term, _ in terms:
-        _, abbrev_term = get_abbrev_term(term)
-        undo_camel_case_term = " ".join(
-            re.findall(r"[A-Z]+(?=[A-Z][a-z]|\b)|[A-Z][a-z]+|[0-9]+", abbrev_term)
+    search_keys = {
+        term: search_key
+        for term, search_key in iter_terms(
+            rels, lambda term: (term, get_term_search_keys(term, inv_prefixes))
         )
-        search_keys = [term, abbrev_term, undo_camel_case_term]
-        constructed_terms[term] = substitute_term(constructed_terms[term], search_keys, search_terms)
+    }
+    substitution_results = {
+        term: substituted_value
+        for term, substituted_value in iter_terms(
+            rels,
+            lambda term: (term, substitute_term(search_keys[term], search_terms)),
+        )
+        if substituted_value is not None
+    }
+    constructed_terms.update(substitution_results)
+    # print(constructed_terms)
 
     graph = nx.DiGraph()
     for _, row in rels.iterrows():
@@ -208,24 +268,15 @@ if __name__ == "__main__":
         subj, obj, pred = tuple(constructed_terms[key] for key in (subj, pred, obj))
         graph.add_edge(subj, obj, label=pred)
 
-    # # iterate through the edges to get all classes
-    # for subj, term, data in g.edges(data=True):
-    #     predicate = data["label"]
-
-    #     if predicate == RDFS.subClassOf:
-    #         # we assume terms between RDFS.subClassOf is a class
-    #         class_terms.update([subj, term])
-
-    #     if predicate == RDF.type:
-    #         # we assume the object of an RDF.type is also a class
-    #         class_terms.add(term)
+    class_terms = get_class_terms(graph)
+    pred_terms = {data["label"] for _, _, data in graph.edges(data=True)}
+    all_terms = graph.nodes() | pred_terms
 
     # # create the rdf graph to store the ttl output
-    # rdf_graph = rdflib.Graph()
+    rdf_graph = rdflib.Graph()
 
-    # # bind prefixes to namespaces for the rdf graph
-    # for prefix in prefixes:
-    #     rdf_graph.bind(prefix, prefixes[prefix])
+    # bind prefixes to namespaces for the rdf graph
+    rdf_graph = bind_prefixes(rdf_graph, prefixes)
 
     # # collect edge inputs and outputs on object properties and consider them the domains and ranges
     # # TODO: assume union of terms for now, fix later
