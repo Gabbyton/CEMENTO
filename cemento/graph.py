@@ -73,14 +73,17 @@ class Graph:
                     for edge_id, (parent, child) in enumerate(self._graph.edges)
                 }
                 # assume rank for drawing
-                # TODO: change to more sophisticated screening once graph conmplete
+                # TODO: change to more sophisticated screening once graph complete
                 rels_id = {
                     (inv_terms[parent], inv_terms[child]): edge_id
                     for edge_id, (_, parent, child) in all_rels.items()
                 }
                 rels = {edge_id: label for edge_id, (label, _, _) in all_rels.items()}
 
-                edges = [(parent, child, "rank") for (parent, child) in rels_id.keys()]
+                edge_is_rank = {(parent, child): is_rank for parent, child, is_rank in self._graph.edges.data('is_rank', default=False)}
+                edges = [(parent, child, "rank" if edge_is_rank[(terms[parent], terms[child])] else "predicate") for (parent, child) in rels_id.keys()]
+                self._rank_edges = [edge for edge in edges if edge[2] == "rank"]
+                self._predicate_edges = [edge for edge in edges if edge[2] == "predicate"]
                 ref = GraphRef(terms, rels, rels_id)
 
                 self._graph = nx.relabel_nodes(self._graph, inv_terms)
