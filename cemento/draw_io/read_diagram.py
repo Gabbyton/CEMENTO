@@ -71,8 +71,11 @@ class ReadDiagram(Diagram):
         self._diagram_id = diagram_tag.attrib["id"]
 
         graph_model_tag = next(root.iter("mxGraphModel"))
-        self.set_grid_dx(graph_model_tag.attrib["dx"])
-        self.set_grid_dy(graph_model_tag.attrib["dy"])
+        try:
+            self.set_grid_dx(graph_model_tag.attrib["dx"])
+            self.set_grid_dy(graph_model_tag.attrib["dy"])
+        except KeyError:
+            pass
         self.set_grid_size(int(graph_model_tag.attrib["gridSize"]))
         self.set_page_width(int(graph_model_tag.attrib["pageWidth"]))
         self.set_page_height(int(graph_model_tag.attrib["pageHeight"]))
