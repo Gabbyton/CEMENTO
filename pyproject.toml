@@ -21,7 +21,8 @@ dependencies = [
   "defusedxml>=0.7.1",
   "networkx>=3.2.1",
   "pandas>=2.2.2",
-  "rdflib"
+  "rdflib",
+  "thefuzz"
 ]
 
 [tool.setuptools]
