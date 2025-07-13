@@ -12,17 +12,17 @@ from rdflib.namespace import split_uri
 from thefuzz import fuzz, process
 
 from cemento.draw_io.read_diagram import ReadDiagram
-from cemento.draw_io.write_diagram import WriteDiagram
-from cemento.rdf.read_turtle import ReadTurtle
-from cemento.tree import Tree
 
-INPUT_PATH = "/srv/samba-share/mds/mds-onto/CEMENTO/SyncXrayResult_graph.drawio"
-ONTO_FOLDER = "/srv/samba-share/mds/mds-onto/CEMENTO/data"
+INPUT_PATH = "/Users/gabriel/dev/sdle/CEMENTO/sandbox/SyncXrayResult_graph.drawio"
+ONTO_FOLDER = "/Users/gabriel/dev/sdle/CEMENTO/data"
+PREFIXES_PATH = "/Users/gabriel/dev/sdle/CEMENTO/sandbox/prefixes.json"
+TTL_OUTPUT_PATH = "/Users/gabriel/dev/sdle/CEMENTO/sandbox/output.ttl"
+DRAWIO_OUTPUT_PATH = "/Users/gabriel/dev/sdle/CEMENTO/sandbox/output.drawio"
 
 if __name__ == "__main__":
     prefixes = dict()
     inv_prefixes = dict()
-    with open("prefixes.json", "r") as f:
+    with open(PREFIXES_PATH, "r") as f:
         prefixes = json.load(f)
 
     # load up namespaces for matching terms
@@ -291,17 +291,9 @@ if __name__ == "__main__":
         predicate_term = data["label"]
         rdf_graph.add((domain_term, predicate_term, range_term))
     # serialize the output as a turtle file
-    rdf_graph.serialize("output.ttl")
+    rdf_graph.serialize(TTL_OUTPUT_PATH)
     print(
         "\n".join(
             [f"{term} -> {key} ({score})" for term, key, score in substituted_terms]
         )
     )
-
-    # evaluate output by converting back to drawio
-    ex = ReadTurtle("output.ttl")
-    graph = ex.get_graph()
-    tree = Tree(graph=ex.get_graph(), do_gen_ids=True)
-    diagram = WriteDiagram("output.drawio")
-    tree.draw_tree(write_diagram=diagram)
-    diagram.draw()
