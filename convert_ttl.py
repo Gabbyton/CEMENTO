@@ -167,21 +167,21 @@ def bind_prefixes(rdf_graph: Graph, prefixes: dict[str, URIRef | Namespace]) -> 
 
 def get_class_terms(graph: DiGraph) -> set[URIRef]:
     class_terms = set()
-    for subj, term, data in graph.edges(data=True):
+    for subj, obj, data in graph.edges(data=True):
         predicate = data["label"]
 
         if predicate == RDFS.subClassOf:
             # we assume terms between RDFS.subClassOf is a class
-            class_terms.update([subj, term])
+            class_terms.update([subj, obj])
 
         if predicate == RDF.type:
             # we assume the object of an RDF.type is also a class
-            class_terms.add(term)
+            class_terms.add(obj)
 
     return class_terms
 
 
-def iter_terms(
+def iter_diagram_terms(
     relationships: DataFrame,
     term_function: (
         Callable[[str | URIRef, bool], str | URIRef]
@@ -207,6 +207,104 @@ def get_term_search_keys(term: str, inv_prefix: dict[URIRef, str]) -> list[str]:
     )
     search_keys = [term, f"{prefix}:{abbrev_term}", f"{prefix}:{undo_camel_case_term}"]
     return [key.strip() for key in search_keys]
+
+
+def get_term_search_result(
+    term: URIRef,
+    inv_prefixes: dict[URIRef | Namespace, str],
+    search_terms: dict[str, URIRef],
+) -> URIRef:
+    ns, abbrev_term = split_uri(term)
+    prefix = inv_prefixes[str(ns)]
+    search_term = f"{prefix}:{abbrev_term}"
+    if search_term in search_terms:
+        return search_terms[search_term]
+    return None
+
+
+def term_in_search_results(
+    term: URIRef,
+    inv_prefixes: dict[URIRef | Namespace, str],
+    search_terms: dict[str, URIRef],
+) -> URIRef:
+    return get_term_search_result(term, inv_prefixes, search_terms) is not None
+
+
+def term_not_in_default_namespace(
+    term: URIRef,
+    inv_prefixes: dict[URIRef | Namespace, str],
+    default_namespace_prefixes: dict[str, Namespace],
+) -> bool:
+    ns, abbrev_term = split_uri(term)
+    prefix = inv_prefixes[str(ns)]
+    return prefix not in default_namespace_prefixes
+
+
+def iter_graph_terms(
+    graph_terms: set[URIRef],
+    term_function: Callable[[URIRef], None],
+    filter_functions: Iterable[Callable[..., bool]] = None,
+    invert_filter=False,
+) -> list[any]:
+    results = []
+    for term in graph_terms:
+        eval_value = True
+        if filter_functions:
+            eval_value = all(
+                [filter_function(term) for filter_function in filter_functions]
+            )
+            if invert_filter:
+                eval_value = not eval_value
+
+        if eval_value:
+            results.append(term_function(term))
+    return results
+
+
+def add_domains_ranges(term: URIRef):
+    predicate_domain = defaultdict(list)
+    predicate_range = defaultdict(list)
+    for domain_term, range_term, data in graph.edges(data=True):
+        predicate_term = data["label"]
+        predicate_domain[predicate_term].append(domain_term)
+        predicate_range[predicate_term].append(range_term)
+
+    for dom_or_range_term, term_dom_range in {
+        RDFS.domain: predicate_domain[term],
+        RDFS.range: predicate_range[term],
+    }.items():
+        if term_dom_range:
+            # if there are more than one term, save the domain or range as a collection
+            if len(term_dom_range) > 1:
+                collection_node = rdflib.BNode()
+                Collection(rdf_graph, collection_node, term_dom_range)
+                # create class that points to the collection
+                collection_class = rdflib.BNode()
+                rdf_graph.add((collection_class, RDF.type, OWL.Class))
+                # connect them all together
+                # TODO: assume union for now but fix later
+                rdf_graph.add((collection_class, OWL.unionOf, collection_node))
+                rdf_graph.add((term, dom_or_range_term, collection_class))
+            else:
+                # if there is only one term, use that term directly
+                rdf_graph.add((term, dom_or_range_term, term_dom_range[0]))
+
+
+def get_term_value(subj: URIRef, pred: URIRef, ref_rdf_graph: Graph):
+    return ref_rdf_graph.value(subj, pred)
+
+
+def add_exact_matches(
+    term: URIRef, match_properties: dict[URIRef, URIRef | None], rdf_graph: Graph
+) -> Graph:
+    # if the term is already imported from somewhere else
+    # get the type and label if available and add to the ttl file
+    for match_property, value in match_properties.items():
+        if value:
+            rdf_graph.add((term, match_property, value))
+
+    # add an exact match to the ttl file for easier cross-referencing
+    rdf_graph.add((term, SKOS.exactMatch, term))
 
 
 if __name__ == "__main__":
@@ -235,7 +333,7 @@ if __name__ == "__main__":
 
     constructed_terms = {
         term: term_uri_ref
-        for term, term_uri_ref in iter_terms(
+        for term, term_uri_ref in iter_diagram_terms(
             rels,
             lambda term, is_predicate: (
                 term,
@@ -247,30 +345,31 @@ if __name__ == "__main__":
     }
     search_keys = {
         term: search_key
-        for term, search_key in iter_terms(
+        for term, search_key in iter_diagram_terms(
             rels, lambda term: (term, get_term_search_keys(term, inv_prefixes))
         )
     }
     substitution_results = {
         term: substituted_value
-        for term, substituted_value in iter_terms(
+        for term, substituted_value in iter_diagram_terms(
             rels,
             lambda term: (term, substitute_term(search_keys[term], search_terms)),
         )
         if substituted_value is not None
     }
+
     constructed_terms.update(substitution_results)
-    # print(constructed_terms)
 
     graph = nx.DiGraph()
     for _, row in rels.iterrows():
         subj, obj, pred = row["parent"], row["child"], row["rel"]
-        subj, obj, pred = tuple(constructed_terms[key] for key in (subj, pred, obj))
+        subj, obj, pred = tuple(constructed_terms[key] for key in (subj, obj, pred))
         graph.add_edge(subj, obj, label=pred)
 
     class_terms = get_class_terms(graph)
-    pred_terms = {data["label"] for _, _, data in graph.edges(data=True)}
-    all_terms = graph.nodes() | pred_terms
+    predicate_terms = {data["label"] for _, _, data in graph.edges(data=True)}
+    class_terms -= predicate_terms
+    all_terms = graph.nodes() | predicate_terms
 
     # # create the rdf graph to store the ttl output
     rdf_graph = rdflib.Graph()
@@ -278,87 +377,56 @@ if __name__ == "__main__":
     # bind prefixes to namespaces for the rdf graph
     rdf_graph = bind_prefixes(rdf_graph, prefixes)
 
-    # # collect edge inputs and outputs on object properties and consider them the domains and ranges
-    # # TODO: assume union of terms for now, fix later
-    # predicate_domain = defaultdict(list)
-    # predicate_range = defaultdict(list)
-    # for domain_term, range_term, data in g.edges(data=True):
-    #     predicate_term = data["label"]
-    #     predicate_domain[predicate_term].append(domain_term)
-    #     predicate_range[predicate_term].append(range_term)
+    # add all of the class terms as a type
+    for term in class_terms:
+        rdf_graph.add((term, RDF.type, OWL.Class))
 
-    # # combine node and edge objects into one collection of terms
-    # all_edges = {data["label"] for _, _, data in g.edges(data=True)}
-    # all_terms = g.nodes() | all_edges
+    # if the term is a predicate and is not part of the default namespaces, add an object property type to the ttl file
+    for term in predicate_terms:
+        # TODO: Assume all predicates are object properties for now, change later
+        if not term_not_in_default_namespace(
+            term, inv_prefixes, default_namespace_prefixes
+        ):
+            rdf_graph.add((term, RDF.type, OWL.ObjectProperty))
 
-    # # iterate through all the terms and predicates
-    # for term in all_terms:
-    #     # for each term, retrieve the prefix and the search term for retrieving the saved object
-    #     ns, abbrev_term = split_uri(term)
-    #     prefix = inv_prefixes[str(ns)]
-    #     search_term = f"{prefix}:{abbrev_term}"
+    props = [RDF.value, RDFS.label]
+    results = {
+        term: {prop: value}
+        for prop in props
+        for result in iterate_ttl_graphs(
+            ONTO_FOLDER,
+            lambda rdf_graph, prop=prop: iter_graph_terms(
+                all_terms,
+                lambda graph_term: (
+                    graph_term,
+                    get_term_value(subj=graph_term, pred=prop, ref_rdf_graph=rdf_graph),
+                ),
+            ),
+        )
+        for term, value in result
+    }
 
-    #     # if the class is a term, always add the type to the ttl file
-    #     if term in class_terms:
-    #         rdf_graph.add((term, RDF.type, OWL.Class))
+    filter_functions = [
+        partial(
+            term_in_search_results, inv_prefixes=inv_prefixes, search_terms=search_terms
+        ),
+        partial(
+            term_not_in_default_namespace,
+            inv_prefixes=inv_prefixes,
+            default_namespace_prefixes=default_namespace_prefixes,
+        ),
+    ]
+    iter_graph_terms(
+        all_terms,
+        lambda graph_term: add_exact_matches(
+            graph_term, match_properties=results[graph_term], rdf_graph=rdf_graph
+        ),
+        filter_functions,
+    )
 
-    #     # check if the prefix is not default
-    #     if prefix not in default_namespace_prefixes:
-    #         # if the term is a predicate and is not part of the default namespaces, add an object property type to the ttl file
-    #         if term in predicate_terms:
-    #             # TODO: Assume all predicates are object properties for now, change later
-    #             rdf_graph.add((term, RDF.type, OWL.ObjectProperty))
-
-    #         # if the term is already imported from somewhere else
-    #         if search_term in search_terms:
-    #             exact_term = search_terms[search_term]
-    #             term_type = search_term_onto_graph.value(exact_term, RDF.type)
-    #             label = search_term_onto_graph.value(exact_term, RDFS.label)
-
-    #             # get the type and label if available and add to the ttl file
-    #             if term_type:
-    #                 rdf_graph.add((term, RDF.type, term_type))
-
-    #             if label:
-    #                 rdf_graph.add((term, RDFS.label, label))
-
-    #             # add an exact match to the ttl file for easier cross-referencing
-    #             rdf_graph.add((term, SKOS.exactMatch, exact_term))
-    #         elif term in predicate_terms:
-    #             # if the term is not default and is new, add domains and ranges for the object property to the ttl file entry
-    #             # iterate over the RDFS.domain, RDFS.range and predicate domain and range respectively.
-    #             for dom_or_range_term, term_dom_range in {
-    #                 RDFS.domain: predicate_domain[term],
-    #                 RDFS.range: predicate_range[term],
-    #             }.items():
-    #                 if term_dom_range:
-    #                     # if there are more than one term, save the domain or range as a collection
-    #                     if len(term_dom_range) > 1:
-    #                         collection_node = rdflib.BNode()
-    #                         collection_list = Collection(
-    #                             rdf_graph, collection_node, term_dom_range
-    #                         )
-    #                         # create class that points to the collection
-    #                         collection_class = rdflib.BNode()
-    #                         rdf_graph.add((collection_class, RDF.type, OWL.Class))
-    #                         # connect them all together
-    #                         # TODO: assume union for now but fix later
-    #                         rdf_graph.add(
-    #                             (collection_class, OWL.unionOf, collection_node)
-    #                         )
-    #                         rdf_graph.add((term, dom_or_range_term, collection_class))
-    #                     else:
-    #                         # if there is only one term, use that term directly
-    #                         rdf_graph.add((term, dom_or_range_term, term_dom_range[0]))
-
-    # # now add the triples from the drawio diagram
-    # for domain_term, range_term, data in g.edges(data=True):
-    #     predicate_term = data["label"]
-    #     rdf_graph.add((domain_term, predicate_term, range_term))
-    # # serialize the output as a turtle file
-    # rdf_graph.serialize(TTL_OUTPUT_PATH)
-    # print(
-    #     "\n".join(
-    #         [f"{term} -> {key} ({score})" for term, key, score in substituted_terms]
-    #     )
-    # )
+    # now add the triples from the drawio diagram
+    for domain_term, range_term, data in graph.edges(data=True):
+        predicate_term = data["label"]
+        rdf_graph.add((domain_term, predicate_term, range_term))
+    # serialize the output as a turtle file
+    rdf_graph.serialize(TTL_OUTPUT_PATH)
