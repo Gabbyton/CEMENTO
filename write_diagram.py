@@ -2,6 +2,7 @@ import networkx as nx
 from networkx import DiGraph
 
 from cemento.draw_io.read_diagram import read_drawio
+from constants import Shape, Connector
 
 INPUT_PATH = "/Users/gabbython/dev/sdle/CEMENTO/sandbox/SyncXrayResult_graph.drawio"
 
@@ -134,7 +135,7 @@ def compute_draw_positions(
             draw_y = tree[node]["draw_y"]
 
             tree[node]["draw_y"] = draw_x
-            tree[node]["draw_x"] - draw_y
+            tree[node]["draw_x"] = draw_y
 
     return tree
 
@@ -144,6 +145,7 @@ def draw_tree(
     translate_y: int = 0,
     horizontal_tree: bool = False,
 ) -> None:
+    shapes, connectors = [], []
     graph = read_drawio(INPUT_PATH)
     ranked_graph = get_ranked_subgraph(graph)
     ranked_subtrees = get_subgraphs(ranked_graph)
@@ -152,9 +154,12 @@ def draw_tree(
     ranked_subtrees = [tree for trees in split_subtrees for tree in trees]
     severed_links = [edge for edges in severed_links for edge in edges]
 
+    diagram_uid = 
     # draw each of the trees
     for subtree in ranked_subtrees:
         roots = get_graph_root_nodes(subtree)
         root_node = roots[0]
         graph = compute_grid_allocations(subtree, root_node)
         graph = compute_draw_positions(subtree, root_node)
+
+        shapes.append(Shape())
