@@ -67,6 +67,7 @@ def get_abbrev_term(
     prefix = default_prefix
     abbrev_term = term
     strict_camel_case = False
+    print(term)
 
     term = remove_term_names(term)
     if ":" in term:
