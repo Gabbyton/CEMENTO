@@ -2,6 +2,7 @@ import re
 from collections import defaultdict
 from collections.abc import Callable, Iterable
 
+import networkx as nx
 from networkx import DiGraph
 from rdflib import OWL, RDF, RDFS, SKOS, BNode, Graph, Literal, Namespace, URIRef
 from rdflib.collection import Collection
@@ -176,3 +177,98 @@ def add_domains_ranges(
             else:
                 # if there is only one term, use that term directly
                 rdf_graph.add((term, dom_or_range_term, term_dom_range[0]))
+
+
+def get_aliases(rdf_graph: Graph) -> dict[URIRef, Literal]:
+    aliases = defaultdict(list)
+    for subj, pred, obj in rdf_graph:
+        if pred == RDFS.label or pred == SKOS.altLabel:
+            aliases[subj].append(obj)
+
+    return aliases
+
+
+def get_term_types(rdf_graph: Graph) -> dict[URIRef, URIRef]:
+    term_type = dict()
+    for subj, pred, obj in rdf_graph:
+        if pred == RDF.type:
+            term_type[subj] = obj
+
+    return term_type
+
+
+def get_terms(
+    rdf_graph: Graph, term_type: dict[URIRef, URIRef], default_terms: set[URIRef]
+) -> tuple[set[URIRef], set[URIRef], set[URIRef]]:
+    all_classes, all_instances = set(), set()
+
+    for subj, pred, obj in rdf_graph:
+        if pred == RDFS.subClassOf:
+            all_classes.update([subj, obj])
+
+    for subj, pred, obj in rdf_graph:
+        if (
+            pred == RDF.type
+            and obj not in default_terms
+            and term_type[obj] == OWL.Class
+        ):
+            all_classes.add(subj)
+            all_instances.add(obj)
+
+    all_predicates = {
+        term
+        for term in rdf_graph.subjects(RDF.type, OWL.ObjectProperty)
+        if term not in default_terms
+    }
+    all_predicates.add(RDF.type)
+    all_predicates.add(RDFS.subClassOf)
+
+    return all_classes, all_instances, all_predicates
+
+
+def get_graph_relabel_mapping(
+    terms: URIRef,
+    aliases: dict[URIRef, Literal],
+    inv_prefix: dict[URIRef | Namespace, str],
+    all_classes: set[URIRef],
+    all_instances: set[URIRef],
+) -> dict[URIRef, str]:
+    rename_mapping = dict()
+    for term in terms:
+        ns, abbrev_term = split_uri(term)
+        prefix = inv_prefix[ns]
+        new_name = f"{prefix}:{abbrev_term}"
+        if aliases[term]:
+            if term in all_classes or term in all_instances:
+                new_name += f" ({','.join(aliases[term])})"
+            else:
+                new_name = f"{prefix}:{aliases[term][0]}"
+        rename_mapping[term] = new_name
+    return rename_mapping
+
+
+def get_graph(
+    rdf_graph: Graph, all_predicates: set[URIRef], default_terms: set[URIRef]
+) -> DiGraph:
+    graph = DiGraph()
+    for subj, pred, obj in rdf_graph:
+        if (
+            pred in all_predicates
+            and subj not in default_terms
+            and obj not in default_terms
+        ):
+            is_rank = pred == RDF.type or pred == RDFS.subClassOf
+            graph.add_edge(obj, subj, label=pred, is_rank=is_rank)
+    return graph
+
+
+def rename_edges(graph: DiGraph, rename_mapping: dict[URIRef, str]) -> DiGraph:
+    edge_rename_mapping = dict()
+    graph = graph.copy()
+    for subj, obj, data in graph.edges(data=True):
+        pred = data["label"]
+        print(pred)
+        new_edge_label = rename_mapping[pred]
+        edge_rename_mapping[(subj, obj)] = {"label": new_edge_label}
+    nx.set_edge_attributes(graph, edge_rename_mapping)
+    return graph
