@@ -4,7 +4,7 @@ import networkx as nx
 import rdflib
 from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS
 
-from cemento.draw_io.read_diagram import ReadDiagram
+from cemento.draw_io.read_diagram import read_drawio
 from cemento.rdf.filters import term_in_search_results, term_not_in_default_namespace
 from cemento.rdf.io import (
     get_search_terms_from_defaults,
@@ -56,8 +56,7 @@ def convert_drawio_to_ttl(input_path, output_path, onto_ref_folder, prefixes_pat
     search_terms |= merge_dictionaries(file_search_terms)
 
     # read the diagram and retrieve the relationship triples as a dataframe
-    diagram = ReadDiagram(input_path, inverted_rank_arrows=True)
-    rels = diagram.get_relationships()
+    rels = read_drawio(input_path)
 
     aliases = {
         term: aliases
@@ -98,8 +97,8 @@ def convert_drawio_to_ttl(input_path, output_path, onto_ref_folder, prefixes_pat
     constructed_terms.update(substitution_results)
 
     graph = nx.DiGraph()
-    for _, row in rels.iterrows():
-        subj, obj, pred = row["parent"], row["child"], row["rel"]
+    for subj, obj, data in rels.edges(data=True):
+        pred = data['label']
         subj, obj, pred = tuple(constructed_terms[key] for key in (subj, obj, pred))
         graph.add_edge(subj, obj, label=pred)
 

@@ -5,22 +5,23 @@ from collections.abc import Callable
 from contextlib import contextmanager
 from pathlib import Path
 
-from pandas import DataFrame
+from networkx import DiGraph
 from rdflib import RDFS, SKOS, Graph, Namespace, URIRef
 from rdflib.namespace import split_uri
 
 
 def iter_diagram_terms(
-    relationships: DataFrame,
+    graph: DiGraph,
     term_function: (
         Callable[[str | URIRef, bool], str | URIRef]
         | Callable[[str | URIRef], str | URIRef]
     ),
 ) -> list[any]:
     results = []
-    for _, row in relationships.iterrows():
-        for term in (row["parent"], row["child"], row["rel"]):
-            is_predicate = term == row["rel"]
+    for subj, obj, data in graph.edges(data=True):
+        pred = data['label']
+        for term in (subj, pred, obj):
+            is_predicate = term == pred
             if "is_predicate" in inspect.signature(term_function).parameters:
                 result = term_function(term, is_predicate)
             else:
