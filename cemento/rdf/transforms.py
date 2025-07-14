@@ -1,13 +1,15 @@
 import re
-from collections.abc import Callable, Iterable
 from collections import defaultdict
+from collections.abc import Callable, Iterable
+
 from networkx import DiGraph
-from rdflib import RDF, RDFS, SKOS, OWL, Graph, Literal, Namespace, BNode, URIRef
+from rdflib import OWL, RDF, RDFS, SKOS, BNode, Graph, Literal, Namespace, URIRef
 from rdflib.collection import Collection
 from rdflib.namespace import split_uri
 from thefuzz import fuzz, process
 
-from cemento.preprocessing import get_abbrev_term, remove_term_names
+from cemento.rdf.preprocessing import get_abbrev_term, remove_term_names
+
 
 def construct_term_uri(
     prefix: str,
@@ -41,12 +43,6 @@ def substitute_term(
     return search_terms[best_match] if best_match else None
 
 
-def bind_prefixes(rdf_graph: Graph, prefixes: dict[str, URIRef | Namespace]) -> Graph:
-    for prefix, ns in prefixes.items():
-        rdf_graph.bind(prefix, ns)
-    return rdf_graph
-
-
 def get_class_terms(graph: DiGraph) -> set[URIRef]:
     class_terms = set()
     for subj, obj, data in graph.edges(data=True):
@@ -61,6 +57,16 @@ def get_class_terms(graph: DiGraph) -> set[URIRef]:
             class_terms.add(obj)
 
     return class_terms
+
+
+def get_doms_ranges(graph: DiGraph) -> dict[URIRef, dict[str, list[URIRef]]]:
+    doms_ranges = defaultdict(lambda: defaultdict(list))
+    for domain_term, range_term, data in graph.edges(data=True):
+        predicate_term = data.get("label", None)
+        if predicate_term:
+            doms_ranges[predicate_term]["domain"].append(domain_term)
+            doms_ranges[predicate_term]["range"].append(range_term)
+    return doms_ranges
 
 
 def get_term_search_keys(term: str, inv_prefix: dict[URIRef, str]) -> list[str]:
@@ -114,6 +120,12 @@ def get_term_value(subj: URIRef, pred: URIRef, ref_rdf_graph: Graph):
     return ref_rdf_graph.value(subj, pred)
 
 
+def bind_prefixes(rdf_graph: Graph, prefixes: dict[str, URIRef | Namespace]) -> Graph:
+    for prefix, ns in prefixes.items():
+        rdf_graph.bind(prefix, ns)
+    return rdf_graph
+
+
 def add_exact_matches(
     term: URIRef, match_properties: dict[URIRef, URIRef | None], rdf_graph: Graph
 ) -> Graph:
@@ -137,30 +149,30 @@ def add_labels(term: URIRef, labels: list[str], rdf_graph: Graph) -> Graph:
     return rdf_graph
 
 
-# def add_domains_ranges(term: URIRef):
-#     predicate_domain = defaultdict(list)
-#     predicate_range = defaultdict(list)
-#     for domain_term, range_term, data in graph.edges(data=True):
-#         predicate_term = data["label"]
-#         predicate_domain[predicate_term].append(domain_term)
-#         predicate_range[predicate_term].append(range_term)
+def add_domains_ranges(
+    term: URIRef,
+    domains_ranges: dict[str, list[URIRef]],
+    rdf_graph: Graph,
+) -> Graph:
+    predicate_domain = domains_ranges["domain"]
+    predicate_range = domains_ranges["range"]
 
-#     for dom_or_range_term, term_dom_range in {
-#         RDFS.domain: predicate_domain[term],
-#         RDFS.range: predicate_range[term],
-#     }.items():
-#         if term_dom_range:
-#             # if there are more than one term, save the domain or range as a collection
-#             if len(term_dom_range) > 1:
-#                 collection_node = BNode()
-#                 Collection(rdf_graph, collection_node, term_dom_range)
-#                 # create class that points to the collection
-#                 collection_class = rdflib.BNode()
-#                 rdf_graph.add((collection_class, RDF.type, OWL.Class))
-#                 # connect them all together
-#                 # TODO: assume union for now but fix later
-#                 rdf_graph.add((collection_class, OWL.unionOf, collection_node))
-#                 rdf_graph.add((term, dom_or_range_term, collection_class))
-#             else:
-#                 # if there is only one term, use that term directly
-#                 rdf_graph.add((term, dom_or_range_term, term_dom_range[0]))
+    for dom_or_range_term, term_dom_range in {
+        RDFS.domain: predicate_domain,
+        RDFS.range: predicate_range,
+    }.items():
+        if term_dom_range:
+            # if there are more than one term, save the domain or range as a collection
+            if len(term_dom_range) > 1:
+                collection_node = BNode()
+                Collection(rdf_graph, collection_node, term_dom_range)
+                # create class that points to the collection
+                collection_class = BNode()
+                rdf_graph.add((collection_class, RDF.type, OWL.Class))
+                # connect them all together
+                # TODO: assume union for now but fix later
+                rdf_graph.add((collection_class, OWL.unionOf, collection_node))
+                rdf_graph.add((term, dom_or_range_term, collection_class))
+            else:
+                # if there is only one term, use that term directly
+                rdf_graph.add((term, dom_or_range_term, term_dom_range[0]))
