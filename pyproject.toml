@@ -22,7 +22,8 @@ dependencies = [
   "networkx>=3.2.1",
   "pandas>=2.2.2",
   "rdflib",
-  "thefuzz"
+  "thefuzz",
+  "tldextract"
 ]
 
 [tool.setuptools]
