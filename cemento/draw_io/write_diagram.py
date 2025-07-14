@@ -254,9 +254,6 @@ def draw_tree(
     ranked_subtrees = [tree for trees in split_subtrees for tree in trees]
     severed_links = [edge for edges in severed_links for edge in edges]
 
-    diagram_uid = str(uuid4())
-    offset_x, offset_y = 0, 0
-    entity_idx_start = 0
     shapes = []
     ranked_subtrees = map(
         lambda subtree: compute_grid_allocations(
@@ -270,6 +267,14 @@ def draw_tree(
         ),
         ranked_subtrees,
     )
+
+    diagram_uid = str(uuid4())
+    offset_x, offset_y = 0, 0
+    entity_idx_start = 0
+    from itertools import accumulate
+    results = zip(*map(get_tree_size, ranked_subtrees))
+    offset_x, offset_y = (accumulate(seq) for seq in results)
+    print(offset_x, offset_y)
     for subtree in ranked_subtrees:
         tree_size_x, tree_size_y = get_tree_size(subtree)
         offset_x += tree_size_x
