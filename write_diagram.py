@@ -78,7 +78,72 @@ def split_multiple_inheritances(
     return subtrees, severed_links
 
 
-if __name__ == "__main__":
+def compute_grid_allocations(tree: DiGraph, root_node: any) -> DiGraph:
+    for node in tree.nodes:
+        set_reserved_x = 1 if tree.out_degree(node) == 0 else 0
+        tree[node]["reserved_x"] = set_reserved_x
+        tree[node]["reserved_y"] = 1
+
+    for node in reversed(list(nx.bfs_tree(tree, root_node))):
+        if len(nx.descendants(tree, node)) > 0:
+            max_reserved_y = 0
+            for child in tree.successors(node):
+                new_reserved_x = tree[node]["reserved_x"] + tree[child]["reserved_x"]
+                max_reserved_y = max(max_reserved_y, tree[node]["reserved_y"])
+                tree[node]["reserved_x"] = new_reserved_x
+            new_reserved_y = max_reserved_y + tree[node]["reserved_y"]
+            tree[node]["reserved_y"] = new_reserved_y
+    return tree
+
+
+def compute_draw_positions(
+    tree: DiGraph, root_node: any, horizontal_tree: bool = False
+) -> DiGraph:
+    nodes_drawn = set()
+    for level, nodes_in_level in enumerate(nx.bfs_layers(tree, root_node)):
+        for node in nodes_in_level:
+            tree[node]["draw_y"] = level
+            nodes_drawn.add(node)
+
+    tree[root_node]["cursor_x"] = 0
+    for node in nx.dfs_preorder_nodes(tree, root_node):
+        offset_x = 0
+        cursor_x = tree[node]["cursor_x"]
+
+        for child in tree.successors(node):
+            child_cursor_x = cursor_x + offset_x
+            tree[child]["reserved_x"] = child_cursor_x
+            offset_x += tree[child]["reserved_x"]
+
+        tree[node]["draw_x"] = (2 * cursor_x + tree[node]["reserved_x"]) / 2
+        nodes_drawn.add(node)
+
+    remaining_nodes = tree.nodes - nodes_drawn
+    for node in remaining_nodes:
+        reserved_x = tree[node]["reserved_x"]
+        reserved_y = tree[node]["reserved_y"]
+        cursor_x = tree[node]["cursor_x"] if "cursor_x" in tree[node] else 0
+        cursor_y = tree[node]["cursor_y"] if "cursor_y" in tree[node] else 0
+
+        tree[node]["draw_x"] = cursor_x + reserved_x
+        tree[node]["draw_y"] = cursor_y + reserved_y
+
+    if horizontal_tree:
+        for node in tree.nodes:
+            draw_x = tree[node]["draw_x"]
+            draw_y = tree[node]["draw_y"]
+
+            tree[node]["draw_y"] = draw_x
+            tree[node]["draw_x"] - draw_y
+
+    return tree
+
+def draw_tree(
+    graph: DiGraph,
+    translate_x: int = 0,
+    translate_y: int = 0,
+    horizontal_tree: bool = False,
+) -> None:
     graph = read_drawio(INPUT_PATH)
     ranked_graph = get_ranked_subgraph(graph)
     ranked_subtrees = get_subgraphs(ranked_graph)
@@ -88,3 +153,8 @@ if __name__ == "__main__":
     severed_links = [edge for edges in severed_links for edge in edges]
 
     # draw each of the trees
+    for subtree in ranked_subtrees:
+        roots = get_graph_root_nodes(subtree)
+        root_node = roots[0]
+        graph = compute_grid_allocations(subtree, root_node)
+        graph = compute_draw_positions(subtree, root_node)
