@@ -7,3 +7,4 @@ dist
 test_cases/out/
 sandbox/
 data/
+*test*.py
