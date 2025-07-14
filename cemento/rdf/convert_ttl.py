@@ -1,100 +1,35 @@
-import inspect
-import json
-import os
 import re
 from collections import defaultdict
 from collections.abc import Callable, Iterable
-from contextlib import contextmanager
 from functools import partial
-from pathlib import Path
 
 import networkx as nx
 import rdflib
 from networkx import DiGraph
-from pandas import DataFrame
-from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS, Graph, Namespace, URIRef, Literal
+from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS, Graph, Literal, Namespace, URIRef
 from rdflib.collection import Collection
 from rdflib.namespace import split_uri
 from thefuzz import fuzz, process
 
 from cemento.draw_io.read_diagram import ReadDiagram
+from cemento.rdf.io import (
+    get_search_terms_from_defaults,
+    get_search_terms_from_graph,
+    iter_diagram_terms,
+    iterate_ttl_graphs,
+    read_prefixes_from_graph,
+    read_prefixes_from_json,
+)
 
-INPUT_PATH = "/Users/gabriel/dev/sdle/CEMENTO/sandbox/mdsChemRxn(v.0.03).drawio"
+INPUT_PATH = "/Users/gabriel/dev/sdle/CEMENTO/sandbox/recipe.drawio"
 ONTO_FOLDER = "/Users/gabriel/dev/sdle/CEMENTO/data"
 PREFIXES_PATH = "/Users/gabriel/dev/sdle/CEMENTO/sandbox/prefixes.json"
-TTL_OUTPUT_PATH = "/Users/gabriel/dev/sdle/CEMENTO/sandbox/output.ttl"
-DRAWIO_OUTPUT_PATH = "/Users/gabriel/dev/sdle/CEMENTO/sandbox/output.drawio"
-
-
-@contextmanager
-def read_ttl(file_path: str | Path) -> Graph:
-    rdf_graph = Graph()
-    try:
-        rdf_graph.parse(file_path, format="turtle")
-        yield rdf_graph
-    finally:
-        rdf_graph.close()
+TTL_OUTPUT_PATH = "/Users/gabriel/dev/sdle/CEMENTO/sandbox/recipe.ttl"
+DRAWIO_OUTPUT_PATH = "/Users/gabriel/dev/sdle/CEMENTO/sandbox/recipe-redraw.drawio"
 
 
 def merge_dictionaries(dict_list: list[dict[any, any]]) -> dict[any, any]:
     return {key: value for each_dict in dict_list for key, value in each_dict.items()}
-
-
-def read_prefixes_from_json(file_path: str) -> dict[str, URIRef]:
-    with open(file_path, "r") as f:
-        prefixes = json.load(f)
-        return prefixes
-
-
-def get_search_terms_from_defaults(
-    default_namespace_prefixes: dict[str, Namespace],
-) -> dict[str, URIRef]:
-    search_terms = dict()
-    for prefix, ns in default_namespace_prefixes.items():
-        for term in dir(ns):
-            if isinstance(term, rdflib.URIRef):
-                _, name = split_uri(term)
-                search_terms[f"{prefix}:{name}"] = term
-    return search_terms
-
-
-def iterate_ttl_graphs(
-    folder_path: str, graph_function: Callable[[Graph], any]
-) -> list[any]:
-    results = []
-    for file in os.scandir(folder_path):
-        file_path = Path(file.path)
-        if file_path.suffix == ".ttl":
-            with read_ttl(file_path) as graph:
-                result = graph_function(graph)
-                results.append(result)
-    return results
-
-
-def read_prefixes_from_graph(rdf_graph: Graph) -> dict[str, str]:
-    return {prefix: str(ns) for prefix, ns in rdf_graph.namespaces()}
-
-
-def get_search_terms_from_graph(
-    rdf_graph: Graph, inv_prefixes: dict[str, str]
-) -> dict[str, URIRef]:
-    search_terms = dict()
-    all_terms = set()
-    for subj, pred, obj in rdf_graph:
-        all_terms.update([subj, pred, obj])
-
-        if pred == RDFS.label or pred == SKOS.altLabel:
-            ns, _ = split_uri(subj)
-            prefix = inv_prefixes[ns]
-            search_terms[f"{prefix}:{str(obj)}"] = subj
-
-    for term in all_terms:
-        if isinstance(term, rdflib.URIRef):
-            ns, abbrev_term = split_uri(term)
-            prefix = inv_prefixes[str(ns)]
-            search_terms[f"{prefix}:{abbrev_term}"] = term
-
-    return search_terms
 
 
 def remove_term_names(term: str) -> str:
@@ -194,25 +129,6 @@ def get_class_terms(graph: DiGraph) -> set[URIRef]:
             class_terms.add(obj)
 
     return class_terms
-
-
-def iter_diagram_terms(
-    relationships: DataFrame,
-    term_function: (
-        Callable[[str | URIRef, bool], str | URIRef]
-        | Callable[[str | URIRef], str | URIRef]
-    ),
-) -> list[any]:
-    results = []
-    for _, row in relationships.iterrows():
-        for term in (row["parent"], row["child"], row["rel"]):
-            is_predicate = term == row["rel"]
-            if "is_predicate" in inspect.signature(term_function).parameters:
-                result = term_function(term, is_predicate)
-            else:
-                result = term_function(term)
-            results.append(result)
-    return results
 
 
 def get_term_search_keys(term: str, inv_prefix: dict[URIRef, str]) -> list[str]:
@@ -368,6 +284,7 @@ if __name__ == "__main__":
     # read the diagram and retrieve the relationship triples as a dataframe
     diagram = ReadDiagram(INPUT_PATH, inverted_rank_arrows=True)
     rels = diagram.get_relationships()
+    rels.to_csv("sample.csv")
 
     aliases = {
         term: aliases
