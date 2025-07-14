@@ -33,7 +33,7 @@ def substitute_term(
                     search_key,
                     search_terms.keys(),
                     scorer=fuzz.token_sort_ratio,
-                    score_cutoff=75,
+                    score_cutoff=80,
                 )
             )
             is not None

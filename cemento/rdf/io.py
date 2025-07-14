@@ -90,8 +90,14 @@ def get_search_terms_from_graph(
 
     for term in all_terms:
         if isinstance(term, URIRef):
-            ns, abbrev_term = split_uri(term)
-            prefix = inv_prefixes[str(ns)]
-            search_terms[f"{prefix}:{abbrev_term}"] = term
+            is_literal = False
+            try:
+                ns, abbrev_term = split_uri(term)
+            except ValueError:
+                is_literal = not is_literal
+
+            if not is_literal:
+                prefix = inv_prefixes[str(ns)]
+                search_terms[f"{prefix}:{abbrev_term}"] = term
 
     return search_terms

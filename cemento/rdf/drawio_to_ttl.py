@@ -15,6 +15,7 @@ from cemento.rdf.io import (
     read_prefixes_from_json,
 )
 from cemento.rdf.preprocessing import (
+    generate_residual_prefixes,
     get_abbrev_term,
     get_term_aliases,
     merge_dictionaries,
@@ -47,6 +48,16 @@ def convert_drawio_to_ttl(input_path, output_path, onto_ref_folder, prefixes_pat
     file_prefixes = iterate_ttl_graphs(onto_ref_folder, read_prefixes_from_graph)
     prefixes |= merge_dictionaries(file_prefixes)
 
+    inv_prefixes = {value: key for key, value in prefixes.items()}
+    residual_file_prefixes = iterate_ttl_graphs(
+        onto_ref_folder, partial(generate_residual_prefixes, inv_prefixes=inv_prefixes)
+    )
+    residual_file_prefixes = {
+        key: value
+        for residual_prefixes in residual_file_prefixes
+        for key, value in residual_prefixes.items()
+    }
+    prefixes.update(residual_file_prefixes)
     inv_prefixes = {value: key for key, value in prefixes.items()}
 
     search_terms = get_search_terms_from_defaults(default_namespace_prefixes)
@@ -98,7 +109,7 @@ def convert_drawio_to_ttl(input_path, output_path, onto_ref_folder, prefixes_pat
 
     graph = nx.DiGraph()
     for subj, obj, data in rels.edges(data=True):
-        pred = data['label']
+        pred = data["label"]
         subj, obj, pred = tuple(constructed_terms[key] for key in (subj, obj, pred))
         graph.add_edge(subj, obj, label=pred)
 
