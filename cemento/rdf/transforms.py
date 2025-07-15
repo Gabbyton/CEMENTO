@@ -267,7 +267,6 @@ def rename_edges(graph: DiGraph, rename_mapping: dict[URIRef, str]) -> DiGraph:
     graph = graph.copy()
     for subj, obj, data in graph.edges(data=True):
         pred = data["label"]
-        print(pred)
         new_edge_label = rename_mapping[pred]
         edge_rename_mapping[(subj, obj)] = {"label": new_edge_label}
     nx.set_edge_attributes(graph, edge_rename_mapping)
