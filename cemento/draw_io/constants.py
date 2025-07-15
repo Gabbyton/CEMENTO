@@ -76,7 +76,7 @@ class Connector(DiagramObject):
             ) <= angle <= 180 or -180 <= angle < crit_angle:
                 return (0, 0.5, 1, 0.5)
             # top
-            case angle if -(pi - crit_angle) <= angle < -crit_angle:
+            case angle if -(pi - crit_angle) <= angle < -crit_angle or angle == 2 * pi:
                 return (0.5, 0, 0.5, 1)
             # right
             case angle if -crit_angle <= angle < crit_angle:
