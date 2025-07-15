@@ -8,7 +8,7 @@ from uuid import uuid4
 import networkx as nx
 from networkx import DiGraph
 
-from cemento.draw_io.constants import DiagramInfo, DiagramObject, Shape
+from cemento.draw_io.constants import Connector, DiagramInfo, DiagramObject, Shape
 
 INPUT_PATH = "/Users/gabbython/dev/sdle/CEMENTO/sandbox/SyncXrayResult_graph.drawio"
 
@@ -157,11 +157,11 @@ def compute_draw_positions(
 
 
 def translate_coords(
-    x_pos: int, y_pos: int, origin_x: int = 0, origin_y: int = 0
+    x_pos: float, y_pos: float, origin_x: float = 0, origin_y: float = 0
 ) -> tuple[int, int]:
     rect_width = 200
     rect_height = 80
-    x_padding = 10
+    x_padding = 5
     y_padding = 20
 
     grid_x = rect_width * 2 + x_padding
@@ -179,19 +179,20 @@ def generate_shapes(
 ) -> list[Shape]:
     shapes = []
     for idx, node in enumerate(graph.nodes):
+        node_content = node.replace('"', "&quot;")
         entity_id = f"{diagram_uid}-{idx + idx_start}"
         shape_pos_x = graph.nodes[node]["draw_x"] + offset_x
         shape_pos_y = graph.nodes[node]["draw_y"] + offset_y
         shape_pos_x, shape_pos_y = translate_coords(shape_pos_x, shape_pos_y)
         shapes.append(
             Shape(
-                entity_id,
-                node,
-                "#f2f3f4",
-                shape_pos_x,
-                shape_pos_y,
-                200,
-                80,
+                shape_id=entity_id,
+                shape_content=node_content,
+                fill_color="#f2f3f4",
+                x_pos=shape_pos_x,
+                y_pos=shape_pos_y,
+                shape_width=200,
+                shape_height=80,
             )
         )
     return shapes
@@ -237,6 +238,10 @@ def generate_diagram_content(
     return write_content
 
 
+def get_shape_ids(shapes: list[Shape]) -> dict[str, Shape]:
+    return {shape.shape_content: shape.shape_id for shape in shapes}
+
+
 def draw_tree(
     graph: DiGraph,
     diagram_output_path: str | Path,
@@ -261,6 +266,7 @@ def draw_tree(
         ),
         ranked_subtrees,
     )
+
     ranked_subtrees = map(
         lambda subtree: compute_draw_positions(
             subtree, get_graph_root_nodes(subtree)[0]
@@ -268,14 +274,20 @@ def draw_tree(
         ranked_subtrees,
     )
 
-    diagram_uid = str(uuid4())
+    diagram_uid = str(uuid4()).split("-")[-1]
     offset_x, offset_y = 0, 0
     entity_idx_start = 0
-    from itertools import accumulate
-    results = zip(*map(get_tree_size, ranked_subtrees))
-    offset_x, offset_y = (accumulate(seq) for seq in results)
-    print(offset_x, offset_y)
+    ranked_subtrees = list(ranked_subtrees)
     for subtree in ranked_subtrees:
+
+        new_shapes = generate_shapes(
+            subtree,
+            diagram_uid,
+            offset_x=offset_x,
+            offset_y=offset_y,
+            idx_start=entity_idx_start,
+        )
+
         tree_size_x, tree_size_y = get_tree_size(subtree)
         offset_x += tree_size_x
         offset_y += tree_size_y
@@ -285,19 +297,31 @@ def draw_tree(
         else:
             offset_y = 0
 
-        new_shapes = generate_shapes(
-            subtree,
-            diagram_uid,
-            offset_x=offset_x,
-            offset_y=offset_y,
-            idx_start=entity_idx_start,
-        )
         shapes.extend(new_shapes)
         entity_idx_start += len(new_shapes)
 
-    write_content = generate_diagram_content(
-        diagram_output_path.stem, diagram_uid, shapes
-    )
+    connectors = []
+    connector_idx = entity_idx_start + 1
+    for subtree in ranked_subtrees:
+        new_connectors = []
+        new_shape_ids = get_shape_ids(shapes)
+        for subj, obj, data in subtree.edges(data=True):
+            pred = data["label"].replace('"', "").strip()
+            new_connectors.append(
+                Connector(
+                    connector_id=f"{diagram_uid}-{connector_idx}",
+                    source_id=new_shape_ids[subj],
+                    target_id=new_shape_ids[obj],
+                    connector_label_id=f"{diagram_uid}-{connector_idx + 1}",
+                    connector_val=pred,
+                )
+            )
+            connector_idx += 2
+        entity_idx_start += len(new_connectors)
+        connectors.extend(new_connectors)
 
+    write_content = generate_diagram_content(
+        diagram_output_path.stem, diagram_uid, connectors, shapes
+    )
     with open(diagram_output_path, "w") as write_file:
         write_file.write(write_content)

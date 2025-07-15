@@ -21,6 +21,7 @@ def get_timestamp_str():
 class DiagramObject:
     pass
 
+
 @dataclass
 class DiagramInfo(DiagramObject):
     diagram_name: int
@@ -32,21 +33,25 @@ class DiagramInfo(DiagramObject):
     page_width: int = 1100
     page_height: int = 850
     diagram_content: int = None
-    template_key: str = 'scaffold'
+    template_key: str = "scaffold"
 
 
 @dataclass
 class Connector(DiagramObject):
-    id: str
+    connector_id: str
     source_id: str
     target_id: str
     connector_label_id: str
-    connector_content: str
-    is_rank: str
-    start_x: str
-    start_y: str
-    end_x: str
-    end_y: str
+    connector_val: str
+    rel_x_pos: float = 0
+    rel_y_pos: float = 0
+    start_pos_x: float = 0.5
+    start_pos_y: float = 1
+    end_pos_x: float = 0.5
+    end_pos_y: float = 0
+    is_dashed: bool = 0
+    is_curved: bool = 0
+    template_key: str = "connector"
 
 
 @dataclass
@@ -54,8 +59,8 @@ class Shape:
     shape_id: str
     shape_content: str
     fill_color: str
-    x_pos: int
-    y_pos: int
+    x_pos: float
+    y_pos: float
     shape_width: int
     shape_height: int
-    template_key: str = 'shape'
+    template_key: str = "shape"
