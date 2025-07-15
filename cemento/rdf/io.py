@@ -8,7 +8,7 @@ from pathlib import Path
 from networkx import DiGraph
 from rdflib import RDFS, SKOS, Graph, Namespace, URIRef
 from rdflib.namespace import split_uri
-
+from collections.abc import Iterable
 
 def iter_diagram_terms(
     graph: DiGraph,
@@ -28,6 +28,12 @@ def iter_diagram_terms(
                 result = term_function(term)
             results.append(result)
     return results
+
+def get_diagram_terms_iter_with_pred(graph: DiGraph) -> Iterable[str]:
+    return ((term, term == data['label']) for subj, obj, data in graph.edges(data=True) for term in (subj, data['label'], obj))
+
+def get_diagram_terms_iter(graph: DiGraph) -> Iterable[str]:
+    return (term for subj, obj, data in graph.edges(data=True) for term in (subj, data['label'], obj))
 
 
 def iterate_ttl_graphs(

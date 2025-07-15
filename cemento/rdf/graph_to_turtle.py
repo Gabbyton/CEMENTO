@@ -1,13 +1,16 @@
 from functools import partial
+from itertools import filterfalse
 from pathlib import Path
 
 import networkx as nx
 import rdflib
 from networkx import DiGraph
-from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS
+from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS, Literal
 
 from cemento.rdf.filters import term_in_search_results, term_not_in_default_namespace
 from cemento.rdf.io import (
+    get_diagram_terms_iter,
+    get_diagram_terms_iter_with_pred,
     get_search_terms_from_defaults,
     get_search_terms_from_graph,
     iter_diagram_terms,
@@ -79,15 +82,23 @@ def convert_graph_to_ttl(
         )
     }
 
+    literal_terms = {
+        term
+        for term in filter(lambda term: ('"' in term), get_diagram_terms_iter(graph))
+    }
+    print(literal_terms)
     constructed_terms = {
         term: term_uri_ref
-        for term, term_uri_ref in iter_diagram_terms(
-            graph,
-            lambda term, is_predicate: (
-                term,
+        for term, term_uri_ref in map(
+            lambda term_info: (
+                term_info[0],
                 construct_term_uri(
-                    *get_abbrev_term(term, is_predicate=is_predicate), prefixes=prefixes
+                    *get_abbrev_term(term_info[0], term_info[1]), prefixes=prefixes
                 ),
+            ),
+            filter(
+                lambda term: term not in literal_terms,
+                get_diagram_terms_iter_with_pred(graph),
             ),
         )
     }
@@ -109,6 +120,9 @@ def convert_graph_to_ttl(
     inv_constructed_terms = {value: key for key, value in constructed_terms.items()}
 
     constructed_terms.update(substitution_results)
+    constructed_terms.update(
+        {term: Literal(term.replace('"', "")) for term in literal_terms}
+    )
 
     output_graph = nx.DiGraph()
     for subj, obj, data in graph.edges(data=True):
@@ -119,7 +133,7 @@ def convert_graph_to_ttl(
     class_terms = get_class_terms(output_graph)
     predicate_terms = {data["label"] for _, _, data in output_graph.edges(data=True)}
     class_terms -= predicate_terms
-    all_terms = output_graph.nodes() | predicate_terms
+    all_terms = output_graph.nodes() | predicate_terms - literal_terms
 
     pred_doms_ranges = get_doms_ranges(output_graph)
 
@@ -167,46 +181,36 @@ def convert_graph_to_ttl(
         default_namespace_prefixes=default_namespace_prefixes,
     )
 
-    iter_graph_terms(
-        all_terms,
+    map(
         lambda graph_term: add_exact_matches(
             graph_term, match_properties=results[graph_term], rdf_graph=rdf_graph
         ),
-        [term_in_search_results_filter, term_not_in_default_namespace_filter],
+        filter(
+            term_in_search_results_filter,
+            filter(term_not_in_default_namespace_filter, all_terms),
+        ),
     )
-    iter_graph_terms(
-        all_terms,
+    map(
         lambda graph_term: add_labels(
             term=graph_term,
             labels=aliases[inv_constructed_terms[graph_term]],
             rdf_graph=rdf_graph,
         ),
-        [
+        filter(
             term_not_in_default_namespace_filter,
-            partial(
-                term_in_search_results,
-                inv_prefixes=inv_prefixes,
-                search_terms=search_terms,
-                invert=True,
-            ),
-        ],
+            filterfalse(term_in_search_results, all_terms),
+        ),
     )
-    iter_graph_terms(
-        predicate_terms,
+    map(
         lambda graph_term: add_domains_ranges(
             term=graph_term,
             domains_ranges=pred_doms_ranges[graph_term],
             rdf_graph=rdf_graph,
         ),
-        [
+        filter(
             term_not_in_default_namespace_filter,
-            partial(
-                term_in_search_results,
-                inv_prefixes=inv_prefixes,
-                search_terms=search_terms,
-                invert=True,
-            ),
-        ],
+            filterfalse(term_in_search_results, predicate_terms),
+        ),
     )
 
     # now add the triples from the drawio diagram
