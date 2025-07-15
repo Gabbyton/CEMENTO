@@ -29,8 +29,8 @@ def construct_literal(term: str, lang="en", datatype=None) -> Literal:
     return Literal(clean_literal_string(term), lang=lang, datatype=None)
 
 
-def get_literal_lang_annotation(literal_term: str) -> str:
-    return res[0] if (res := re.findall(r"@(\w+)", literal_term)) else None
+def get_literal_lang_annotation(literal_term: str, default=None) -> str:
+    return res[0] if (res := re.findall(r"@(\w+)", literal_term)) else default
 
 
 def get_literal_data_type(

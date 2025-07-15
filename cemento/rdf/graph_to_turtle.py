@@ -38,6 +38,7 @@ from cemento.rdf.transforms import (
     get_term_search_keys,
     get_term_value,
     substitute_term,
+    get_literal_lang_annotation
 )
 
 
@@ -131,7 +132,7 @@ def convert_graph_to_ttl(
     constructed_terms.update(substitution_results)
     constructed_literal_terms = {
         term: construct_literal(
-            term, datatype=get_literal_data_type(term, search_terms)
+            term, lang=get_literal_lang_annotation(term), datatype=get_literal_data_type(term, search_terms)
         )
         for term in literal_terms
     }
