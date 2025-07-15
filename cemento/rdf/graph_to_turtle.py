@@ -1,10 +1,11 @@
 from functools import partial
+from pathlib import Path
 
 import networkx as nx
 import rdflib
+from networkx import DiGraph
 from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS
 
-from cemento.draw_io.read_diagram import read_drawio
 from cemento.rdf.filters import term_in_search_results, term_not_in_default_namespace
 from cemento.rdf.io import (
     get_search_terms_from_defaults,
@@ -35,7 +36,12 @@ from cemento.rdf.transforms import (
 )
 
 
-def convert_drawio_to_ttl(input_path, output_path, onto_ref_folder, prefixes_path):
+def convert_graph_to_ttl(
+    graph: DiGraph,
+    output_path: str | Path,
+    onto_ref_folder: str | Path,
+    prefixes_path: str | Path,
+) -> None:
     default_namespaces = [RDF, RDFS, OWL, DCTERMS, SKOS]
     default_namespace_prefixes = ["rdf", "rdfs", "owl", "dcterms", "skos"]
 
@@ -66,20 +72,17 @@ def convert_drawio_to_ttl(input_path, output_path, onto_ref_folder, prefixes_pat
     )
     search_terms |= merge_dictionaries(file_search_terms)
 
-    # read the diagram and retrieve the relationship triples as a dataframe
-    rels = read_drawio(input_path)
-
     aliases = {
         term: aliases
         for term, aliases in iter_diagram_terms(
-            rels, lambda term: (term, get_term_aliases(term))
+            graph, lambda term: (term, get_term_aliases(term))
         )
     }
 
     constructed_terms = {
         term: term_uri_ref
         for term, term_uri_ref in iter_diagram_terms(
-            rels,
+            graph,
             lambda term, is_predicate: (
                 term,
                 construct_term_uri(
@@ -91,13 +94,13 @@ def convert_drawio_to_ttl(input_path, output_path, onto_ref_folder, prefixes_pat
     search_keys = {
         term: search_key
         for term, search_key in iter_diagram_terms(
-            rels, lambda term: (term, get_term_search_keys(term, inv_prefixes))
+            graph, lambda term: (term, get_term_search_keys(term, inv_prefixes))
         )
     }
     substitution_results = {
         term: substituted_value
         for term, substituted_value in iter_diagram_terms(
-            rels,
+            graph,
             lambda term: (term, substitute_term(search_keys[term], search_terms)),
         )
         if substituted_value is not None
@@ -107,18 +110,18 @@ def convert_drawio_to_ttl(input_path, output_path, onto_ref_folder, prefixes_pat
 
     constructed_terms.update(substitution_results)
 
-    graph = nx.DiGraph()
-    for subj, obj, data in rels.edges(data=True):
+    output_graph = nx.DiGraph()
+    for subj, obj, data in graph.edges(data=True):
         pred = data["label"]
         subj, obj, pred = tuple(constructed_terms[key] for key in (subj, obj, pred))
-        graph.add_edge(subj, obj, label=pred)
+        output_graph.add_edge(subj, obj, label=pred)
 
-    class_terms = get_class_terms(graph)
-    predicate_terms = {data["label"] for _, _, data in graph.edges(data=True)}
+    class_terms = get_class_terms(output_graph)
+    predicate_terms = {data["label"] for _, _, data in output_graph.edges(data=True)}
     class_terms -= predicate_terms
-    all_terms = graph.nodes() | predicate_terms
+    all_terms = output_graph.nodes() | predicate_terms
 
-    pred_doms_ranges = get_doms_ranges(graph)
+    pred_doms_ranges = get_doms_ranges(output_graph)
 
     # # create the rdf graph to store the ttl output
     rdf_graph = rdflib.Graph()
@@ -207,7 +210,7 @@ def convert_drawio_to_ttl(input_path, output_path, onto_ref_folder, prefixes_pat
     )
 
     # now add the triples from the drawio diagram
-    for domain_term, range_term, data in graph.edges(data=True):
+    for domain_term, range_term, data in output_graph.edges(data=True):
         predicate_term = data["label"]
         rdf_graph.add((domain_term, predicate_term, range_term))
     # serialize the output as a turtle file
