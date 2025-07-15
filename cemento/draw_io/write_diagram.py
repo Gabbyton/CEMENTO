@@ -8,7 +8,13 @@ from uuid import uuid4
 import networkx as nx
 from networkx import DiGraph
 
-from cemento.draw_io.constants import Connector, DiagramInfo, DiagramObject, Shape
+from cemento.draw_io.constants import (
+    Connector,
+    DiagramInfo,
+    DiagramObject,
+    GhostConnector,
+    Shape,
+)
 
 INPUT_PATH = "/Users/gabbython/dev/sdle/CEMENTO/sandbox/SyncXrayResult_graph.drawio"
 
@@ -242,6 +248,10 @@ def get_shape_ids(shapes: list[Shape]) -> dict[str, Shape]:
     return {shape.shape_content: shape.shape_id for shape in shapes}
 
 
+def get_shape_positions(shapes: list[Shape]) -> dict[str, tuple[float, float]]:
+    return {shape.shape_content: (shape.x_pos, shape.y_pos) for shape in shapes}
+
+
 def draw_tree(
     graph: DiGraph,
     diagram_output_path: str | Path,
@@ -300,11 +310,11 @@ def draw_tree(
         shapes.extend(new_shapes)
         entity_idx_start += len(new_shapes)
 
+    new_shape_ids = get_shape_ids(shapes)
     connectors = []
     connector_idx = entity_idx_start + 1
     for subtree in ranked_subtrees:
         new_connectors = []
-        new_shape_ids = get_shape_ids(shapes)
         for subj, obj, data in subtree.edges(data=True):
             pred = data["label"].replace('"', "").strip()
             new_connectors.append(
@@ -320,8 +330,28 @@ def draw_tree(
         entity_idx_start += len(new_connectors)
         connectors.extend(new_connectors)
 
+    predicate_connectors = []
+    shape_positions = get_shape_positions(shapes)
+    property_edges = (
+        (subj, obj, data["label"])
+        for subj, obj, data in graph.edges(data=True)
+        if not data["is_rank"]
+    )
+    for subj, obj, pred in property_edges:
+        new_connector = GhostConnector(
+            connector_id=f"{diagram_uid}-{connector_idx}",
+            source_id=new_shape_ids[subj],
+            target_id=new_shape_ids[obj],
+            connector_label_id=f"{diagram_uid}-{connector_idx + 1}",
+            connector_val=pred,
+        )
+        predicate_connectors.append(new_connector)
+        new_connector.resolve_position(
+            "property", shape_positions[subj], shape_positions[obj]
+        )
+        connector_idx += 2
     write_content = generate_diagram_content(
-        diagram_output_path.stem, diagram_uid, connectors, shapes
+        diagram_output_path.stem, diagram_uid, connectors, predicate_connectors, shapes
     )
     with open(diagram_output_path, "w") as write_file:
         write_file.write(write_content)

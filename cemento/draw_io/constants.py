@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
+from math import atan2, pi
 
 
 class DiagramKey(Enum):
@@ -36,6 +37,11 @@ class DiagramInfo(DiagramObject):
     template_key: str = "scaffold"
 
 
+class ConnectorType(Enum):
+    RANK_CONNECTOR = "rank"
+    PROPERTY_CONNECTOR = "property"
+
+
 @dataclass
 class Connector(DiagramObject):
     connector_id: str
@@ -53,6 +59,64 @@ class Connector(DiagramObject):
     is_curved: bool = 0
     template_key: str = "connector"
 
+    @staticmethod
+    def compute_dynamic_position(
+        source_shape_x: float,
+        source_shape_y: float,
+        target_shape_x: float,
+        target_shape_y: float,
+    ) -> tuple[float, float, float, float]:
+        crit_angle = abs(atan2(SHAPE_HEIGHT, SHAPE_WIDTH))
+        # apple around banana
+        current_angle = atan2(target_shape_y - source_shape_y, target_shape_x - source_shape_x)
+        match current_angle:
+            # left
+            case angle if (
+                pi - crit_angle
+            ) <= angle <= 180 or -180 <= angle < crit_angle:
+                return (0, 0.5, 1, 0.5)
+            # top
+            case angle if -(pi - crit_angle) <= angle < -crit_angle:
+                return (0.5, 0, 0.5, 1)
+            # right
+            case angle if -crit_angle <= angle < crit_angle:
+                return (0, 0.5, 1, 0.5)
+                # return (1, 0.5, 0, 0.5)
+            # bottom
+            case angle if crit_angle <= angle < (pi - crit_angle):
+                return (0.5, 1, 0.5, 0)
+            case _:
+                return (0, 0, 0, 0)
+
+    def resolve_position(
+        self,
+        connector_type: str | ConnectorType = None,
+        source_shape_pos: tuple[float, float] = None,
+        target_shape_pos: tuple[float, float] = None,
+    ) -> None:
+        match connector_type:
+            case ConnectorType.RANK_CONNECTOR | ConnectorType.RANK_CONNECTOR.value:
+                self.start_pos_x = 0.5
+                self.start_pos_x = 1
+                self.end_pos_x = 0.5
+                self.end_pos_y = 0
+                return
+            case (
+                ConnectorType.PROPERTY_CONNECTOR
+                | ConnectorType.PROPERTY_CONNECTOR.value
+            ):
+                self.start_pos_x, self.start_pos_y, self.end_pos_x, self.end_pos_y = (
+                    Connector.compute_dynamic_position(
+                        *source_shape_pos, *target_shape_pos
+                    )
+                )
+            case _:
+                return
+
+@dataclass
+class GhostConnector(Connector):
+    is_curved: bool = 1
+    is_dashed: bool = 1
 
 @dataclass
 class Shape:
