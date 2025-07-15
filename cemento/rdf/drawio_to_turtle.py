@@ -7,7 +7,7 @@ def convert_drawio_to_ttl(
     output_path: str | Path,
     onto_ref_folder: str | Path,
     prefixes_path: str | Path,
-):
+) -> None:
     convert_graph_to_ttl(
         read_drawio(file_path), output_path, onto_ref_folder, prefixes_path
     )
