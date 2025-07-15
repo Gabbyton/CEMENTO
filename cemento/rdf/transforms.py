@@ -9,6 +9,7 @@ from rdflib.collection import Collection
 from rdflib.namespace import split_uri
 from thefuzz import fuzz, process
 
+from cemento.rdf.constants import PREDICATES
 from cemento.rdf.preprocessing import (
     clean_literal_string,
     get_abbrev_term,
@@ -38,9 +39,7 @@ def get_literal_data_type(
     search_terms: dict[str, URIRef],
     score_cutoff=90,
 ) -> URIRef | None:
-    search_key = (
-        res[0] if (res := re.findall(r"\^\^(\w+:\w+)", literal_term)) else None
-    )
+    search_key = res[0] if (res := re.findall(r"\^\^(\w+:\w+)", literal_term)) else None
     if search_key:
         datatype = substitute_term(
             [search_key], search_terms, score_cutoff=score_cutoff
@@ -219,41 +218,41 @@ def get_aliases(rdf_graph: Graph) -> dict[URIRef, Literal]:
 
 
 def get_term_types(rdf_graph: Graph) -> dict[URIRef, URIRef]:
-    term_type = dict()
-    for subj, pred, obj in rdf_graph:
-        if pred == RDF.type:
-            term_type[subj] = obj
-
-    return term_type
+    return {subj: obj for subj, pred, obj in rdf_graph if pred == RDF.type}
 
 
-def get_terms(
-    rdf_graph: Graph, term_type: dict[URIRef, URIRef], default_terms: set[URIRef]
-) -> tuple[set[URIRef], set[URIRef], set[URIRef]]:
-    all_classes, all_instances = set(), set()
-
-    for subj, pred, obj in rdf_graph:
-        if pred == RDFS.subClassOf:
-            all_classes.update([subj, obj])
-
-    for subj, pred, obj in rdf_graph:
-        if (
-            pred == RDF.type
-            and obj not in default_terms
-            and term_type[obj] == OWL.Class
-        ):
-            all_classes.add(subj)
-            all_instances.add(obj)
-
-    all_predicates = {
-        term
-        for term in rdf_graph.subjects(RDF.type, OWL.ObjectProperty)
-        if term not in default_terms
+def get_instances(
+    rdf_graph: Graph, default_terms: set[URIRef], term_types: dict[URIRef, URIRef]
+) -> set[URIRef]:
+    return {
+        obj
+        for subj, pred, obj in rdf_graph
+        if pred == RDF.type
+        and obj not in default_terms
+        and term_types[obj] == OWL.Class
     }
-    all_predicates.add(RDF.type)
-    all_predicates.add(RDFS.subClassOf)
 
-    return all_classes, all_instances, all_predicates
+
+def get_classes(
+    rdf_graph: Graph, default_terms: set[URIRef], term_types: dict[URIRef, URIRef]
+) -> set[URIRef]:
+    instance_superclasses = {
+        subj
+        for subj, pred, obj in rdf_graph
+        if pred == RDF.type
+        and obj not in default_terms
+        and term_types[subj] == OWL.Class
+    }
+    return instance_superclasses | {
+        term
+        for subj, pred, obj in rdf_graph
+        if pred == RDFS.subClassOf
+        for term in (subj, obj)
+    }
+
+
+def get_predicates(rdf_graph: Graph, default_terms: set[URIRef]) -> set[URIRef]:
+    return {term for prop in PREDICATES for term in rdf_graph.subjects(RDF.type, prop)}
 
 
 def get_graph_relabel_mapping(
