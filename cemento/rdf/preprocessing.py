@@ -10,6 +10,13 @@ def merge_dictionaries(dict_list: list[dict[any, any]]) -> dict[any, any]:
     return {key: value for each_dict in dict_list for key, value in each_dict.items()}
 
 
+def clean_literal_string(literal_term: str) -> str:
+    new_literal_term = literal_term.strip().replace('"', "")
+    new_literal_term = re.sub(r"@\w+", "", new_literal_term)
+    new_literal_term = re.sub(r"\^\^\w+:\w+", "", new_literal_term)
+    return new_literal_term
+
+
 def generate_residual_prefixes(
     rdf_graph: Graph, inv_prefixes: dict[Namespace | URIRef, str]
 ):

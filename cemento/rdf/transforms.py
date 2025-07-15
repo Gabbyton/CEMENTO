@@ -9,7 +9,11 @@ from rdflib.collection import Collection
 from rdflib.namespace import split_uri
 from thefuzz import fuzz, process
 
-from cemento.rdf.preprocessing import get_abbrev_term, remove_term_names
+from cemento.rdf.preprocessing import (
+    clean_literal_string,
+    get_abbrev_term,
+    remove_term_names,
+)
 
 
 def construct_term_uri(
@@ -21,8 +25,32 @@ def construct_term_uri(
     return URIRef(f"{ns_uri}{abbrev_term}")
 
 
+def construct_literal(term: str, lang="en", datatype=None) -> Literal:
+    return Literal(clean_literal_string(term), lang=lang, datatype=None)
+
+
+def get_literal_lang_annotation(literal_term: str) -> str:
+    return res[0] if (res := re.findall(r"@(\w+)", literal_term)) else None
+
+
+def get_literal_data_type(
+    literal_term: str,
+    search_terms: dict[str, URIRef],
+    score_cutoff=90,
+) -> URIRef | None:
+    search_key = (
+        res[0] if (res := re.findall(r"\^\^(\w+:\w+)", literal_term)) else None
+    )
+    if search_key:
+        datatype = substitute_term(
+            [search_key], search_terms, score_cutoff=score_cutoff
+        )
+        return datatype
+    return None
+
+
 def substitute_term(
-    search_keys: Iterable[str], search_terms: dict[str, URIRef]
+    search_keys: Iterable[str], search_terms: dict[str, URIRef], score_cutoff: int = 80
 ) -> URIRef:
     best_match, score = max(
         (
@@ -33,7 +61,7 @@ def substitute_term(
                     search_key,
                     search_terms.keys(),
                     scorer=fuzz.token_sort_ratio,
-                    score_cutoff=80,
+                    score_cutoff=score_cutoff,
                 )
             )
             is not None

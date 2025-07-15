@@ -5,7 +5,7 @@ from pathlib import Path
 import networkx as nx
 import rdflib
 from networkx import DiGraph
-from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS, Literal
+from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS
 
 from cemento.rdf.filters import term_in_search_results, term_not_in_default_namespace
 from cemento.rdf.io import (
@@ -30,9 +30,11 @@ from cemento.rdf.transforms import (
     add_exact_matches,
     add_labels,
     bind_prefixes,
+    construct_literal,
     construct_term_uri,
     get_class_terms,
     get_doms_ranges,
+    get_literal_data_type,
     get_term_search_keys,
     get_term_value,
     substitute_term,
@@ -94,7 +96,6 @@ def convert_graph_to_ttl(
         term
         for term in filter(lambda term: ('"' in term), get_diagram_terms_iter(graph))
     }
-    print(literal_terms)
     constructed_terms = {
         term: term_uri_ref
         for term, term_uri_ref in map(
@@ -105,7 +106,7 @@ def convert_graph_to_ttl(
                 ),
             ),
             filter(
-                lambda term: term not in literal_terms,
+                lambda term_info: term_info[0] not in literal_terms,
                 get_diagram_terms_iter_with_pred(graph),
             ),
         )
@@ -129,7 +130,10 @@ def convert_graph_to_ttl(
 
     constructed_terms.update(substitution_results)
     constructed_literal_terms = {
-        term: Literal(term.replace('"', "")) for term in literal_terms
+        term: construct_literal(
+            term, datatype=get_literal_data_type(term, search_terms)
+        )
+        for term in literal_terms
     }
     constructed_terms.update(constructed_literal_terms)
 
