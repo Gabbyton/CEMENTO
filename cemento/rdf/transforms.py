@@ -139,6 +139,8 @@ def add_exact_matches(
     # add an exact match to the ttl file for easier cross-referencing
     rdf_graph.add((term, SKOS.exactMatch, term))
 
+    return rdf_graph
+
 
 def add_labels(term: URIRef, labels: list[str], rdf_graph: Graph) -> Graph:
     # assume the first element of the labels is the actual label, others are alt-names

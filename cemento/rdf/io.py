@@ -35,6 +35,8 @@ def get_diagram_terms_iter_with_pred(graph: DiGraph) -> Iterable[str]:
 def get_diagram_terms_iter(graph: DiGraph) -> Iterable[str]:
     return (term for subj, obj, data in graph.edges(data=True) for term in (subj, data['label'], obj))
 
+def get_ttl_file_iter(folder_path: str | Path) -> Iterable[Path]:
+    return (get_ttl_graph(file_path) for file in os.scandir(folder_path) if (file_path := Path(file.path)).suffix == '.ttl')
 
 def iterate_ttl_graphs(
     folder_path: str, graph_function: Callable[[Graph], any]
@@ -48,6 +50,9 @@ def iterate_ttl_graphs(
                 results.append(result)
     return results
 
+def get_ttl_graph(file_path: str | Path) -> Graph | None:
+    with read_ttl(file_path) as graph:
+        return graph
 
 @contextmanager
 def read_ttl(file_path: str | Path) -> Graph:

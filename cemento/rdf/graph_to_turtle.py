@@ -1,4 +1,4 @@
-from functools import partial
+from functools import partial, reduce
 from itertools import filterfalse
 from pathlib import Path
 
@@ -13,6 +13,7 @@ from cemento.rdf.io import (
     get_diagram_terms_iter_with_pred,
     get_search_terms_from_defaults,
     get_search_terms_from_graph,
+    get_ttl_file_iter,
     iter_diagram_terms,
     iterate_ttl_graphs,
     read_prefixes_from_graph,
@@ -34,7 +35,6 @@ from cemento.rdf.transforms import (
     get_doms_ranges,
     get_term_search_keys,
     get_term_value,
-    iter_graph_terms,
     substitute_term,
 )
 
@@ -42,38 +42,46 @@ from cemento.rdf.transforms import (
 def convert_graph_to_ttl(
     graph: DiGraph,
     output_path: str | Path,
-    onto_ref_folder: str | Path,
-    prefixes_path: str | Path,
+    onto_ref_folder: str | Path = None,
+    prefixes_path: str | Path = None,
 ) -> None:
     default_namespaces = [RDF, RDFS, OWL, DCTERMS, SKOS]
     default_namespace_prefixes = ["rdf", "rdfs", "owl", "dcterms", "skos"]
 
-    prefixes = read_prefixes_from_json(prefixes_path)
+    prefixes = dict()
+    if prefixes_path:
+        prefixes = read_prefixes_from_json(prefixes_path)
 
     default_namespace_prefixes = {
         prefix: ns for prefix, ns in zip(default_namespace_prefixes, default_namespaces)
     }
     prefixes.update(default_namespace_prefixes)
-    file_prefixes = iterate_ttl_graphs(onto_ref_folder, read_prefixes_from_graph)
-    prefixes |= merge_dictionaries(file_prefixes)
 
-    inv_prefixes = {value: key for key, value in prefixes.items()}
-    residual_file_prefixes = iterate_ttl_graphs(
-        onto_ref_folder, partial(generate_residual_prefixes, inv_prefixes=inv_prefixes)
-    )
-    residual_file_prefixes = {
-        key: value
-        for residual_prefixes in residual_file_prefixes
-        for key, value in residual_prefixes.items()
-    }
-    prefixes.update(residual_file_prefixes)
-    inv_prefixes = {value: key for key, value in prefixes.items()}
+    if onto_ref_folder:
+        file_prefixes = iterate_ttl_graphs(onto_ref_folder, read_prefixes_from_graph)
+        prefixes |= merge_dictionaries(file_prefixes)
+        inv_prefixes = {value: key for key, value in prefixes.items()}
+
+        residual_file_prefixes = iterate_ttl_graphs(
+            onto_ref_folder,
+            partial(generate_residual_prefixes, inv_prefixes=inv_prefixes),
+        )
+        residual_file_prefixes = {
+            key: value
+            for residual_prefixes in residual_file_prefixes
+            for key, value in residual_prefixes.items()
+        }
+        prefixes.update(residual_file_prefixes)
+        inv_prefixes = {value: key for key, value in prefixes.items()}
 
     search_terms = get_search_terms_from_defaults(default_namespace_prefixes)
-    file_search_terms = iterate_ttl_graphs(
-        onto_ref_folder, partial(get_search_terms_from_graph, inv_prefixes=inv_prefixes)
-    )
-    search_terms |= merge_dictionaries(file_search_terms)
+
+    if onto_ref_folder:
+        file_search_terms = iterate_ttl_graphs(
+            onto_ref_folder,
+            partial(get_search_terms_from_graph, inv_prefixes=inv_prefixes),
+        )
+        search_terms |= merge_dictionaries(file_search_terms)
 
     aliases = {
         term: aliases
@@ -120,9 +128,10 @@ def convert_graph_to_ttl(
     inv_constructed_terms = {value: key for key, value in constructed_terms.items()}
 
     constructed_terms.update(substitution_results)
-    constructed_terms.update(
-        {term: Literal(term.replace('"', "")) for term in literal_terms}
-    )
+    constructed_literal_terms = {
+        term: Literal(term.replace('"', "")) for term in literal_terms
+    }
+    constructed_terms.update(constructed_literal_terms)
 
     output_graph = nx.DiGraph()
     for subj, obj, data in graph.edges(data=True):
@@ -132,8 +141,9 @@ def convert_graph_to_ttl(
 
     class_terms = get_class_terms(output_graph)
     predicate_terms = {data["label"] for _, _, data in output_graph.edges(data=True)}
+    literal_terms = set(constructed_literal_terms.values())
     class_terms -= predicate_terms
-    all_terms = output_graph.nodes() | predicate_terms - literal_terms
+    all_terms = (output_graph.nodes() | predicate_terms) - literal_terms
 
     pred_doms_ranges = get_doms_ranges(output_graph)
 
@@ -155,23 +165,6 @@ def convert_graph_to_ttl(
         ):
             rdf_graph.add((term, RDF.type, OWL.ObjectProperty))
 
-    exact_match_properties = [RDF.value, RDFS.label]
-    results = {
-        term: {prop: value}
-        for prop in exact_match_properties
-        for result in iterate_ttl_graphs(
-            onto_ref_folder,
-            lambda rdf_graph, prop=prop: iter_graph_terms(
-                all_terms,
-                lambda graph_term: (
-                    graph_term,
-                    get_term_value(subj=graph_term, pred=prop, ref_rdf_graph=rdf_graph),
-                ),
-            ),
-        )
-        for term, value in result
-    }
-
     term_in_search_results_filter = partial(
         term_in_search_results, inv_prefixes=inv_prefixes, search_terms=search_terms
     )
@@ -181,36 +174,57 @@ def convert_graph_to_ttl(
         default_namespace_prefixes=default_namespace_prefixes,
     )
 
-    map(
-        lambda graph_term: add_exact_matches(
-            graph_term, match_properties=results[graph_term], rdf_graph=rdf_graph
+    exact_match_property_predicates = [RDF.value, RDFS.label]
+    exact_match_properties = {
+        term: {prop: value}
+        for prop in exact_match_property_predicates
+        for result in map(
+            lambda rdf_graph, prop=prop: map(
+                lambda graph_term: (
+                    graph_term,
+                    get_term_value(subj=graph_term, pred=prop, ref_rdf_graph=rdf_graph),
+                ),
+                all_terms,
+            ),
+            get_ttl_file_iter(onto_ref_folder),
+        )
+        for term, value in result
+    }
+    rdf_graph = reduce(
+        lambda rdf_graph, graph_term: add_exact_matches(
+            term=graph_term,
+            match_properties=exact_match_properties[graph_term],
+            rdf_graph=rdf_graph,
         ),
         filter(
             term_in_search_results_filter,
             filter(term_not_in_default_namespace_filter, all_terms),
         ),
+        rdf_graph,
     )
-    map(
-        lambda graph_term: add_labels(
+    rdf_graph = reduce(
+        lambda rdf_graph, graph_term: add_labels(
             term=graph_term,
             labels=aliases[inv_constructed_terms[graph_term]],
             rdf_graph=rdf_graph,
         ),
         filter(
             term_not_in_default_namespace_filter,
-            filterfalse(term_in_search_results, all_terms),
+            filterfalse(term_in_search_results_filter, all_terms),
         ),
+        rdf_graph,
     )
-    map(
-        lambda graph_term: add_domains_ranges(
+    rdf_graph = reduce(
+        lambda rdf_graph, graph_term: add_domains_ranges(
             term=graph_term,
             domains_ranges=pred_doms_ranges[graph_term],
             rdf_graph=rdf_graph,
         ),
         filter(
             term_not_in_default_namespace_filter,
-            filterfalse(term_in_search_results, predicate_terms),
+            filterfalse(term_in_search_results_filter, predicate_terms),
         ),
+        rdf_graph,
     )
 
     # now add the triples from the drawio diagram
