@@ -1,20 +1,22 @@
 import networkx as nx
+from networkx import DiGraph
 from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS, URIRef
 
-from cemento.draw_io.write_diagram import WriteDiagram
 from cemento.rdf.io import read_ttl
 from cemento.rdf.transforms import (
     get_aliases,
+    get_classes,
     get_graph,
     get_graph_relabel_mapping,
+    get_instances,
+    get_predicates,
     get_term_types,
-    get_terms,
     rename_edges,
 )
-from cemento.tree import Tree
+from pathlib import Path
 
 
-def convert_ttl_to_drawio(input_path, output_path):
+def convert_ttl_to_graph(input_path: str | Path) -> DiGraph:
     default_namespaces = [RDF, RDFS, OWL, DCTERMS, SKOS]
     default_namespace_prefixes = ["rdf", "rdfs", "owl", "dcterms", "skos"]
 
@@ -37,11 +39,10 @@ def convert_ttl_to_drawio(input_path, output_path):
             if isinstance(term, URIRef)
         }
 
-        term_type = get_term_types(rdf_graph)
-        all_classes, all_instances, all_predicates = get_terms(
-            rdf_graph, term_type, default_terms
-        )
-
+        term_types = get_term_types(rdf_graph)
+        all_classes = get_classes(rdf_graph, default_terms, term_types)
+        all_instances = get_instances(rdf_graph, default_terms, term_types)
+        all_predicates = get_predicates(rdf_graph, default_terms)
         graph = get_graph(rdf_graph, all_predicates, default_terms)
 
         all_terms = all_classes | all_instances | all_predicates | default_terms
@@ -52,7 +53,5 @@ def convert_ttl_to_drawio(input_path, output_path):
         graph = nx.relabel_nodes(graph, rename_terms)
         graph = rename_edges(graph, rename_terms)
 
-    tree = Tree(graph=graph, do_gen_ids=True, invert_tree=False)
-    diagram = WriteDiagram(output_path)
-    tree.draw_tree(write_diagram=diagram)
-    diagram.draw()
+        print(graph.nodes)
+        return graph
