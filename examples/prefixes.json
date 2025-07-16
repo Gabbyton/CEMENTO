@@ -1,0 +1,20 @@
+{
+    "cco": "https://www.commoncoreontologies.org/",
+    "mds": "https://cwrusdle.bitbucket.io/mds/",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "ncit": "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "obo": "http://purl.obolibrary.org/obo/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "qudt": "http://qudt.org/schema/qudt/",
+    "pmdco": "https://w3id.org/pmd/co/",
+    "pmd": "https://w3id.org/pmd/co/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "unit": "http://qudt.org/vocab/unit/",
+    "afe": "http://purl.allotrope.org/ontologies/equipment#",
+    "afm": "http://purl.allotrope.org/ontologies/material#",
+    "afq": "http://purl.allotrope.org/ontologies/quality#",
+    "afr": "http://purl.allotrope.org/ontologies/result#"
+}
