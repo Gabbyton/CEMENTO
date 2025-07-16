@@ -11,6 +11,7 @@ class DiagramKey(Enum):
 
 SHAPE_WIDTH = 200
 SHAPE_HEIGHT = 80
+FILL_COLOR = "#f2f3f4"
 x_padding = 10
 y_padding = 20
 
@@ -76,10 +77,10 @@ class Connector(DiagramObject):
             ) <= angle <= 180 or -180 <= angle < crit_angle:
                 return (0, 0.5, 1, 0.5)
             # top
-            case angle if -(pi - crit_angle) <= angle < -crit_angle or angle == 2 * pi:
+            case angle if -(pi - crit_angle) <= angle < -crit_angle:
                 return (0.5, 0, 0.5, 1)
             # right
-            case angle if -crit_angle <= angle < crit_angle:
+            case angle if -crit_angle <= angle < crit_angle  or angle == 2 * pi:
                 return (0, 0.5, 1, 0.5)
             # bottom
             case angle if crit_angle <= angle < (pi - crit_angle):

@@ -10,6 +10,9 @@ from networkx import DiGraph
 from thefuzz import process
 
 from cemento.draw_io.constants import (
+    FILL_COLOR,
+    SHAPE_HEIGHT,
+    SHAPE_WIDTH,
     Connector,
     DiagramInfo,
     DiagramKey,
@@ -311,6 +314,9 @@ def generate_shapes(
     offset_x: int = 0,
     offset_y: int = 0,
     idx_start: int = 0,
+    shape_color: str = FILL_COLOR,
+    shape_height: int = SHAPE_HEIGHT,
+    shape_width: int = SHAPE_WIDTH,
 ) -> list[Shape]:
     shapes = []
     for idx, node in enumerate(graph.nodes):
@@ -323,11 +329,11 @@ def generate_shapes(
             Shape(
                 shape_id=entity_id,
                 shape_content=node_content,
-                fill_color="#f2f3f4",
+                fill_color=shape_color,
                 x_pos=shape_pos_x,
                 y_pos=shape_pos_y,
-                shape_width=200,
-                shape_height=80,
+                shape_width=shape_width,
+                shape_height=shape_height,
             )
         )
     return shapes
