@@ -42,6 +42,7 @@ from cemento.rdf.transforms import (
     get_term_types,
     get_term_value,
     substitute_term,
+    infer_predicate_type
 )
 
 
@@ -180,7 +181,7 @@ def convert_graph_to_ttl(
         if term_not_in_default_namespace(
             term, inv_prefixes, default_namespace_prefixes
         ):
-            term_type = term_types[term]
+            term_type = term_types[term] if term in term_types else OWL.ObjectProperty
             rdf_graph.add((term, RDF.type, term_type))
 
     term_in_search_results_filter = partial(
