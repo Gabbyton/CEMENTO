@@ -1,6 +1,7 @@
 import re
 from collections import defaultdict
 from collections.abc import Callable, Iterable
+from itertools import chain, groupby
 
 import networkx as nx
 from networkx import DiGraph
@@ -209,12 +210,17 @@ def add_domains_ranges(
 
 
 def get_aliases(rdf_graph: Graph) -> dict[URIRef, Literal]:
-    aliases = defaultdict(list)
-    for subj, pred, obj in rdf_graph:
-        if pred == RDFS.label or pred == SKOS.altLabel:
-            aliases[subj].append(obj)
-
-    return aliases
+    label_tuples = list(
+        chain(
+            rdf_graph.subject_objects(RDFS.label),
+            rdf_graph.subject_objects(SKOS.altLabel),
+        )
+    )
+    sorted(label_tuples, key=lambda x: x[0])
+    return {
+        subj: [obj for _, obj in objs]
+        for subj, objs in groupby(label_tuples, key=lambda x: x[0])
+    }
 
 
 def get_term_types(rdf_graph: Graph) -> dict[URIRef, URIRef]:
@@ -243,12 +249,13 @@ def get_classes(
         and obj not in default_terms
         and term_types[subj] == OWL.Class
     }
-    return instance_superclasses | {
+    subclass_terms = {
         term
         for subj, pred, obj in rdf_graph
         if pred == RDFS.subClassOf
         for term in (subj, obj)
     }
+    return instance_superclasses | subclass_terms
 
 
 def get_predicates(rdf_graph: Graph, default_terms: set[URIRef]) -> set[URIRef]:
@@ -257,17 +264,17 @@ def get_predicates(rdf_graph: Graph, default_terms: set[URIRef]) -> set[URIRef]:
 
 def get_graph_relabel_mapping(
     terms: URIRef,
-    aliases: dict[URIRef, Literal],
-    inv_prefix: dict[URIRef | Namespace, str],
     all_classes: set[URIRef],
     all_instances: set[URIRef],
+    aliases: dict[URIRef, Literal],
+    inv_prefix: dict[URIRef | Namespace, str],
 ) -> dict[URIRef, str]:
     rename_mapping = dict()
     for term in terms:
         ns, abbrev_term = split_uri(term)
         prefix = inv_prefix[ns]
         new_name = f"{prefix}:{abbrev_term}"
-        if aliases[term]:
+        if term in aliases and aliases[term]:
             if term in all_classes or term in all_instances:
                 new_name += f" ({','.join(aliases[term])})"
             else:

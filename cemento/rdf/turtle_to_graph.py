@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import networkx as nx
 from networkx import DiGraph
 from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS, URIRef
@@ -13,7 +15,6 @@ from cemento.rdf.transforms import (
     get_term_types,
     rename_edges,
 )
-from pathlib import Path
 
 
 def convert_ttl_to_graph(input_path: str | Path) -> DiGraph:
@@ -48,10 +49,9 @@ def convert_ttl_to_graph(input_path: str | Path) -> DiGraph:
         all_terms = all_classes | all_instances | all_predicates | default_terms
         aliases = get_aliases(rdf_graph)
         rename_terms = get_graph_relabel_mapping(
-            all_terms, aliases, inv_prefix, all_classes, all_instances
+            all_terms, all_classes, all_instances, aliases, inv_prefix
         )
+
         graph = nx.relabel_nodes(graph, rename_terms)
         graph = rename_edges(graph, rename_terms)
-
-        print(graph.nodes)
         return graph
