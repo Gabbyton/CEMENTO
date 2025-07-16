@@ -41,8 +41,7 @@ from cemento.rdf.transforms import (
     get_term_search_keys,
     get_term_types,
     get_term_value,
-    substitute_term,
-    infer_predicate_type
+    substitute_term
 )
 
 

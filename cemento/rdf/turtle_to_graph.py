@@ -27,7 +27,7 @@ def convert_ttl_to_graph(input_path: str | Path) -> DiGraph:
         prefixes.update(
             {
                 prefix: ns
-                for prefix, ns in zip(default_namespace_prefixes, default_namespaces)
+                for prefix, ns in zip(default_namespace_prefixes, default_namespaces, strict=True)
             }
         )
 
