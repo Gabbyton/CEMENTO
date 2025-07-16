@@ -231,7 +231,7 @@ def get_instances(
     rdf_graph: Graph, default_terms: set[URIRef], term_types: dict[URIRef, URIRef]
 ) -> set[URIRef]:
     return {
-        obj
+        subj
         for subj, pred, obj in rdf_graph
         if pred == RDF.type
         and obj not in default_terms
@@ -293,8 +293,11 @@ def get_graph(
             and subj not in default_terms
             and obj not in default_terms
         ):
-            is_rank = pred == RDF.type or pred == RDFS.subClassOf
-            graph.add_edge(obj, subj, label=pred, is_rank=is_rank)
+            is_rank = pred in {RDF.type, RDFS.subClassOf}
+            if is_rank:
+                graph.add_edge(subj, obj, label=pred, is_rank=is_rank)
+            else:
+                graph.add_edge(obj, subj, label=pred, is_rank=is_rank)
     return graph
 
 
@@ -304,6 +307,7 @@ def rename_edges(graph: DiGraph, rename_mapping: dict[URIRef, str]) -> DiGraph:
     for subj, obj, data in graph.edges(data=True):
         pred = data["label"]
         new_edge_label = rename_mapping[pred]
-        edge_rename_mapping[(subj, obj)] = {"label": new_edge_label}
+        data.update({"label": new_edge_label})
+        edge_rename_mapping[(subj, obj)] = data
     nx.set_edge_attributes(graph, edge_rename_mapping)
     return graph

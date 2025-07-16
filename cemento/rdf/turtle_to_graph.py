@@ -44,6 +44,7 @@ def convert_ttl_to_graph(input_path: str | Path) -> DiGraph:
         all_classes = get_classes(rdf_graph, default_terms, term_types)
         all_instances = get_instances(rdf_graph, default_terms, term_types)
         all_predicates = get_predicates(rdf_graph, default_terms)
+        all_predicates.update([RDF.type, RDFS.subClassOf])
         graph = get_graph(rdf_graph, all_predicates, default_terms)
 
         all_terms = all_classes | all_instances | all_predicates | default_terms
@@ -51,7 +52,6 @@ def convert_ttl_to_graph(input_path: str | Path) -> DiGraph:
         rename_terms = get_graph_relabel_mapping(
             all_terms, all_classes, all_instances, aliases, inv_prefix
         )
-
         graph = nx.relabel_nodes(graph, rename_terms)
         graph = rename_edges(graph, rename_terms)
         return graph
