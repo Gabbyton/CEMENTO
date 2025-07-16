@@ -1,3 +1,4 @@
+from copy import deepcopy
 from functools import partial, reduce
 from itertools import filterfalse
 from pathlib import Path
@@ -9,6 +10,7 @@ from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS
 
 from cemento.rdf.filters import term_in_search_results, term_not_in_default_namespace
 from cemento.rdf.io import (
+    combine_graphs,
     get_diagram_terms_iter,
     get_diagram_terms_iter_with_pred,
     get_search_terms_from_defaults,
@@ -35,10 +37,11 @@ from cemento.rdf.transforms import (
     get_class_terms,
     get_doms_ranges,
     get_literal_data_type,
+    get_literal_lang_annotation,
     get_term_search_keys,
+    get_term_types,
     get_term_value,
     substitute_term,
-    get_literal_lang_annotation
 )
 
 
@@ -56,7 +59,10 @@ def convert_graph_to_ttl(
         prefixes = read_prefixes_from_json(prefixes_path)
 
     default_namespace_prefixes = {
-        prefix: ns for prefix, ns in zip(default_namespace_prefixes, default_namespaces)
+        prefix: ns
+        for prefix, ns in zip(
+            default_namespace_prefixes, default_namespaces, strict=True
+        )
     }
     prefixes.update(default_namespace_prefixes)
 
@@ -132,7 +138,9 @@ def convert_graph_to_ttl(
     constructed_terms.update(substitution_results)
     constructed_literal_terms = {
         term: construct_literal(
-            term, lang=get_literal_lang_annotation(term), datatype=get_literal_data_type(term, search_terms)
+            term,
+            lang=get_literal_lang_annotation(term),
+            datatype=get_literal_data_type(term, search_terms),
         )
         for term in literal_terms
     }
@@ -163,12 +171,17 @@ def convert_graph_to_ttl(
         rdf_graph.add((term, RDF.type, OWL.Class))
 
     # if the term is a predicate and is not part of the default namespaces, add an object property type to the ttl file
+    ref_graph = deepcopy(rdf_graph)
+    if onto_ref_folder:
+        ref_graph += combine_graphs(get_ttl_file_iter(onto_ref_folder))
+    term_types = get_term_types(ref_graph)
     for term in predicate_terms:
         # TODO: Assume all predicates are object properties for now, change later
         if term_not_in_default_namespace(
             term, inv_prefixes, default_namespace_prefixes
         ):
-            rdf_graph.add((term, RDF.type, OWL.ObjectProperty))
+            term_type = term_types[term]
+            rdf_graph.add((term, RDF.type, term_type))
 
     term_in_search_results_filter = partial(
         term_in_search_results, inv_prefixes=inv_prefixes, search_terms=search_terms
@@ -179,34 +192,37 @@ def convert_graph_to_ttl(
         default_namespace_prefixes=default_namespace_prefixes,
     )
 
-    exact_match_property_predicates = [RDF.value, RDFS.label]
-    exact_match_properties = {
-        term: {prop: value}
-        for prop in exact_match_property_predicates
-        for result in map(
-            lambda rdf_graph, prop=prop: map(
-                lambda graph_term: (
-                    graph_term,
-                    get_term_value(subj=graph_term, pred=prop, ref_rdf_graph=rdf_graph),
+    if onto_ref_folder:
+        exact_match_property_predicates = [RDF.value, RDFS.label]
+        exact_match_properties = {
+            term: {prop: value}
+            for prop in exact_match_property_predicates
+            for result in map(
+                lambda rdf_graph, prop=prop: map(
+                    lambda graph_term: (
+                        graph_term,
+                        get_term_value(
+                            subj=graph_term, pred=prop, ref_rdf_graph=ref_graph
+                        ),
+                    ),
+                    all_terms,
                 ),
-                all_terms,
+                get_ttl_file_iter(onto_ref_folder),
+            )
+            for term, value in result
+        }
+        rdf_graph = reduce(
+            lambda rdf_graph, graph_term: add_exact_matches(
+                term=graph_term,
+                match_properties=exact_match_properties[graph_term],
+                rdf_graph=rdf_graph,
             ),
-            get_ttl_file_iter(onto_ref_folder),
+            filter(
+                term_in_search_results_filter,
+                filter(term_not_in_default_namespace_filter, all_terms),
+            ),
+            rdf_graph,
         )
-        for term, value in result
-    }
-    rdf_graph = reduce(
-        lambda rdf_graph, graph_term: add_exact_matches(
-            term=graph_term,
-            match_properties=exact_match_properties[graph_term],
-            rdf_graph=rdf_graph,
-        ),
-        filter(
-            term_in_search_results_filter,
-            filter(term_not_in_default_namespace_filter, all_terms),
-        ),
-        rdf_graph,
-    )
     rdf_graph = reduce(
         lambda rdf_graph, graph_term: add_labels(
             term=graph_term,
