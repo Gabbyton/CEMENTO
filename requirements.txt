@@ -5,3 +5,5 @@ pandas>=2.2.2
 rdflib
 thefuzz
 tldextract
+build
+twine
