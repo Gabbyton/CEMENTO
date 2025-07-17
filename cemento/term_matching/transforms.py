@@ -2,8 +2,7 @@ import re
 from collections.abc import Iterable
 from itertools import chain, groupby
 
-from rdflib import Namespace, URIRef
-from rdflib import RDF, RDFS, SKOS, Graph, Literal
+from rdflib import RDF, RDFS, SKOS, Graph, Literal, Namespace, URIRef
 from rdflib.namespace import split_uri
 from thefuzz import fuzz, process
 
