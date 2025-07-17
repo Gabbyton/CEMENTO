@@ -1,6 +1,7 @@
 import re
 from collections import defaultdict
 from collections.abc import Callable, Iterable
+from functools import reduce
 from itertools import chain, groupby
 
 import networkx as nx
@@ -170,13 +171,22 @@ def add_exact_matches(
     return rdf_graph
 
 
-def add_labels(term: URIRef, labels: list[str], rdf_graph: Graph) -> Graph:
+def add_rdf_triples(
+    rdf_graph: Graph, triples: tuple[URIRef | Literal, URIRef, URIRef | Literal]
+) -> Graph:
+    # TODO: set to strictly immutable rdf_graph
+    return reduce(lambda graph, triple: graph.add(triple), triples, rdf_graph)
+
+
+def add_labels(rdf_graph: Graph, term: URIRef, labels: list[str]) -> Graph:
     # assume the first element of the labels is the actual label, others are alt-names
+    # TODO: set to strictly immutable rdf_graph
     if labels:
-        rdf_graph.add((term, RDFS.label, Literal(labels[0])))
+        rdf_graph = rdf_graph.add((term, RDFS.label, Literal(labels[0])))
         if len(labels) > 1:
-            for label in labels[1:]:
-                rdf_graph.add((term, SKOS.altLabel, Literal(label)))
+            rdf_graph = add_rdf_triples(
+                rdf_graph, ((term, SKOS.altLabel, Literal(label)) for label in labels[1:])
+            )
     return rdf_graph
 
 
