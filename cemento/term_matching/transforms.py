@@ -1,5 +1,6 @@
 import re
 from collections.abc import Iterable
+from functools import reduce
 from itertools import chain, groupby
 
 from rdflib import RDF, RDFS, SKOS, Graph, Literal, Namespace, URIRef
@@ -92,3 +93,7 @@ def get_aliases(rdf_graph: Graph) -> dict[URIRef, Literal]:
 
 def get_term_types(rdf_graph: Graph) -> dict[URIRef, URIRef]:
     return {subj: obj for subj, pred, obj in rdf_graph if pred == RDF.type}
+
+
+def combine_graphs(graphs: Iterable[Graph]) -> Graph:
+    return reduce(lambda acc, graph: acc + graph, graphs, Graph())

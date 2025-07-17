@@ -10,14 +10,9 @@ from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS
 
 from cemento.rdf.filters import term_in_search_results, term_not_in_default_namespace
 from cemento.rdf.io import (
-    combine_graphs,
     get_diagram_terms_iter,
     get_diagram_terms_iter_with_pred,
-    get_search_terms_from_defaults,
-    get_search_terms_from_graph,
     get_ttl_file_iter,
-    read_prefixes_from_graph,
-    read_prefixes_from_json,
 )
 from cemento.rdf.preprocessing import (
     generate_residual_prefixes,
@@ -39,8 +34,15 @@ from cemento.rdf.transforms import (
     get_term_value,
     substitute_term,
 )
+from cemento.term_matching.io import (
+    get_search_terms_from_defaults,
+    get_search_terms_from_graph,
+    read_prefixes_from_graph,
+    read_prefixes_from_json,
+)
 from cemento.term_matching.transforms import (
     add_exact_matches,
+    combine_graphs,
     get_term_search_keys,
     get_term_types,
 )
