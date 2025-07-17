@@ -1,6 +1,6 @@
 import importlib.resources as pkg_resources
 import os
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Container, Iterable
 from dataclasses import asdict
 from itertools import accumulate
 from pathlib import Path
@@ -101,6 +101,21 @@ def extract_elements(
     return term_ids, rel_ids
 
 
+def get_term_matches(
+    term: str, search_pool: Container[str], score_cutoff: int = None
+) -> tuple[str, int]:
+    return process.extractOne(
+        term.lower(),
+        [search_term.lower() for search_term in search_pool],
+        score_cutoff=score_cutoff,
+    )
+
+
+def substitute_rank(term: str, rank_terms: set[str], score_cutoff=85) -> str:
+    matched_rank_term, score = get_term_matches(term, rank_terms)
+    return matched_rank_term if score > score_cutoff else term
+
+
 def generate_graph(
     elements: dict[str, dict[str, any]],
     term_ids: set[str],
@@ -121,14 +136,20 @@ def generate_graph(
         obj_id = elements[rel_id]["target"]
         pred = clean_term(elements[rel_id]["value"])
 
+        # new_pred = substitute_rank(pred, rank_terms)
+        # is_strat = new_pred != pred
+        # pred = new_pred
+
         matched_rank_pred, score = process.extractOne(
             pred.lower(), [rank_term.lower() for rank_term in rank_terms]
         )
         is_rank = score > 85
+        print(pred, matched_rank_pred, score, is_rank)
         pred = matched_rank_pred if is_rank else pred
+        is_strat = is_rank
 
         # arrow conventions are inverted for rank relationships, flip assignments to conform
-        if inverted_rank_arrow and is_rank:
+        if inverted_rank_arrow and is_strat:
             temp = subj_id
             subj_id = obj_id
             obj_id = temp
@@ -138,7 +159,7 @@ def generate_graph(
             obj_id,
             label=pred,
             pred_id=rel_id,
-            is_rank=is_rank,
+            is_strat=is_strat,
             is_predicate=True,
         )
 
@@ -156,16 +177,22 @@ def relabel_graph_nodes(
     return nx.relabel_nodes(graph, relabel_mapping)
 
 
-def get_ranked_subgraph(graph: DiGraph) -> DiGraph:
-    ranked_subgraph = graph.copy()
-    ranked_subgraph.remove_edges_from(
+def filter_graph(
+    graph: DiGraph, data_filter: Callable[[dict[str, any]], bool]
+) -> DiGraph:
+    filtered_graph = graph.copy()
+    filtered_graph.remove_edges_from(
         [
             (subj, obj)
             for subj, obj, data in graph.edges(data=True)
-            if not data["is_rank"]
+            if (not data_filter(data) if data_filter else False)
         ]
     )
-    return ranked_subgraph
+    return filtered_graph
+
+
+def get_ranked_subgraph(graph: DiGraph) -> DiGraph:
+    return filter_graph(graph, lambda data: data["is_strat"])
 
 
 def get_subgraphs(graph: DiGraph) -> list[DiGraph]:
@@ -411,7 +438,7 @@ def get_rank_connectors(
 ) -> list[Connector]:
     rank_edges = map(
         lambda edge: NxEdge(subj=edge.subj, obj=edge.obj, pred=edge.pred),
-        get_graph_edges(graph, data_filter=lambda data: data["is_rank"]),
+        get_graph_edges(graph, data_filter=lambda data: data["is_strat"]),
     )
     rank_edges = remove_predicate_quotes(rank_edges)
     rank_edges = list(rank_edges)
@@ -434,7 +461,7 @@ def get_predicate_connectors(
 ) -> list[Connector]:
     property_edges = map(
         lambda edge: NxEdge(subj=edge.subj, obj=edge.obj, pred=edge.pred),
-        get_graph_edges(graph, data_filter=lambda data: not data["is_rank"]),
+        get_graph_edges(graph, data_filter=lambda data: not data["is_strat"]),
     )
     property_edges = remove_predicate_quotes(property_edges)
     property_edges = list(property_edges)
@@ -458,7 +485,7 @@ def get_rank_connectors_from_trees(
     connector_idcs = accumulate(
         trees,
         lambda idx, graph: idx
-        + len(list(get_graph_edges(graph, lambda data: data["is_rank"]))) * 2,
+        + len(list(get_graph_edges(graph, lambda data: data["is_strat"]))) * 2,
         initial=entity_idx_start,
     )
     rank_connectors_list = map(
