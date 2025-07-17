@@ -2,7 +2,6 @@ import importlib.resources as pkg_resources
 import os
 from collections.abc import Callable, Iterable
 from dataclasses import asdict
-from functools import partial
 from itertools import accumulate
 from pathlib import Path
 from string import Template
@@ -25,7 +24,8 @@ from cemento.draw_io.constants import (
     NxStringEdge,
     Shape,
 )
-from cemento.draw_io.preprocessing import clean_term, fst, remove_predicate_quotes, snd
+from cemento.draw_io.preprocessing import clean_term, remove_predicate_quotes
+from cemento.utils.utils import fst, snd
 
 
 def parse_elements(file_path: str | Path) -> dict[str, dict[str, any]]:
@@ -410,7 +410,7 @@ def get_rank_connectors(
     entity_idx_start: int = 0,
 ) -> list[Connector]:
     rank_edges = map(
-        lambda edge: NxEdge(*edge),
+        lambda edge: NxEdge(subj=edge.subj, obj=edge.obj, pred=edge.pred),
         get_graph_edges(graph, data_filter=lambda data: data["is_rank"]),
     )
     rank_edges = remove_predicate_quotes(rank_edges)
@@ -433,7 +433,7 @@ def get_predicate_connectors(
     entity_idx_start: int = 0,
 ) -> list[Connector]:
     property_edges = map(
-        lambda edge: NxEdge(*edge),
+        lambda edge: NxEdge(subj=edge.subj, obj=edge.obj, pred=edge.pred),
         get_graph_edges(graph, data_filter=lambda data: not data["is_rank"]),
     )
     property_edges = remove_predicate_quotes(property_edges)
@@ -455,15 +455,21 @@ def get_rank_connectors_from_trees(
     diagram_uid: str,
     entity_idx_start: int = 0,
 ) -> list[Connector]:
-    rank_connectors_list = map(
-        partial(
-            get_rank_connectors,
-            shape_positions=shape_positions,
-            shape_ids=shape_ids,
-            diagram_uid=diagram_uid,
-            entity_idx_start=entity_idx_start,
-        ),
+    connector_idcs = accumulate(
         trees,
+        lambda idx, graph: idx
+        + len(list(get_graph_edges(graph, lambda data: data["is_rank"]))) * 2,
+        initial=entity_idx_start,
+    )
+    rank_connectors_list = map(
+        lambda tree_info: get_rank_connectors(
+            fst(tree_info),
+            shape_positions,
+            shape_ids,
+            diagram_uid,
+            entity_idx_start=snd(tree_info),
+        ),
+        zip(trees, connector_idcs, strict=False),
     )
     return [
         connector for connectors in rank_connectors_list for connector in connectors

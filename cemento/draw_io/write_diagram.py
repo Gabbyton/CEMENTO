@@ -3,6 +3,7 @@ from uuid import uuid4
 
 from networkx import DiGraph
 
+from cemento.draw_io.preprocessing import replace_term_quotes
 from cemento.draw_io.transforms import (
     compute_draw_positions,
     compute_grid_allocations,
@@ -27,6 +28,9 @@ def draw_tree(
     horizontal_tree: bool = False,
 ) -> None:
     diagram_output_path = Path(diagram_output_path)
+
+    graph = replace_term_quotes(graph)
+
     ranked_graph = get_ranked_subgraph(graph)
     ranked_graph = ranked_graph.reverse(copy=True)
     ranked_subtrees = get_subgraphs(ranked_graph)
@@ -69,12 +73,13 @@ def draw_tree(
         diagram_uid,
         entity_idx_start=entity_idx_start + 1,
     )
+    entity_idx_start += len(connectors) * 2
     predicate_connectors = get_predicate_connectors(
         graph,
         shape_positions,
         new_shape_ids,
         diagram_uid,
-        entity_idx_start=entity_idx_start + len(connectors) * 2 + 1,
+        entity_idx_start=entity_idx_start + 1,
     )
 
     write_content = generate_diagram_content(
