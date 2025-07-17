@@ -17,6 +17,10 @@ def term_not_in_default_namespace(
     inv_prefixes: dict[URIRef | Namespace, str],
     default_namespace_prefixes: dict[str, Namespace],
 ) -> bool:
-    ns, abbrev_term = split_uri(term)
+    # assume all default namespaces terms are resolvable by split_uri
+    try:
+        ns, abbrev_term = split_uri(term)
+    except ValueError:
+        return False
     prefix = inv_prefixes[str(ns)]
     return prefix not in default_namespace_prefixes
