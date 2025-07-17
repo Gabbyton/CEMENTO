@@ -4,17 +4,16 @@ import networkx as nx
 from networkx import DiGraph
 from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS, URIRef
 
-from cemento.rdf.io import read_ttl
+from cemento.term_matching.io import read_ttl
 from cemento.rdf.transforms import (
-    get_aliases,
     get_classes,
     get_graph,
     get_graph_relabel_mapping,
     get_instances,
     get_predicates,
-    get_term_types,
     rename_edges,
 )
+from cemento.term_matching.transforms import get_aliases, get_term_types
 
 
 def convert_ttl_to_graph(input_path: str | Path) -> DiGraph:

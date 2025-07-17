@@ -74,7 +74,7 @@ def get_search_terms_from_graph(
             except ValueError:
                 is_literal = not is_literal
 
-            if not is_literal:
+            if not is_literal and str(ns) in inv_prefixes:
                 prefix = inv_prefixes[str(ns)]
                 search_terms[f"{prefix}:{abbrev_term}"] = term
 

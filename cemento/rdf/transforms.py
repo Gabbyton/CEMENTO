@@ -195,11 +195,12 @@ def get_graph(
             and subj not in default_terms
             and obj not in default_terms
         ):
-            is_rank = pred in {RDF.type, RDFS.subClassOf}
-            if is_rank:
-                graph.add_edge(subj, obj, label=pred, is_rank=is_rank)
+            # TODO: add pred check here for annotations
+            is_strat = pred in {RDF.type, RDFS.subClassOf}
+            if is_strat:
+                graph.add_edge(subj, obj, label=pred, is_strat=is_strat)
             else:
-                graph.add_edge(obj, subj, label=pred, is_rank=is_rank)
+                graph.add_edge(obj, subj, label=pred, is_strat=is_strat)
     return graph
 
 
