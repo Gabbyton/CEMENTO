@@ -7,5 +7,6 @@ dist
 test_cases/out/
 sandbox/
 data/
-*test*.py
 !data/xsd.ttl
+defaults
+*test*.py
