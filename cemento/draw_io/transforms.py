@@ -425,24 +425,30 @@ def get_predicate_connectors(
     diagram_uid: str,
     entity_idx_start: int = 0,
 ):
-    predicate_connectors = []
     connector_idx = entity_idx_start + 1
-    property_edges = (
+    property_edges = [
         (subj, obj, data["label"])
         for subj, obj, data in graph.edges(data=True)
         if not data["is_rank"]
+    ]
+    connector_ids = (
+        f"{diagram_uid}-{idx + connector_idx}"
+        for idx in range(0, len(property_edges) * 2, 2)
     )
-    for subj, obj, pred in property_edges:
-        new_connector = GhostConnector(
-            connector_id=f"{diagram_uid}-{connector_idx}",
+    connector_label_ids = (
+        f"{diagram_uid}-{idx + connector_idx + 1}"
+        for idx in range(0, len(property_edges) * 2, 2)
+    )
+    predicate_connectors = [
+        GhostConnector(
+            connector_id=connector_id,
             source_id=shape_ids[subj],
             target_id=shape_ids[obj],
-            connector_label_id=f"{diagram_uid}-{connector_idx + 1}",
+            connector_label_id=connector_label_id,
             connector_val=pred,
         )
-        predicate_connectors.append(new_connector)
-        new_connector.resolve_position(
-            "property", shape_positions[subj], shape_positions[obj]
+        for (connector_id, connector_label_id, (subj, obj, pred)) in zip(
+            connector_ids, connector_label_ids, property_edges, strict=True
         )
-        connector_idx += 2
+    ]
     return predicate_connectors
