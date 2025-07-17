@@ -111,9 +111,14 @@ def get_term_matches(
     )
 
 
-def substitute_rank(term: str, rank_terms: set[str], score_cutoff=85) -> str:
+def substitute_rank(
+    term: str, rank_terms: set[str], score_cutoff=85
+) -> tuple[str, bool]:
     matched_rank_term, score = get_term_matches(term, rank_terms)
-    return matched_rank_term if score > score_cutoff else term
+    return (
+        matched_rank_term if (meets_cutoff := score > score_cutoff) else term,
+        meets_cutoff,
+    )
 
 
 def generate_graph(
@@ -136,16 +141,7 @@ def generate_graph(
         obj_id = elements[rel_id]["target"]
         pred = clean_term(elements[rel_id]["value"])
 
-        # new_pred = substitute_rank(pred, rank_terms)
-        # is_strat = new_pred != pred
-        # pred = new_pred
-
-        matched_rank_pred, score = process.extractOne(
-            pred.lower(), [rank_term.lower() for rank_term in rank_terms]
-        )
-        is_rank = score > 85
-        print(pred, matched_rank_pred, score, is_rank)
-        pred = matched_rank_pred if is_rank else pred
+        pred, is_rank = substitute_rank(pred, rank_terms)
         is_strat = is_rank
 
         # arrow conventions are inverted for rank relationships, flip assignments to conform
