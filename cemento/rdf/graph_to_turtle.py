@@ -40,7 +40,7 @@ from cemento.term_matching.transforms import (
     get_term_search_keys,
     get_term_types,
 )
-from cemento.utils.utils import get_abbrev_term
+from cemento.utils.utils import get_abbrev_term, fst, snd
 
 
 def convert_graph_to_ttl(
@@ -67,14 +67,13 @@ def convert_graph_to_ttl(
         term: term_uri_ref
         for term, term_uri_ref in map(
             lambda term_info: (
-                term_info[0],
-                # TODO: replace with fst and snd once utils functions have their own module
+                fst(term_info),
                 construct_term_uri(
-                    *get_abbrev_term(term_info[0], term_info[1]), prefixes=prefixes
+                    *get_abbrev_term(fst(term_info), snd(term_info[1])), prefixes=prefixes
                 ),
             ),
             filter(
-                lambda term_info: term_info[0] not in literal_terms,
+                lambda term_info: fst(term_info) not in literal_terms,
                 get_diagram_terms_iter_with_pred(graph),
             ),
         )
