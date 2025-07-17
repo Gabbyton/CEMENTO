@@ -6,19 +6,15 @@ from pathlib import Path
 import networkx as nx
 import rdflib
 from networkx import DiGraph
-from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS
+from rdflib import OWL, RDF, RDFS
 
 from cemento.rdf.filters import term_in_search_results, term_not_in_default_namespace
 from cemento.rdf.io import (
     get_diagram_terms_iter,
     get_diagram_terms_iter_with_pred,
-    get_ttl_file_iter,
 )
 from cemento.rdf.preprocessing import (
-    generate_residual_prefixes,
-    get_abbrev_term,
     get_term_aliases,
-    merge_dictionaries,
 )
 from cemento.rdf.transforms import (
     add_domains_ranges,
@@ -34,18 +30,17 @@ from cemento.rdf.transforms import (
     get_term_value,
     substitute_term,
 )
-from cemento.term_matching.io import (
-    get_search_terms_from_defaults,
-    get_search_terms_from_graph,
-    read_prefixes_from_graph,
-    read_prefixes_from_json,
-)
+from cemento.term_matching.constants import get_default_namespace_prefixes
+from cemento.term_matching.io import get_ttl_file_iter
 from cemento.term_matching.transforms import (
     add_exact_matches,
     combine_graphs,
+    get_prefixes,
+    get_search_terms,
     get_term_search_keys,
     get_term_types,
 )
+from cemento.utils.utils import get_abbrev_term
 
 
 def convert_graph_to_ttl(
@@ -54,48 +49,8 @@ def convert_graph_to_ttl(
     onto_ref_folder: str | Path = None,
     prefixes_path: str | Path = None,
 ) -> None:
-    default_namespaces = [RDF, RDFS, OWL, DCTERMS, SKOS]
-    default_namespace_prefixes = ["rdf", "rdfs", "owl", "dcterms", "skos"]
-
-    prefixes = dict()
-    if prefixes_path:
-        prefixes = read_prefixes_from_json(prefixes_path)
-
-    default_namespace_prefixes = {
-        prefix: ns
-        for prefix, ns in zip(
-            default_namespace_prefixes, default_namespaces, strict=True
-        )
-    }
-    prefixes.update(default_namespace_prefixes)
-
-    if onto_ref_folder:
-        file_prefixes = map(
-            read_prefixes_from_graph, get_ttl_file_iter(onto_ref_folder)
-        )
-        prefixes |= merge_dictionaries(file_prefixes)
-        inv_prefixes = {value: key for key, value in prefixes.items()}
-
-        residual_file_prefixes = map(
-            partial(generate_residual_prefixes, inv_prefixes=inv_prefixes),
-            get_ttl_file_iter(onto_ref_folder),
-        )
-        residual_file_prefixes = {
-            key: value
-            for residual_prefixes in residual_file_prefixes
-            for key, value in residual_prefixes.items()
-        }
-        prefixes.update(residual_file_prefixes)
-        inv_prefixes = {value: key for key, value in prefixes.items()}
-
-    search_terms = get_search_terms_from_defaults(default_namespace_prefixes)
-
-    if onto_ref_folder:
-        file_search_terms = map(
-            partial(get_search_terms_from_graph, inv_prefixes=inv_prefixes),
-            get_ttl_file_iter(onto_ref_folder),
-        )
-        search_terms |= merge_dictionaries(file_search_terms)
+    prefixes, inv_prefixes = get_prefixes(prefixes_path, onto_ref_folder)
+    search_terms = get_search_terms(inv_prefixes, onto_ref_folder)
 
     aliases = {
         term: aliases
@@ -187,7 +142,7 @@ def convert_graph_to_ttl(
     term_not_in_default_namespace_filter = partial(
         term_not_in_default_namespace,
         inv_prefixes=inv_prefixes,
-        default_namespace_prefixes=default_namespace_prefixes,
+        default_namespace_prefixes=get_default_namespace_prefixes(),
     )
     term_type_subs = {
         key: value

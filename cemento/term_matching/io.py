@@ -1,7 +1,34 @@
 import json
+import os
+from collections.abc import Iterable
+from contextlib import contextmanager
+from pathlib import Path
 
 from rdflib import RDFS, SKOS, Graph, Namespace, URIRef
 from rdflib.namespace import split_uri
+
+
+def get_ttl_file_iter(folder_path: str | Path) -> Iterable[Graph]:
+    return (
+        get_ttl_graph(file_path)
+        for file in os.scandir(folder_path)
+        if (file_path := Path(file.path)).suffix == ".ttl"
+    )
+
+
+def get_ttl_graph(file_path: str | Path) -> Graph | None:
+    with read_ttl(file_path) as graph:
+        return graph
+
+
+@contextmanager
+def read_ttl(file_path: str | Path) -> Graph:
+    rdf_graph = Graph()
+    try:
+        rdf_graph.parse(file_path, format="turtle")
+        yield rdf_graph
+    finally:
+        rdf_graph.close()
 
 
 def read_prefixes_from_json(file_path: str) -> dict[str, URIRef]:
