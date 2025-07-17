@@ -19,8 +19,14 @@ def read_drawio(
     elements = parse_elements(input_path)
     term_ids, rel_ids = extract_elements(elements)
     rank_terms = ["rdfs:subClassOf", "rdf:type"]
+    annotation_terms = []
     graph = generate_graph(
-        elements, term_ids, rel_ids, rank_terms, inverted_rank_arrow=inverted_rank_arrow
+        elements,
+        term_ids,
+        rel_ids,
+        rank_terms,
+        annotation_terms,
+        inverted_rank_arrow=inverted_rank_arrow,
     )
     graph = relabel_graph_nodes(graph, new_attr_label=relabel_key.value)
     return graph

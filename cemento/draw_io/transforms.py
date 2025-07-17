@@ -111,10 +111,12 @@ def get_term_matches(
     )
 
 
-def substitute_rank(
-    term: str, rank_terms: set[str], score_cutoff=85
+def substitute_term(
+    term: str, search_terms: set[str], score_cutoff=85
 ) -> tuple[str, bool]:
-    matched_rank_term, score = get_term_matches(term, rank_terms)
+    matched_rank_term, score = (
+        match_res if (match_res := get_term_matches(term, search_terms)) else (None, 0)
+    )
     return (
         matched_rank_term if (meets_cutoff := score > score_cutoff) else term,
         meets_cutoff,
@@ -126,6 +128,7 @@ def generate_graph(
     term_ids: set[str],
     relationship_ids: set[str],
     rank_terms: set[str],
+    annotation_terms: set[str],
     inverted_rank_arrow: bool = False,
 ) -> DiGraph:
     # for identified connectors, extract relationship information
@@ -141,8 +144,9 @@ def generate_graph(
         obj_id = elements[rel_id]["target"]
         pred = clean_term(elements[rel_id]["value"])
 
-        pred, is_rank = substitute_rank(pred, rank_terms)
-        is_strat = is_rank
+        pred, is_rank = substitute_term(pred, rank_terms)
+        pred, is_annotation = substitute_term(pred, annotation_terms)
+        is_strat = is_rank or is_annotation
 
         # arrow conventions are inverted for rank relationships, flip assignments to conform
         if inverted_rank_arrow and is_strat:
@@ -155,6 +159,7 @@ def generate_graph(
             obj_id,
             label=pred,
             pred_id=rel_id,
+            is_rank=is_rank,
             is_strat=is_strat,
             is_predicate=True,
         )
