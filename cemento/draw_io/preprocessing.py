@@ -1,4 +1,12 @@
+from collections.abc import Iterable
+
 from bs4 import BeautifulSoup
+
+from cemento.draw_io.constants import NxEdge
+
+
+def remove_predicate_quotes(edges: Iterable[NxEdge]) -> Iterable[NxEdge]:
+    return map(lambda edge: (edge.subj, edge.obj, remove_quotes(edge.pred)), edges)
 
 
 def clean_term(term: str) -> str:

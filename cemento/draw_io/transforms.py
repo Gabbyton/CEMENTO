@@ -1,7 +1,9 @@
 import importlib.resources as pkg_resources
 import os
+from collections.abc import Callable, Iterable
 from dataclasses import asdict
 from functools import partial
+from itertools import accumulate
 from pathlib import Path
 from string import Template
 
@@ -19,10 +21,11 @@ from cemento.draw_io.constants import (
     DiagramKey,
     DiagramObject,
     GhostConnector,
+    NxEdge,
     NxStringEdge,
     Shape,
 )
-from cemento.draw_io.preprocessing import clean_term, remove_quotes
+from cemento.draw_io.preprocessing import clean_term, fst, remove_predicate_quotes, snd
 
 
 def parse_elements(file_path: str | Path) -> dict[str, dict[str, any]]:
@@ -310,42 +313,6 @@ def translate_coords(
     return ((x_pos + origin_x) * grid_x, (y_pos + origin_y) * grid_y)
 
 
-def generate_shapes(
-    graph: DiGraph,
-    diagram_uid: str,
-    offset_x: int = 0,
-    offset_y: int = 0,
-    idx_start: int = 0,
-    shape_color: str = FILL_COLOR,
-    shape_height: int = SHAPE_HEIGHT,
-    shape_width: int = SHAPE_WIDTH,
-) -> list[Shape]:
-    nodes = [node for node in graph.nodes]
-    entity_ids = (f"{diagram_uid}-{idx + idx_start}" for idx in range(len(nodes)))
-    shape_pos_x = (graph.nodes[node]["draw_x"] + offset_x for node in nodes)
-    shape_pos_y = (graph.nodes[node]["draw_y"] + offset_y for node in nodes)
-    shape_positions = map(
-        lambda x: translate_coords(x[0], x[1]),
-        zip(shape_pos_x, shape_pos_y, strict=True),
-    )
-    node_contents = (node.replace('"', "&quot;") for node in nodes)
-    shapes = [
-        Shape(
-            shape_id=entity_id,
-            shape_content=node_content,
-            fill_color=shape_color,
-            x_pos=shape_pos_x,
-            y_pos=shape_pos_y,
-            shape_width=shape_width,
-            shape_height=shape_height,
-        )
-        for (entity_id, node_content, (shape_pos_x, shape_pos_y)) in zip(
-            entity_ids, node_contents, shape_positions, strict=True
-        )
-    ]
-    return shapes
-
-
 def get_template_files() -> dict[str, str | Path]:
     current_file_folder = Path(__file__)
     # retrieve the template folder from the grandparent directory
@@ -394,6 +361,17 @@ def get_shape_positions(shapes: list[Shape]) -> dict[str, tuple[float, float]]:
     return {shape.shape_content: (shape.x_pos, shape.y_pos) for shape in shapes}
 
 
+def get_graph_edges(
+    graph: DiGraph,
+    data_filter: Callable[[dict[str, any]], bool] = None,
+) -> Iterable[NxEdge]:
+    return (
+        NxEdge(subj=subj, obj=obj, pred=data["label"])
+        for subj, obj, data in graph.edges(data=True)
+        if data_filter(data)
+    )
+
+
 def get_connectors(
     edges: list[NxStringEdge | tuple[str, str, str]],
     shape_positions: dict[str, tuple[float, float]],
@@ -431,11 +409,12 @@ def get_rank_connectors(
     diagram_uid: str,
     entity_idx_start: int = 0,
 ) -> list[Connector]:
-    rank_edges = [
-        NxStringEdge(subj=subj, obj=obj, pred=remove_quotes(data["label"]))
-        for subj, obj, data in graph.edges(data=True)
-        if data["is_rank"]
-    ]
+    rank_edges = map(
+        lambda edge: NxEdge(*edge),
+        get_graph_edges(graph, data_filter=lambda data: data["is_rank"]),
+    )
+    rank_edges = remove_predicate_quotes(rank_edges)
+    rank_edges = list(rank_edges)
     return get_connectors(
         rank_edges,
         shape_positions,
@@ -453,11 +432,12 @@ def get_predicate_connectors(
     diagram_uid: str,
     entity_idx_start: int = 0,
 ) -> list[Connector]:
-    property_edges = [
-        NxStringEdge(subj=subj, obj=obj, pred=remove_quotes(data["label"]))
-        for subj, obj, data in graph.edges(data=True)
-        if not data["is_rank"]
-    ]
+    property_edges = map(
+        lambda edge: NxEdge(*edge),
+        get_graph_edges(graph, data_filter=lambda data: not data["is_rank"]),
+    )
+    property_edges = remove_predicate_quotes(property_edges)
+    property_edges = list(property_edges)
     return get_connectors(
         property_edges,
         shape_positions,
@@ -474,7 +454,7 @@ def get_rank_connectors_from_trees(
     shape_ids: dict[str, str],
     diagram_uid: str,
     entity_idx_start: int = 0,
-):
+) -> list[Connector]:
     rank_connectors_list = map(
         partial(
             get_rank_connectors,
@@ -488,3 +468,78 @@ def get_rank_connectors_from_trees(
     return [
         connector for connectors in rank_connectors_list for connector in connectors
     ]
+
+
+def generate_shapes(
+    graph: DiGraph,
+    diagram_uid: str,
+    offset_x: int = 0,
+    offset_y: int = 0,
+    idx_start: int = 0,
+    shape_color: str = FILL_COLOR,
+    shape_height: int = SHAPE_HEIGHT,
+    shape_width: int = SHAPE_WIDTH,
+) -> list[Shape]:
+    nodes = [node for node in graph.nodes]
+    entity_ids = (f"{diagram_uid}-{idx + idx_start}" for idx in range(len(nodes)))
+    shape_pos_x = (graph.nodes[node]["draw_x"] + offset_x for node in nodes)
+    shape_pos_y = (graph.nodes[node]["draw_y"] + offset_y for node in nodes)
+    shape_positions = map(
+        lambda x: translate_coords(x[0], x[1]),
+        zip(shape_pos_x, shape_pos_y, strict=True),
+    )
+    node_contents = (node.replace('"', "&quot;") for node in nodes)
+    shapes = [
+        Shape(
+            shape_id=entity_id,
+            shape_content=node_content,
+            fill_color=shape_color,
+            x_pos=shape_pos_x,
+            y_pos=shape_pos_y,
+            shape_width=shape_width,
+            shape_height=shape_height,
+        )
+        for (entity_id, node_content, (shape_pos_x, shape_pos_y)) in zip(
+            entity_ids, node_contents, shape_positions, strict=True
+        )
+    ]
+    return shapes
+
+
+def get_shapes_from_trees(
+    trees: list[DiGraph],
+    diagram_uid: str,
+    entity_idx_start: int = 0,
+    horizontal_tree: bool = False,
+) -> list[Shape]:
+    tree_sizes = map(get_tree_size, trees)
+    entity_index_starts = accumulate(
+        trees,
+        lambda acc, tree: acc + len(tree.nodes),
+        initial=entity_idx_start,
+    )
+    offsets = accumulate(
+        tree_sizes,
+        lambda acc, x: (fst(acc) + fst(x), snd(acc) + snd(x)),
+        initial=(0, 0),
+    )
+    offsets = map(
+        lambda x: (
+            fst(x) if not horizontal_tree else 0,
+            snd(x) if horizontal_tree else 0,
+        ),
+        offsets,
+    )
+    shapes_list = [
+        generate_shapes(
+            subtree,
+            diagram_uid,
+            offset_x=offset_x,
+            offset_y=offset_y,
+            idx_start=entity_idx_start,
+        )
+        for (subtree, (offset_x, offset_y), entity_idx_start) in zip(
+            trees, offsets, entity_index_starts, strict=False
+        )
+    ]
+    return [shape for shapes in shapes_list for shape in shapes]
