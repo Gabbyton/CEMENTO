@@ -368,7 +368,7 @@ def get_graph_edges(
     return (
         NxEdge(subj=subj, obj=obj, pred=data["label"])
         for subj, obj, data in graph.edges(data=True)
-        if data_filter(data)
+        if (data_filter(data) if data_filter else True)
     )
 
 

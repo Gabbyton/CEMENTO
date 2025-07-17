@@ -29,6 +29,7 @@ from cemento.rdf.transforms import (
     add_domains_ranges,
     add_exact_matches,
     add_labels,
+    add_rdf_triples,
     bind_prefixes,
     construct_literal,
     construct_term_uri,
@@ -169,29 +170,43 @@ def convert_graph_to_ttl(
     rdf_graph = bind_prefixes(rdf_graph, prefixes)
 
     # add all of the class terms as a type
-    for term in class_terms:
-        rdf_graph.add((term, RDF.type, OWL.Class))
+    rdf_graph = add_rdf_triples(
+        rdf_graph, ((term, RDF.type, OWL.Class) for term in class_terms)
+    )
 
     # if the term is a predicate and is not part of the default namespaces, add an object property type to the ttl file
     ref_graph = deepcopy(rdf_graph)
     if onto_ref_folder:
         ref_graph += combine_graphs(get_ttl_file_iter(onto_ref_folder))
     term_types = get_term_types(ref_graph)
-    for term in predicate_terms:
-        # TODO: Assume all predicates are object properties for now, change later
-        if term_not_in_default_namespace(
-            term, inv_prefixes, default_namespace_prefixes
-        ):
-            term_type = term_types[term] if term in term_types else OWL.ObjectProperty
-            rdf_graph.add((term, RDF.type, term_type))
 
-    term_in_search_results_filter = partial(
-        term_in_search_results, inv_prefixes=inv_prefixes, search_terms=search_terms
-    )
     term_not_in_default_namespace_filter = partial(
         term_not_in_default_namespace,
         inv_prefixes=inv_prefixes,
         default_namespace_prefixes=default_namespace_prefixes,
+    )
+    term_type_subs = {
+        key: value
+        for key, value in map(
+            lambda term: (
+                term,
+                term_types[term] if term in term_types else OWL.ObjectProperty,
+            ),
+            filter(term_not_in_default_namespace_filter, predicate_terms),
+        )
+    }
+    # Assume a custom property is just a property
+    # TODO: Add default schema files for rdf, rdfs and owl to get default namespace terms
+    rdf_graph = add_rdf_triples(
+        rdf_graph,
+        (
+            (term, RDF.type, term_type_subs[term])
+            for term in filter(term_not_in_default_namespace_filter, predicate_terms)
+        ),
+    )
+
+    term_in_search_results_filter = partial(
+        term_in_search_results, inv_prefixes=inv_prefixes, search_terms=search_terms
     )
 
     if onto_ref_folder:
