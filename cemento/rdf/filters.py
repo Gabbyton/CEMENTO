@@ -1,7 +1,7 @@
 from rdflib import Namespace, URIRef
 from rdflib.namespace import split_uri
 
-from cemento.rdf.transforms import get_term_search_result
+from cemento.term_matching.transforms import get_term_search_result
 
 
 def term_in_search_results(

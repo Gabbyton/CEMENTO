@@ -27,7 +27,6 @@ from cemento.rdf.preprocessing import (
 )
 from cemento.rdf.transforms import (
     add_domains_ranges,
-    add_exact_matches,
     add_labels,
     add_rdf_triples,
     bind_prefixes,
@@ -37,10 +36,13 @@ from cemento.rdf.transforms import (
     get_doms_ranges,
     get_literal_data_type,
     get_literal_lang_annotation,
-    get_term_search_keys,
-    get_term_types,
     get_term_value,
     substitute_term,
+)
+from cemento.term_matching.transforms import (
+    add_exact_matches,
+    get_term_search_keys,
+    get_term_types,
 )
 
 
