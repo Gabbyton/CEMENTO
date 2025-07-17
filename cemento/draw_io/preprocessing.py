@@ -4,7 +4,7 @@ import networkx as nx
 from bs4 import BeautifulSoup
 from networkx import DiGraph
 
-from cemento.draw_io.constants import NxEdge
+from cemento.draw_io.constants import NxEdge, Shape
 
 
 def replace_term_quotes(graph: DiGraph) -> DiGraph:
@@ -15,6 +15,10 @@ def replace_term_quotes(graph: DiGraph) -> DiGraph:
 def remove_predicate_quotes(edges: Iterable[NxEdge]) -> Iterable[NxEdge]:
     return map(lambda edge: (edge.subj, edge.obj, remove_quotes(edge.pred)), edges)
 
+def replace_shape_html_quotes(shape: Shape) -> Shape:
+    # TODO: implement immutable object copy
+    shape.shape_content = replace_quotes(shape.shape_content)
+    return shape
 
 def clean_term(term: str) -> str:
     soup = BeautifulSoup(term, "html.parser")

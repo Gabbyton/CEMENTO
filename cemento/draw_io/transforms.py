@@ -494,7 +494,7 @@ def generate_shapes(
         lambda x: translate_coords(x[0], x[1]),
         zip(shape_pos_x, shape_pos_y, strict=True),
     )
-    node_contents = (node.replace('"', "&quot;") for node in nodes)
+    node_contents = (node for node in nodes)
     shapes = [
         Shape(
             shape_id=entity_id,
