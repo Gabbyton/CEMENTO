@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from math import atan2, pi
+from typing import NamedTuple
 
 
 class DiagramKey(Enum):
@@ -69,7 +70,9 @@ class Connector(DiagramObject):
     ) -> tuple[float, float, float, float]:
         crit_angle = abs(atan2(SHAPE_HEIGHT, SHAPE_WIDTH))
         # apple around banana
-        current_angle = atan2(target_shape_y - source_shape_y, target_shape_x - source_shape_x)
+        current_angle = atan2(
+            target_shape_y - source_shape_y, target_shape_x - source_shape_x
+        )
         match current_angle:
             # left
             case angle if (
@@ -80,7 +83,7 @@ class Connector(DiagramObject):
             case angle if -(pi - crit_angle) <= angle < -crit_angle:
                 return (0.5, 0, 0.5, 1)
             # right
-            case angle if -crit_angle <= angle < crit_angle  or angle == 2 * pi:
+            case angle if -crit_angle <= angle < crit_angle or angle == 2 * pi:
                 return (0, 0.5, 1, 0.5)
             # bottom
             case angle if crit_angle <= angle < (pi - crit_angle):
@@ -113,10 +116,12 @@ class Connector(DiagramObject):
             case _:
                 return
 
+
 @dataclass
 class GhostConnector(Connector):
     is_curved: bool = 1
     is_dashed: bool = 1
+
 
 @dataclass
 class Shape:
@@ -128,3 +133,15 @@ class Shape:
     shape_width: int
     shape_height: int
     template_key: str = "shape"
+
+
+class NxEdge(NamedTuple):
+    subj: any
+    obj: any
+    pred: any
+
+
+class NxStringEdge(NxEdge):
+    subj: str
+    obj: str
+    pred: str

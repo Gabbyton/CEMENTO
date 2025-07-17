@@ -13,3 +13,7 @@ def fst(x: tuple[any, any]) -> any:
 
 def snd(x: tuple[any, any]) -> any:
     return x[1]
+
+
+def remove_quotes(input_str: str) -> str:
+    return input_str.replace('"', "").strip()

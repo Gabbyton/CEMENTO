@@ -12,7 +12,7 @@ from cemento.draw_io.transforms import (
     generate_shapes,
     get_graph_root_nodes,
     get_predicate_connectors,
-    get_rank_connectors,
+    get_rank_connectors_from_trees,
     get_ranked_subgraph,
     get_shape_ids,
     get_shape_positions,
@@ -92,15 +92,19 @@ def draw_tree(
     entity_idx_start = len(shapes)
     new_shape_ids = get_shape_ids(shapes)
     shape_positions = get_shape_positions(shapes)
-    connectors = get_rank_connectors(
-        ranked_subtrees, new_shape_ids, diagram_uid, entity_idx_start=entity_idx_start
+    connectors = get_rank_connectors_from_trees(
+        ranked_subtrees,
+        shape_positions,
+        new_shape_ids,
+        diagram_uid,
+        entity_idx_start=entity_idx_start + 1,
     )
     predicate_connectors = get_predicate_connectors(
         graph,
         shape_positions,
         new_shape_ids,
         diagram_uid,
-        entity_idx_start=entity_idx_start + len(connectors) * 2,
+        entity_idx_start=entity_idx_start + len(connectors) * 2 + 1,
     )
     write_content = generate_diagram_content(
         diagram_output_path.stem, diagram_uid, connectors, predicate_connectors, shapes

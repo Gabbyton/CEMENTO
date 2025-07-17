@@ -1,6 +1,7 @@
 import importlib.resources as pkg_resources
 import os
 from dataclasses import asdict
+from functools import partial
 from pathlib import Path
 from string import Template
 
@@ -18,9 +19,10 @@ from cemento.draw_io.constants import (
     DiagramKey,
     DiagramObject,
     GhostConnector,
+    NxStringEdge,
     Shape,
 )
-from cemento.draw_io.preprocessing import clean_term
+from cemento.draw_io.preprocessing import clean_term, remove_quotes
 
 
 def parse_elements(file_path: str | Path) -> dict[str, dict[str, any]]:
@@ -392,30 +394,56 @@ def get_shape_positions(shapes: list[Shape]) -> dict[str, tuple[float, float]]:
     return {shape.shape_content: (shape.x_pos, shape.y_pos) for shape in shapes}
 
 
-def get_rank_connectors(
-    trees: list[DiGraph],
+def get_connectors(
+    edges: list[NxStringEdge | tuple[str, str, str]],
+    shape_positions: dict[str, tuple[float, float]],
     shape_ids: dict[str, str],
     diagram_uid: str,
     entity_idx_start: int = 0,
-):
-    connectors = []
-    connector_idx = entity_idx_start + 1
-    for subtree in trees:
-        new_connectors = []
-        for subj, obj, data in subtree.edges(data=True):
-            pred = data["label"].replace('"', "").strip()
-            new_connectors.append(
-                Connector(
-                    connector_id=f"{diagram_uid}-{connector_idx}",
-                    source_id=shape_ids[subj],
-                    target_id=shape_ids[obj],
-                    connector_label_id=f"{diagram_uid}-{connector_idx + 1}",
-                    connector_val=pred,
-                )
-            )
-            connector_idx += 2
-        connectors.extend(new_connectors)
+    connector_type: type[Connector] = Connector,
+) -> list[Connector]:
+    connector_ids = (
+        f"{diagram_uid}-{idx + entity_idx_start}" for idx in range(0, len(edges) * 2, 2)
+    )
+    connector_label_ids = (
+        f"{diagram_uid}-{idx + entity_idx_start + 1}"
+        for idx in range(0, len(edges) * 2, 2)
+    )
+    connectors = [
+        connector_type(
+            connector_id=connector_id,
+            source_id=shape_ids[subj],
+            target_id=shape_ids[obj],
+            connector_label_id=connector_label_id,
+            connector_val=pred,
+        )
+        for (connector_id, connector_label_id, (subj, obj, pred)) in zip(
+            connector_ids, connector_label_ids, edges, strict=True
+        )
+    ]
     return connectors
+
+
+def get_rank_connectors(
+    graph: DiGraph,
+    shape_positions: dict[str, tuple[float, float]],
+    shape_ids: dict[str, str],
+    diagram_uid: str,
+    entity_idx_start: int = 0,
+) -> list[Connector]:
+    rank_edges = [
+        NxStringEdge(subj=subj, obj=obj, pred=remove_quotes(data["label"]))
+        for subj, obj, data in graph.edges(data=True)
+        if data["is_rank"]
+    ]
+    return get_connectors(
+        rank_edges,
+        shape_positions,
+        shape_ids,
+        diagram_uid,
+        entity_idx_start,
+        connector_type=Connector,
+    )
 
 
 def get_predicate_connectors(
@@ -424,31 +452,39 @@ def get_predicate_connectors(
     shape_ids: dict[str, str],
     diagram_uid: str,
     entity_idx_start: int = 0,
-):
-    connector_idx = entity_idx_start + 1
+) -> list[Connector]:
     property_edges = [
-        (subj, obj, data["label"])
+        NxStringEdge(subj=subj, obj=obj, pred=remove_quotes(data["label"]))
         for subj, obj, data in graph.edges(data=True)
         if not data["is_rank"]
     ]
-    connector_ids = (
-        f"{diagram_uid}-{idx + connector_idx}"
-        for idx in range(0, len(property_edges) * 2, 2)
+    return get_connectors(
+        property_edges,
+        shape_positions,
+        shape_ids,
+        diagram_uid,
+        entity_idx_start,
+        connector_type=GhostConnector,
     )
-    connector_label_ids = (
-        f"{diagram_uid}-{idx + connector_idx + 1}"
-        for idx in range(0, len(property_edges) * 2, 2)
+
+
+def get_rank_connectors_from_trees(
+    trees: list[DiGraph],
+    shape_positions: dict[str, tuple[float, float]],
+    shape_ids: dict[str, str],
+    diagram_uid: str,
+    entity_idx_start: int = 0,
+):
+    rank_connectors_list = map(
+        partial(
+            get_rank_connectors,
+            shape_positions=shape_positions,
+            shape_ids=shape_ids,
+            diagram_uid=diagram_uid,
+            entity_idx_start=entity_idx_start,
+        ),
+        trees,
     )
-    predicate_connectors = [
-        GhostConnector(
-            connector_id=connector_id,
-            source_id=shape_ids[subj],
-            target_id=shape_ids[obj],
-            connector_label_id=connector_label_id,
-            connector_val=pred,
-        )
-        for (connector_id, connector_label_id, (subj, obj, pred)) in zip(
-            connector_ids, connector_label_ids, property_edges, strict=True
-        )
+    return [
+        connector for connectors in rank_connectors_list for connector in connectors
     ]
-    return predicate_connectors
