@@ -1,8 +1,10 @@
+from itertools import accumulate
 from pathlib import Path
 from uuid import uuid4
 
 from networkx import DiGraph
 
+from cemento.draw_io.preprocessing import fst, snd
 from cemento.draw_io.transforms import (
     compute_draw_positions,
     compute_grid_allocations,
@@ -53,31 +55,41 @@ def draw_tree(
     )
 
     diagram_uid = str(uuid4()).split("-")[-1]
-    offset_x, offset_y = 0, 0
     entity_idx_start = 0
     ranked_subtrees = list(ranked_subtrees)
-    for subtree in ranked_subtrees:
-
-        new_shapes = generate_shapes(
+    tree_sizes = map(get_tree_size, ranked_subtrees)
+    entity_index_starts = accumulate(
+        ranked_subtrees,
+        lambda acc, tree: acc + len(tree.nodes),
+        initial=entity_idx_start,
+    )
+    offsets = accumulate(
+        tree_sizes,
+        lambda acc, x: (fst(acc) + fst(x), snd(acc) + snd(x)),
+        initial=(0, 0),
+    )
+    offsets = map(
+        lambda x: (
+            fst(x) if not horizontal_tree else 0,
+            snd(x) if horizontal_tree else 0,
+        ),
+        offsets,
+    )
+    shapes_list = [
+        generate_shapes(
             subtree,
             diagram_uid,
             offset_x=offset_x,
             offset_y=offset_y,
             idx_start=entity_idx_start,
         )
+        for (subtree, (offset_x, offset_y), entity_idx_start) in zip(
+            ranked_subtrees, offsets, entity_index_starts, strict=False
+        )
+    ]
+    shapes = [shape for shapes in shapes_list for shape in shapes]
 
-        tree_size_x, tree_size_y = get_tree_size(subtree)
-        offset_x += tree_size_x
-        offset_y += tree_size_y
-
-        if horizontal_tree:
-            offset_x = 0
-        else:
-            offset_y = 0
-
-        shapes.extend(new_shapes)
-        entity_idx_start += len(new_shapes)
-
+    entity_idx_start = len(shapes)
     new_shape_ids = get_shape_ids(shapes)
     shape_positions = get_shape_positions(shapes)
     connectors = get_rank_connectors(

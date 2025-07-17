@@ -318,24 +318,29 @@ def generate_shapes(
     shape_height: int = SHAPE_HEIGHT,
     shape_width: int = SHAPE_WIDTH,
 ) -> list[Shape]:
-    shapes = []
-    for idx, node in enumerate(graph.nodes):
-        node_content = node.replace('"', "&quot;")
-        entity_id = f"{diagram_uid}-{idx + idx_start}"
-        shape_pos_x = graph.nodes[node]["draw_x"] + offset_x
-        shape_pos_y = graph.nodes[node]["draw_y"] + offset_y
-        shape_pos_x, shape_pos_y = translate_coords(shape_pos_x, shape_pos_y)
-        shapes.append(
-            Shape(
-                shape_id=entity_id,
-                shape_content=node_content,
-                fill_color=shape_color,
-                x_pos=shape_pos_x,
-                y_pos=shape_pos_y,
-                shape_width=shape_width,
-                shape_height=shape_height,
-            )
+    nodes = [node for node in graph.nodes]
+    entity_ids = (f"{diagram_uid}-{idx + idx_start}" for idx in range(len(nodes)))
+    shape_pos_x = (graph.nodes[node]["draw_x"] + offset_x for node in nodes)
+    shape_pos_y = (graph.nodes[node]["draw_y"] + offset_y for node in nodes)
+    shape_positions = map(
+        lambda x: translate_coords(x[0], x[1]),
+        zip(shape_pos_x, shape_pos_y, strict=True),
+    )
+    node_contents = (node.replace('"', "&quot;") for node in nodes)
+    shapes = [
+        Shape(
+            shape_id=entity_id,
+            shape_content=node_content,
+            fill_color=shape_color,
+            x_pos=shape_pos_x,
+            y_pos=shape_pos_y,
+            shape_width=shape_width,
+            shape_height=shape_height,
         )
+        for (entity_id, node_content, (shape_pos_x, shape_pos_y)) in zip(
+            entity_ids, node_contents, shape_positions, strict=True
+        )
+    ]
     return shapes
 
 
