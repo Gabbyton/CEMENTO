@@ -1,4 +1,7 @@
+import importlib.resources as pkg_resources
+import os
 from pathlib import Path
+from string import Template
 
 from defusedxml import ElementTree as ET
 
@@ -23,3 +26,22 @@ def get_diagram_headers(file_path: str | Path) -> dict[str, str]:
     }
 
     return diagram_headers
+
+
+def get_template_files() -> dict[str, str | Path]:
+    current_file_folder = Path(__file__)
+    # retrieve the template folder from the grandparent directory
+    template_path = current_file_folder.parent.parent.parent / "templates"
+
+    if not template_path.exists():
+        template_path = pkg_resources.files("cemento").joinpath("templates")
+
+    template_files = [
+        Path(file) for file in os.scandir(template_path) if file.name.endswith(".xml")
+    ]
+    template_dict = dict()
+    for file in template_files:
+        with open(file, "r") as f:
+            template = Template(f.read())
+            template_dict[file.stem] = template
+    return template_dict

@@ -1,10 +1,7 @@
-import importlib.resources as pkg_resources
-import os
 from collections.abc import Callable, Container, Iterable
 from dataclasses import asdict
 from itertools import accumulate
 from pathlib import Path
-from string import Template
 
 import networkx as nx
 from defusedxml import ElementTree as ET
@@ -24,6 +21,7 @@ from cemento.draw_io.constants import (
     NxStringEdge,
     Shape,
 )
+from cemento.draw_io.io import get_template_files
 from cemento.draw_io.preprocessing import clean_term, remove_predicate_quotes
 from cemento.utils.utils import fst, snd
 
@@ -339,25 +337,6 @@ def translate_coords(
     grid_y = rect_height * 2 + y_padding
 
     return ((x_pos + origin_x) * grid_x, (y_pos + origin_y) * grid_y)
-
-
-def get_template_files() -> dict[str, str | Path]:
-    current_file_folder = Path(__file__)
-    # retrieve the template folder from the grandparent directory
-    template_path = current_file_folder.parent.parent.parent / "templates"
-
-    if not template_path.exists():
-        template_path = pkg_resources.files("cemento").joinpath("templates")
-
-    template_files = [
-        Path(file) for file in os.scandir(template_path) if file.name.endswith(".xml")
-    ]
-    template_dict = dict()
-    for file in template_files:
-        with open(file, "r") as f:
-            template = Template(f.read())
-            template_dict[file.stem] = template
-    return template_dict
 
 
 def generate_diagram_content(
