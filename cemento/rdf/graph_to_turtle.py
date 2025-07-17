@@ -16,8 +16,6 @@ from cemento.rdf.io import (
     get_search_terms_from_defaults,
     get_search_terms_from_graph,
     get_ttl_file_iter,
-    iter_diagram_terms,
-    iterate_ttl_graphs,
     read_prefixes_from_graph,
     read_prefixes_from_json,
 )
@@ -41,7 +39,7 @@ from cemento.rdf.transforms import (
     get_term_search_keys,
     get_term_types,
     get_term_value,
-    substitute_term
+    substitute_term,
 )
 
 
@@ -67,13 +65,15 @@ def convert_graph_to_ttl(
     prefixes.update(default_namespace_prefixes)
 
     if onto_ref_folder:
-        file_prefixes = iterate_ttl_graphs(onto_ref_folder, read_prefixes_from_graph)
+        file_prefixes = map(
+            read_prefixes_from_graph, get_ttl_file_iter(onto_ref_folder)
+        )
         prefixes |= merge_dictionaries(file_prefixes)
         inv_prefixes = {value: key for key, value in prefixes.items()}
 
-        residual_file_prefixes = iterate_ttl_graphs(
-            onto_ref_folder,
+        residual_file_prefixes = map(
             partial(generate_residual_prefixes, inv_prefixes=inv_prefixes),
+            get_ttl_file_iter(onto_ref_folder),
         )
         residual_file_prefixes = {
             key: value
@@ -86,16 +86,16 @@ def convert_graph_to_ttl(
     search_terms = get_search_terms_from_defaults(default_namespace_prefixes)
 
     if onto_ref_folder:
-        file_search_terms = iterate_ttl_graphs(
-            onto_ref_folder,
+        file_search_terms = map(
             partial(get_search_terms_from_graph, inv_prefixes=inv_prefixes),
+            get_ttl_file_iter(onto_ref_folder),
         )
         search_terms |= merge_dictionaries(file_search_terms)
 
     aliases = {
         term: aliases
-        for term, aliases in iter_diagram_terms(
-            graph, lambda term: (term, get_term_aliases(term))
+        for term, aliases in map(
+            lambda term: (term, get_term_aliases(term)), get_diagram_terms_iter(graph)
         )
     }
 
@@ -108,6 +108,7 @@ def convert_graph_to_ttl(
         for term, term_uri_ref in map(
             lambda term_info: (
                 term_info[0],
+                # TODO: replace with fst and snd once utils functions have their own module
                 construct_term_uri(
                     *get_abbrev_term(term_info[0], term_info[1]), prefixes=prefixes
                 ),
@@ -120,15 +121,16 @@ def convert_graph_to_ttl(
     }
     search_keys = {
         term: search_key
-        for term, search_key in iter_diagram_terms(
-            graph, lambda term: (term, get_term_search_keys(term, inv_prefixes))
+        for term, search_key in map(
+            lambda term: (term, get_term_search_keys(term, inv_prefixes)),
+            get_diagram_terms_iter(graph),
         )
     }
     substitution_results = {
         term: substituted_value
-        for term, substituted_value in iter_diagram_terms(
-            graph,
+        for term, substituted_value in map(
             lambda term: (term, substitute_term(search_keys[term], search_terms)),
+            get_diagram_terms_iter(graph),
         )
         if substituted_value is not None
     }
