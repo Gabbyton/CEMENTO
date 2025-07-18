@@ -12,6 +12,7 @@ from cemento.draw_io.transforms import (
     get_predicate_connectors,
     get_rank_connectors_from_trees,
     get_ranked_subgraph,
+    get_severed_link_connectors,
     get_shape_ids,
     get_shape_positions,
     get_shapes_from_trees,
@@ -39,7 +40,6 @@ def draw_tree(
     )
     ranked_subtrees = [tree for trees in split_subtrees for tree in trees]
     severed_links = [edge for edges in severed_links for edge in edges]
-    print(severed_links)
 
     ranked_subtrees = map(
         lambda subtree: compute_grid_allocations(
@@ -82,9 +82,23 @@ def draw_tree(
         diagram_uid,
         entity_idx_start=entity_idx_start + 1,
     )
+    entity_idx_start += len(connectors) * 2
+    severed_link_connectors = get_severed_link_connectors(
+        graph,
+        severed_links,
+        shape_positions,
+        new_shape_ids,
+        diagram_uid,
+        entity_idx_start=entity_idx_start + 1,
+    )
 
     write_content = generate_diagram_content(
-        diagram_output_path.stem, diagram_uid, connectors, predicate_connectors, shapes
+        diagram_output_path.stem,
+        diagram_uid,
+        connectors,
+        predicate_connectors,
+        severed_link_connectors,
+        shapes,
     )
 
     with open(diagram_output_path, "w") as write_file:

@@ -170,6 +170,7 @@ def relabel_graph_nodes_with_node_attr(
     }
     return nx.relabel_nodes(graph, relabel_mapping)
 
+
 def filter_graph(
     graph: DiGraph, data_filter: Callable[[dict[str, any]], bool]
 ) -> DiGraph:
@@ -402,6 +403,7 @@ def get_connectors(
     ]
     return connectors
 
+
 def get_rank_connectors(
     graph: DiGraph,
     shape_positions: dict[str, tuple[float, float]],
@@ -423,6 +425,38 @@ def get_rank_connectors(
         entity_idx_start,
         connector_type=Connector,
     )
+
+
+def get_severed_link_connectors(
+    graph: DiGraph,
+    edges: list[tuple[any, any]],
+    shape_positions: dict[str, tuple[float, float]],
+    shape_ids: dict[str, str],
+    diagram_uid: str,
+    entity_idx_start: int = 0,
+):
+    # TODO: remove all side effects, make it clear that the order is reversed!
+    severed_edges = map(
+        lambda edge: NxEdge(
+            subj=fst(edge),
+            obj=snd(edge),
+            pred=graph.get_edge_data(snd(edge), fst(edge), default={"label": None})[
+                "label"
+            ],
+        ),
+        edges,
+    )
+    severed_edges = remove_predicate_quotes(severed_edges)
+    severed_edges = list(severed_edges)
+    return get_connectors(
+        severed_edges,
+        shape_positions,
+        shape_ids,
+        diagram_uid,
+        entity_idx_start,
+        connector_type=GhostConnector,
+    )
+
 
 def get_predicate_connectors(
     graph: DiGraph,
