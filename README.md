@@ -96,14 +96,25 @@ In fact, the functions `read_drawio` and `convert_ttl_to_graph` are actually wra
 ### Important Note
 
 When using the `read_drawio`, please exercise caution when providing the paths. The function has a signature:
+
 ```{python}
 read_drawio( input_path: str | Path, onto_ref_folder: str | Path = None, prefixes_folder: str | Path = None, defaults_folder: str | Path = None, relabel_key: DiagramKey = DiagramKey.LABEL, inverted_rank_arrow: bool = False)
 ```
+
 If you aren't planning on leveraging stratified layouts like the ones used in `draw_tree`, please supply just the arguments for `input_path` and optionally, `relabel_key` and `inverted_rank_arrow`.
 
 ## Drawing Basics
 
-pending
+The following diagram goes through an example supplied with the repository called `happy-example.drawio` with its corresponding `.ttl` file called `happy-example.ttl`. We used [CCO terms](https://github.com/CommonCoreOntology/CommonCoreOntologies) to model the ontology, so please download that file and place it into your `ONTO_REF_FOLDER` so you can follow along.
+
+**NOTE:** If the embedded viewer does not display, please refer to the `do-not-input-this-happy-example-explainer.drawio` file found in the `figures` folder.
+
+<iframe
+  src="https://viewer.diagrams.net/?highlight=0000ff&edit=_blank&layers=1&nav=1#U=https://raw.githubusercontent.com/Gabbyton/CEMENTO/refs/heads/master/figures/do-not-input-this-happy-example-explainer.drawio"
+  width="800"
+  height="600"
+  frameborder="0">
+</iframe>
 
 ## Future Features
 
