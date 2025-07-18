@@ -28,6 +28,9 @@ def draw_tree(
     horizontal_tree: bool = False,
 ) -> None:
     diagram_output_path = Path(diagram_output_path)
+    # replace quotes to match shape content
+    # TODO: prioritize is_rank terms over non-rank predicates when cutting
+    graph = replace_term_quotes(graph)
     ranked_graph = get_ranked_subgraph(graph)
     ranked_graph = ranked_graph.reverse(copy=True)
     ranked_subtrees = get_subgraphs(ranked_graph)
@@ -36,6 +39,7 @@ def draw_tree(
     )
     ranked_subtrees = [tree for trees in split_subtrees for tree in trees]
     severed_links = [edge for edges in severed_links for edge in edges]
+    print(severed_links)
 
     ranked_subtrees = map(
         lambda subtree: compute_grid_allocations(
@@ -71,8 +75,6 @@ def draw_tree(
         entity_idx_start=entity_idx_start + 1,
     )
     entity_idx_start += len(connectors) * 2
-    # replace quotes to match shape content
-    graph = replace_term_quotes(graph)
     predicate_connectors = get_predicate_connectors(
         graph,
         shape_positions,

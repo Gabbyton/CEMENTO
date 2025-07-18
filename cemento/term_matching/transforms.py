@@ -6,7 +6,7 @@ from itertools import chain, groupby
 from pathlib import Path
 
 import tldextract
-from rdflib import RDF, RDFS, SKOS, Graph, Literal, Namespace, URIRef
+from rdflib import OWL, RDF, RDFS, SKOS, Graph, Literal, Namespace, URIRef
 from rdflib.namespace import split_uri
 from thefuzz import fuzz, process
 
@@ -82,7 +82,6 @@ def add_exact_matches(
 
     # add an exact match to the ttl file for easier cross-referencing
     rdf_graph.add((term, SKOS.exactMatch, term))
-
     return rdf_graph
 
 
@@ -188,3 +187,108 @@ def get_search_terms(inv_prefixes: dict[URIRef, str], onto_ref_folder: str | Pat
         search_terms |= merge_dictionaries(file_search_terms)
 
     return search_terms
+
+
+def get_prop_family(rdf_graph: Graph, prop: URIRef) -> set[URIRef]:
+    props_from_type = rdf_graph.transitive_subjects(RDF.type, prop)
+    props_from_subclass = rdf_graph.transitive_subjects(RDFS.subClassOf, prop)
+    return set(chain(props_from_type, props_from_subclass, [prop]))
+
+
+def get_abbrev_uri(
+    default_term: URIRef, inv_prefixes: dict[URIRef | Namespace, str]
+) -> str:
+    ns, abbrev_term = split_uri(default_term)
+    prefix = inv_prefixes[str(ns)]
+    return f"{prefix}:{abbrev_term.strip()}"
+
+
+def get_prop_family_from_defaults(
+    prop: URIRef,
+    defaults_folder: str | Path,
+    inv_prefixes: dict[URIRef | Namespace, str],
+) -> Iterable[str]:
+    prop_family = map(
+        partial(get_prop_family, prop=prop),
+        get_ttl_file_iter(defaults_folder),
+    )
+    prop_family = (prop for props in prop_family for prop in props)
+    return prop_family
+
+
+def get_rank_props() -> Iterable[URIRef]:
+    # TODO: add subclass terms to constants
+    return {RDF.type, RDFS.subClassOf}
+
+
+def get_strat_props(
+    defaults_folder: str | Path,
+    inv_prefixes: dict[URIRef | Namespace, str],
+    include_non_rank_props: bool = True,
+) -> set[str]:
+    non_rank_strat_prop_parents = {
+        OWL.AnnotationProperty,
+        OWL.DatatypeProperty,
+    }
+    strat_props = get_rank_props()
+    if include_non_rank_props:
+        non_rank_strat_props = map(
+            partial(
+                get_prop_family_from_defaults,
+                inv_prefixes=inv_prefixes,
+                defaults_folder=defaults_folder,
+            ),
+            non_rank_strat_prop_parents,
+        )
+        strat_props = chain(strat_props, *non_rank_strat_props)
+    return set(strat_props)
+
+
+def get_abbrev_prefixed_literal(
+    term: URIRef, literal: Literal, inv_prefixes: dict[URIRef | Namespace, str]
+) -> str:
+    ns, _ = split_uri(term)
+    prefix = inv_prefixes[str(ns)]
+    return f"{prefix}:{literal.lower().strip()}"
+
+
+def get_file_preds_in_ref(
+    type_refs: set[URIRef], onto_ref_folder: str | Path
+) -> Iterable[URIRef]:
+    return (
+        subj
+        for rdf_graph in get_ttl_file_iter(onto_ref_folder)
+        for subj, obj in rdf_graph.subject_objects(RDF.type)
+        if obj in type_refs
+    )
+
+
+def get_strat_predicates_str(
+    onto_ref_folder: str | Path,
+    defaults_folder: str | Path,
+    inv_prefixes: dict[URIRef | Namespace, str],
+) -> set[str]:
+    type_refs = get_strat_props(defaults_folder, inv_prefixes)
+    stat_preds = list(get_file_preds_in_ref(type_refs, onto_ref_folder))
+    stat_pred_aliases = (
+        (
+            stat_pred,
+            chain(
+                rdf_graph.objects(stat_pred, RDFS.label),
+                rdf_graph.objects(stat_pred, SKOS.altLabel),
+            ),
+        )
+        for rdf_graph in get_ttl_file_iter(onto_ref_folder)
+        for stat_pred in stat_preds
+    )
+
+    stat_preds_str = map(partial(get_abbrev_uri, inv_prefixes=inv_prefixes), stat_preds)
+    aliased_stat_preds_str = (
+        get_abbrev_prefixed_literal(term, alias, inv_prefixes)
+        for term, aliases in stat_pred_aliases
+        for alias in aliases
+    )
+    rank_props_str = map(
+        partial(get_abbrev_uri, inv_prefixes=inv_prefixes), get_rank_props()
+    )
+    return set(chain(stat_preds_str, aliased_stat_preds_str, rank_props_str))

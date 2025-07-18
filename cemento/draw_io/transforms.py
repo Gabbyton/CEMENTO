@@ -110,7 +110,7 @@ def get_term_matches(
 
 
 def substitute_term(
-    term: str, search_terms: set[str], score_cutoff=85
+    term: str, search_terms: set[str], score_cutoff=90
 ) -> tuple[str, bool]:
     matched_rank_term, score = (
         match_res if (match_res := get_term_matches(term, search_terms)) else (None, 0)
@@ -125,8 +125,7 @@ def generate_graph(
     elements: dict[str, dict[str, any]],
     term_ids: set[str],
     relationship_ids: set[str],
-    rank_terms: set[str],
-    annotation_terms: set[str],
+    strat_terms: set[str],
     inverted_rank_arrow: bool = False,
 ) -> DiGraph:
     # for identified connectors, extract relationship information
@@ -142,10 +141,7 @@ def generate_graph(
         obj_id = elements[rel_id]["target"]
         pred = clean_term(elements[rel_id]["value"])
 
-        pred, is_rank = substitute_term(pred, rank_terms)
-        pred, is_annotation = substitute_term(pred, annotation_terms)
-        is_strat = is_rank or is_annotation
-
+        pred, is_strat = substitute_term(pred, strat_terms)
         # arrow conventions are inverted for rank relationships, flip assignments to conform
         if inverted_rank_arrow and is_strat:
             temp = subj_id
@@ -157,7 +153,6 @@ def generate_graph(
             obj_id,
             label=pred,
             pred_id=rel_id,
-            is_rank=is_rank,
             is_strat=is_strat,
             is_predicate=True,
         )
@@ -165,7 +160,7 @@ def generate_graph(
     return graph
 
 
-def relabel_graph_nodes(
+def relabel_graph_nodes_with_node_attr(
     graph: DiGraph, new_attr_label=DiagramKey.TERM_ID.value
 ) -> DiGraph:
     node_info = nx.get_node_attributes(graph, new_attr_label)
@@ -174,7 +169,6 @@ def relabel_graph_nodes(
         for current_node_label in graph.nodes
     }
     return nx.relabel_nodes(graph, relabel_mapping)
-
 
 def filter_graph(
     graph: DiGraph, data_filter: Callable[[dict[str, any]], bool]
@@ -408,7 +402,6 @@ def get_connectors(
     ]
     return connectors
 
-
 def get_rank_connectors(
     graph: DiGraph,
     shape_positions: dict[str, tuple[float, float]],
@@ -430,7 +423,6 @@ def get_rank_connectors(
         entity_idx_start,
         connector_type=Connector,
     )
-
 
 def get_predicate_connectors(
     graph: DiGraph,

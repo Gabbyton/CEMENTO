@@ -61,6 +61,7 @@ def get_search_terms_from_graph(
     for subj, pred, obj in rdf_graph:
         all_terms.update([subj, pred, obj])
 
+        # TODO: take comparison set from constnats
         if pred == RDFS.label or pred == SKOS.altLabel:
             ns, _ = split_uri(subj)
             prefix = inv_prefixes[ns]
