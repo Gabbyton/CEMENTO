@@ -157,21 +157,19 @@ def get_classes(
 ) -> set[URIRef]:
     instance_superclasses = {
         subj
-        for subj, pred, obj in rdf_graph
-        if pred == RDF.type
-        and obj not in default_terms
-        and term_types[subj] == OWL.Class
+        for subj, obj in rdf_graph.subject_objects(RDF.type)
+        if obj not in default_terms and term_types[subj] == OWL.Class
     }
     subclass_terms = {
         term
-        for subj, pred, obj in rdf_graph
-        if pred == RDFS.subClassOf
+        for subj, obj in rdf_graph.subject_objects(RDFS.subClassOf)
         for term in (subj, obj)
     }
     return instance_superclasses | subclass_terms
 
 
 def get_predicates(rdf_graph: Graph, default_terms: set[URIRef]) -> set[URIRef]:
+    # TODO: add the dynamic predicate retrieval from term matching
     return {term for prop in PREDICATES for term in rdf_graph.subjects(RDF.type, prop)}
 
 
