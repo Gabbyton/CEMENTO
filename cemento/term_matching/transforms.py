@@ -10,7 +10,11 @@ from rdflib import OWL, RDF, RDFS, SKOS, Graph, Literal, Namespace, URIRef
 from rdflib.namespace import split_uri
 from thefuzz import fuzz, process
 
-from cemento.term_matching.constants import get_default_namespace_prefixes
+from cemento.term_matching.constants import (
+    FALLBACK_STRAT_TYPES,
+    RANK_PROPS,
+    get_default_namespace_prefixes,
+)
 from cemento.term_matching.io import (
     get_search_terms_from_defaults,
     get_search_terms_from_graph,
@@ -218,7 +222,7 @@ def get_prop_family_from_defaults(
 
 def get_rank_props() -> Iterable[URIRef]:
     # TODO: add subclass terms to constants
-    return {RDF.type, RDFS.subClassOf}
+    return RANK_PROPS
 
 
 def get_strat_props(
@@ -232,14 +236,17 @@ def get_strat_props(
     }
     strat_props = get_rank_props()
     if include_non_rank_props:
-        non_rank_strat_props = map(
-            partial(
-                get_prop_family_from_defaults,
-                inv_prefixes=inv_prefixes,
-                defaults_folder=defaults_folder,
-            ),
-            non_rank_strat_prop_parents,
-        )
+        try:
+            non_rank_strat_props = map(
+                partial(
+                    get_prop_family_from_defaults,
+                    inv_prefixes=inv_prefixes,
+                    defaults_folder=defaults_folder,
+                ),
+                non_rank_strat_prop_parents,
+            )
+        except Exception:
+            non_rank_strat_props = FALLBACK_STRAT_TYPES
         strat_props = chain(strat_props, *non_rank_strat_props)
     return set(strat_props)
 
