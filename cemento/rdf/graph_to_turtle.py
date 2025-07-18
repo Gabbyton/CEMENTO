@@ -63,21 +63,33 @@ def convert_graph_to_ttl(
         term
         for term in filter(lambda term: ('"' in term), get_diagram_terms_iter(graph))
     }
-    constructed_terms = {
-        term: term_uri_ref
-        for term, term_uri_ref in map(
-            lambda term_info: (
-                fst(term_info),
-                construct_term_uri(
-                    *get_abbrev_term(fst(term_info), snd(term_info)), prefixes=prefixes
+    try:
+        constructed_terms = {
+            term: term_uri_ref
+            for term, term_uri_ref in map(
+                lambda term_info: (
+                    fst(term_info),
+                    construct_term_uri(
+                        *get_abbrev_term(fst(term_info), snd(term_info)),
+                        prefixes=prefixes,
+                    ),
                 ),
-            ),
-            filter(
-                lambda term_info: fst(term_info) not in literal_terms,
-                get_diagram_terms_iter_with_pred(graph),
-            ),
-        )
-    }
+                filter(
+                    lambda term_info: fst(term_info) not in literal_terms,
+                    get_diagram_terms_iter_with_pred(graph),
+                ),
+            )
+        }
+    except KeyError as e:
+        offending_key = e.args[0]
+        if prefixes_path:
+            raise ValueError(
+                f"The prefix {offending_key} was used but it was not in the prefix.json file located in {prefixes_path}. Please consider adding it there."
+            ) from KeyError
+        else:
+            raise ValueError(
+                f"The prefix {offending_key} was used but it is not part of the default namespace. Consider creating a prefixes.json file and add set the prefixes_path argument."
+            ) from KeyError
     search_keys = {
         term: search_key
         for term, search_key in map(
