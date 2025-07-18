@@ -23,6 +23,7 @@ from cemento.draw_io.constants import (
 )
 from cemento.draw_io.io import get_template_files
 from cemento.draw_io.preprocessing import clean_term, remove_predicate_quotes
+from cemento.term_matching.constants import RANK_PROPS
 from cemento.utils.utils import fst, snd
 
 
@@ -125,7 +126,7 @@ def generate_graph(
     elements: dict[str, dict[str, any]],
     term_ids: set[str],
     relationship_ids: set[str],
-    strat_terms: set[str],
+    strat_terms: set[str] = None,
     inverted_rank_arrow: bool = False,
 ) -> DiGraph:
     # for identified connectors, extract relationship information
@@ -141,7 +142,11 @@ def generate_graph(
         obj_id = elements[rel_id]["target"]
         pred = clean_term(elements[rel_id]["value"])
 
-        pred, is_strat = substitute_term(pred, strat_terms)
+        if strat_terms:
+            pred, is_strat = substitute_term(pred, strat_terms)
+        else:
+            # default to just taking rank terms, which are always known
+            is_strat = pred in RANK_PROPS
         # arrow conventions are inverted for rank relationships, flip assignments to conform
         if inverted_rank_arrow and is_strat:
             temp = subj_id
@@ -161,7 +166,7 @@ def generate_graph(
 
 
 def relabel_graph_nodes_with_node_attr(
-    graph: DiGraph, new_attr_label=DiagramKey.TERM_ID.value
+    graph: DiGraph, new_attr_label: str = DiagramKey.TERM_ID.value
 ) -> DiGraph:
     node_info = nx.get_node_attributes(graph, new_attr_label)
     relabel_mapping = {
