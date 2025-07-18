@@ -63,6 +63,7 @@ def convert_graph_to_ttl(
         term
         for term in filter(lambda term: ('"' in term), get_diagram_terms_iter(graph))
     }
+    print(literal_terms)
     constructed_terms = {
         term: term_uri_ref
         for term, term_uri_ref in map(
