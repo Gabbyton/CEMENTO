@@ -32,7 +32,7 @@ The package only currently supports a python script interface for using the func
 
 Four paths are required to fully utilize all CEMENTO features for this purpose. `INPUT_PATH` and `OUTPUT` are your input draw.io and output `.ttl` file paths, respectively.
 
-`ONTO_PATH` points to a folder containing `.ttl` files that contain the terms you want to reference. For example, you can download the `cco.ttl` from the official CCO repo page and place it here to reference all cco terms. Under the hood, this referencing is additive, which means you can add as many `.ttl` as you want to reference.
+`ONTO_PATH` points to a folder containing `.ttl` files that contain the terms you want to reference. For example, you can download the `cco.ttl` from the official [CCO repo page](https://github.com/CommonCoreOntology/CommonCoreOntologies/blob/develop/src/cco-merged/CommonCoreOntologiesMerged.ttl) and place it here to reference all cco terms. Under the hood, this referencing is additive, which means you can add as many `.ttl` as you want to reference.
 
 **CAUTION:** Repeated references are overwritten in the order the files are read by python (usually alphabetical order). If your reference files conflict with one another, please be advised and resolve those conflicts first by deleting the terms or modifying them.
 
@@ -95,7 +95,15 @@ In fact, the functions `read_drawio` and `convert_ttl_to_graph` are actually wra
 
 ### Important Note
 
+When using the `read_drawio`, please exercise caution when providing the paths. The function has a signature:
+```{python}
+read_drawio( input_path: str | Path, onto_ref_folder: str | Path = None, prefixes_folder: str | Path = None, defaults_folder: str | Path = None, relabel_key: DiagramKey = DiagramKey.LABEL, inverted_rank_arrow: bool = False)
+```
+If you aren't planning on leveraging stratified layouts like the ones used in `draw_tree`, please supply just the arguments for `input_path` and optionally, `relabel_key` and `inverted_rank_arrow`.
 
+## Drawing Basics
+
+pending
 
 ## Future Features
 
@@ -115,7 +123,4 @@ This project was released under the BSD-3-Clause License. For more information a
 
 ## Contact Information
 
-If you have any questions or need further assistance, feel free to contact us at:
-
-Email:
-[gop2@case.edu](Gabriel Obsequio Ponon)
+If you have any questions or need further assistance, please open a GitHub issue we can assist you there.

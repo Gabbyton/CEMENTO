@@ -1,0 +1,53 @@
+@prefix cco: <https://www.commoncoreontologies.org/> .
+@prefix mds: <https://cwrusdle.bitbucket.io/mds/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+mds:NicknameOfHappyGilmore a cco:ont00000990 ;
+    cco:ont00001761 "Happy" ;
+    cco:ont00001916 mds:HappyGilmore .
+
+mds:hasCatchphrase a owl:ObjectProperty ;
+    rdfs:domain [ a owl:Class ;
+            owl:unionOf ( mds:HappyGilmore ) ] ;
+    rdfs:range [ a owl:Class ;
+            owl:unionOf ( mds:CatchPhraseOfHappyGilmore ) ] .
+
+mds:CatchPhrase a owl:Class ;
+    rdfs:label "catch phrase" ;
+    rdfs:subClassOf cco:ont00000958 ;
+    skos:altLabel "slogan" ;
+    skos:definition "a well-known sentence or phrase, especially one that is associated with a particular famous person."@en .
+
+mds:HappyPerson a owl:Class ;
+    rdfs:subClassOf cco:ont00001262 ;
+    skos:definition "someone who experiences frequent positive emotions, a sense of satisfaction with their life, and a positive outlook on life"@en .
+
+cco:ont00001761 a owl:AnnotationProperty ;
+    rdfs:label "is tokenized by"@en ;
+    skos:exactMatch cco:ont00001761 .
+
+cco:ont00001916 a owl:ObjectProperty ;
+    rdfs:label "designates"@en ;
+    skos:exactMatch cco:ont00001916 .
+
+mds:CatchPhraseOfHappyGilmore a mds:CatchPhrase ;
+    cco:ont00001761 "¿Por que no te vas a casa? ¡Eso es tu casa!"@es .
+
+mds:HappyGilmore a mds:HappyPerson ;
+    mds:hasCatchphrase mds:CatchPhraseOfHappyGilmore .
+
+cco:ont00000958 a owl:Class ;
+    rdfs:label "Information Content Entity"@en ;
+    skos:exactMatch cco:ont00000958 .
+
+cco:ont00000990 a owl:Class ;
+    rdfs:label "Nickname"@en ;
+    skos:exactMatch cco:ont00000990 .
+
+cco:ont00001262 a owl:Class ;
+    rdfs:label "Person"@en ;
+    skos:exactMatch cco:ont00001262 .
+
