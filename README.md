@@ -26,15 +26,26 @@ pip install cemento
 
 ## Usage
 
-The package only currently supports a python script interface for using the functions. The following sections can show how to use the package for the its most common (and simplest) use-cases:
+### Command Line Interface
+
+Once the package is installed, you will have access to a `cemento` CLI command for converting files. At the moment, this CLI interface allows you to convert `.ttl` files into draw.io diagrams and vice versa. To do so:
+```{bash}
+# converting from .ttl to drawio
+cemento ttl_drawio your_triples.ttl your_output_diagram.drawio -r <onto_ref_folder_path> -d <defaults_folder_path> -p <prefixes_path>
+```
+`onto_ref_folder_path` points to a folder containing `.ttl` files that contain the terms you want to reference. For example, you can download the `cco.ttl` from the official [CCO repo page](https://github.com/CommonCoreOntology/CommonCoreOntologies/blob/develop/src/cco-merged/CommonCoreOntologiesMerged.ttl) and place it here to reference all cco terms. Under the hood, this referencing is additive, which means you can add as many `.ttl` as you want to reference. By default, `cemento` will automatically download a reference ontology `.ttl` file and place it in a data folder where you are running the code. `defaults_folder_path`.
+
+**CAUTION:** Repeated references are overwritten in the order the files are read by python (usually alphabetical order). If your reference files conflict with one another, please be advised and resolve those conflicts first by deleting the terms or modifying them.
+
+**NOTE:** To turn off automatic downloads, please use the `-nd` or `--nodownload` flag.
+
+### Scripting
+
+The package composed of four main modules that can be imported into a python script. The following sections can show how to use the package for the its most common (and simplest) use-cases:
 
 ### Converting draw.io to `.ttl` files
 
 Four paths are required to fully utilize all CEMENTO features for this purpose. `INPUT_PATH` and `OUTPUT` are your input draw.io and output `.ttl` file paths, respectively.
-
-`ONTO_PATH` points to a folder containing `.ttl` files that contain the terms you want to reference. For example, you can download the `cco.ttl` from the official [CCO repo page](https://github.com/CommonCoreOntology/CommonCoreOntologies/blob/develop/src/cco-merged/CommonCoreOntologiesMerged.ttl) and place it here to reference all cco terms. Under the hood, this referencing is additive, which means you can add as many `.ttl` as you want to reference.
-
-**CAUTION:** Repeated references are overwritten in the order the files are read by python (usually alphabetical order). If your reference files conflict with one another, please be advised and resolve those conflicts first by deleting the terms or modifying them.
 
 Using the actual function is as easy as importing and calling it in a python script.
 
