@@ -25,18 +25,18 @@ def read_drawio(
     # add annotation terms to set for checking
     # TODO: add backup constant terms if any of the ref folders are not set
     strat_props = None
-    if all(onto_ref_folder, prefixes_folder, defaults_folder):
+    if all([onto_ref_folder, prefixes_folder, defaults_folder]):
         prefixes, inv_prefixes = get_prefixes(prefixes_folder, onto_ref_folder)
         strat_props = get_strat_predicates_str(
             onto_ref_folder, defaults_folder, inv_prefixes
         )
-    elif any(onto_ref_folder, prefixes_folder, defaults_folder):
+    elif any([onto_ref_folder, prefixes_folder, defaults_folder]):
         raise ValueError("Either all the folders are set or none at all!")
     graph = generate_graph(
         elements,
         term_ids,
         rel_ids,
-        strat_props=strat_props,
+        strat_terms=strat_props,
         inverted_rank_arrow=inverted_rank_arrow,
     )
     graph = relabel_graph_nodes_with_node_attr(graph, new_attr_label=relabel_key.value)

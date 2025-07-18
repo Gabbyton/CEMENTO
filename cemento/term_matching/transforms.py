@@ -259,14 +259,19 @@ def get_abbrev_prefixed_literal(
     return f"{prefix}:{literal.lower().strip()}"
 
 
-def get_file_preds_in_ref(
-    type_refs: set[URIRef], onto_ref_folder: str | Path
-) -> Iterable[URIRef]:
+def get_preds_in_ref(rdf_graph: Graph, type_refs: set[URIRef]) -> Iterable[URIRef]:
     return (
-        subj
-        for rdf_graph in get_ttl_file_iter(onto_ref_folder)
-        for subj, obj in rdf_graph.subject_objects(RDF.type)
-        if obj in type_refs
+        subj for subj, obj in rdf_graph.subject_objects(RDF.type) if obj in type_refs
+    )
+
+
+def get_term_aliases_from_graph(rdf_graph: Graph, term: URIRef) -> list[URIRef]:
+    return (
+        term,
+        chain(
+            rdf_graph.objects(term, RDFS.label),
+            rdf_graph.objects(term, SKOS.altLabel),
+        ),
     )
 
 
@@ -276,20 +281,18 @@ def get_strat_predicates_str(
     inv_prefixes: dict[URIRef | Namespace, str],
 ) -> set[str]:
     type_refs = get_strat_props(defaults_folder, inv_prefixes)
-    stat_preds = list(get_file_preds_in_ref(type_refs, onto_ref_folder))
-    stat_pred_aliases = (
-        (
-            stat_pred,
-            chain(
-                rdf_graph.objects(stat_pred, RDFS.label),
-                rdf_graph.objects(stat_pred, SKOS.altLabel),
-            ),
-        )
-        for rdf_graph in get_ttl_file_iter(onto_ref_folder)
-        for stat_pred in stat_preds
+    rdf_graphs = list(get_ttl_file_iter(onto_ref_folder))
+    strat_preds = list(
+        chain(*map(partial(get_preds_in_ref, type_refs=type_refs), rdf_graphs))
     )
-
-    stat_preds_str = map(partial(get_abbrev_uri, inv_prefixes=inv_prefixes), stat_preds)
+    stat_pred_aliases = (
+        get_term_aliases_from_graph(graph, pred)
+        for graph in rdf_graphs
+        for pred in strat_preds
+    )
+    stat_preds_str = map(
+        partial(get_abbrev_uri, inv_prefixes=inv_prefixes), strat_preds
+    )
     aliased_stat_preds_str = (
         get_abbrev_prefixed_literal(term, alias, inv_prefixes)
         for term, aliases in stat_pred_aliases
