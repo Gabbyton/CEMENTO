@@ -109,7 +109,7 @@ The following diagram goes through an example supplied with the repository calle
 
 ![happy-exampl-explainer-diagram](figures/happy-example-explainer.drawio.svg)
 
-**NOTE:** If the text is too small on the figure, please refer to the `do-not-input-this-happy-example-explainer.drawio` file found in the `figures` folder.
+**NOTE:** Click on the figure and click the `Raw` button on the subsequent page to enlarge. If you prefer, your can also refer to the `do-not-input-this-happy-example-explainer.drawio` file found in the `figures` folder.
 
 ## Future Features
 
