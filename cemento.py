@@ -4,8 +4,9 @@ from pathlib import Path
 
 import requests
 
+import cemento.cli.drawio_ttl as drawio_ttl
+import cemento.cli.ttl_drawio as ttl_drawio
 from cemento.rdf.constants import DEFAULT_DOWNLOADS
-from cemento.rdf.drawio_to_turtle import convert_drawio_to_ttl
 
 
 def make_data_dirs(data_path: Path) -> Path:
@@ -41,38 +42,28 @@ if __name__ == "__main__":
     prefixes_path = Path(__file__).parent / "examples" / "prefixes.json"
     data_path = Path(__file__).parent / "data"
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("input", help="the path to the input drawio diagram file.")
-    parser.add_argument("output", help="the path to the desired output .ttl file.")
+    parser = argparse.ArgumentParser(prog="cemento")
+
     parser.add_argument(
         "-nd",
         "--nodownloads",
-        help="turn off automatic downloads to populate ontology references.",
+        help="turn off automatic downloads to populate ontology reference folder.",
+        metavar="",
     )
-    parser.add_argument(
-        "-r",
-        "--ontoref",
-        help="the path to the folder containing the reference ontologies.",
-        default=data_path,
+
+    subparsers = parser.add_subparsers(
+        dest="cemento", metavar="", title="Available functions"
     )
-    parser.add_argument(
-        "-d",
-        "--defaults",
-        help="the path to the folder containing the ttl files of the default namespaces.",
-        default=defaults_path,
-    )
-    parser.add_argument(
-        "-p",
-        "--prefixfile",
-        help="the path to the json file containing prefixes.",
-        default=prefixes_path,
-    )
+    subparsers.required = True
+
+    drawio_ttl.register(subparsers)
+    ttl_drawio.register(subparsers)
+
     args = parser.parse_args()
+
+    if hasattr(args, "_handler"):
+        args._handler(args)
+
     if not args.nodownloads:
         make_data_dirs(data_path)
         download_defaults(data_path)
-
-    print(f"converting {args.input} into a ttl file at {args.output}...")
-    convert_drawio_to_ttl(
-        args.input, args.output, args.ontoref, args.defaults, args.prefixfile
-    )
