@@ -4,33 +4,31 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cemento"
-version = "0.7.0"
-authors = [
-  { name="Gabriel Obsequio Ponon", email="gop2@case.edu" },
-]
+version = "0.8.0"
+authors = [{ name = "Gabriel Obsequio Ponon", email = "gop2@case.edu" }]
 description = "A package to view and write ontologies directly from draw.io diagram files."
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
 ]
 
 dependencies = [
-  "beautifulsoup4>=4.12.3",
-  "defusedxml>=0.7.1",
-  "networkx>=3.2.1",
-  "pandas>=2.2.2",
+  "beautifulsoup4",
+  "defusedxml",
+  "networkx",
+  "pandas",
   "rdflib",
   "thefuzz",
-  "tldextract"
+  "tldextract",
 ]
 
 [tool.setuptools]
 packages = ["cemento", "cemento.draw_io", "cemento.rdf"]
 
 [project.urls]
-Homepage = "https://bitbucket.org/cwrusdle/fairmaterials/src/gabriel-gxp/packages/xrd-onto-viewer/"
+Homepage = "https://github.com/Gabbyton/CEMENTO"
 
 [project.license]
 text = "BSD-3-Clause"

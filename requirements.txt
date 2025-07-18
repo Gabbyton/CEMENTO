@@ -1,7 +1,7 @@
-beautifulsoup4>=4.12.3
-defusedxml>=0.7.1
-networkx>=3.2.1
-pandas>=2.2.2
+beautifulsoup4
+defusedxml
+networkx
+pandas
 rdflib
 thefuzz
 tldextract
