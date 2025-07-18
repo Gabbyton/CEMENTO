@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cemento"
-version = "0.8.0"
+version = "0.8.1"
 authors = [{ name = "Gabriel Obsequio Ponon", email = "gop2@case.edu" }]
 description = "A package to view and write ontologies directly from draw.io diagram files."
 readme = "README.md"
@@ -24,8 +24,18 @@ dependencies = [
   "tldextract",
 ]
 
+[project.scripts]
+cemento = "cemento.main:main"
+
 [tool.setuptools]
-packages = ["cemento", "cemento.draw_io", "cemento.rdf"]
+packages = [
+  "cemento",
+  "cemento.draw_io",
+  "cemento.rdf",
+  "cemento.term_matching",
+  "cemento.utils",
+  "cemento.cli",
+]
 
 [project.urls]
 Homepage = "https://github.com/Gabbyton/CEMENTO"
