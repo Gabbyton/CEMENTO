@@ -120,7 +120,6 @@ def get_term_collection_triples(
     collection_class = BNode()
     triples.append((collection_class, RDF.type, OWL.Class))
     # connect them all together
-    # TODO: assume union for now but fix later
     triples.append((collection_class, member_rel, collection_node))
     triples.append((head_term, term_collection_rel, collection_class))
     return triples
@@ -131,6 +130,7 @@ def add_domains_ranges(
     rdf_graph: DiGraph,
 ) -> Graph:
     predicate_term, domains, ranges = term_domains_ranges
+    # TODO: assume union for now but fix later
     domain_collection_triples = get_term_collection_triples(
         rdf_graph, predicate_term, domains, OWL.unionOf, RDFS.domain
     )
@@ -147,10 +147,8 @@ def get_instances(
 ) -> set[URIRef]:
     return {
         subj
-        for subj, pred, obj in rdf_graph
-        if pred == RDF.type
-        and obj not in default_terms
-        and term_types[obj] == OWL.Class
+        for subj, obj in rdf_graph.subject_objects(RDF.type)
+        if obj not in default_terms and term_types[obj] == OWL.Class
     }
 
 
