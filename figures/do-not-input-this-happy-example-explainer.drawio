@@ -71,9 +71,6 @@
         <mxCell id="pety45B3u8wGdrX-bXSJ-23" value="&lt;span style=&quot;font-size: 12px;&quot;&gt;cco:Nickname&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;resizable=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;arcSize=0;movable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;enumerate=0;" parent="1" vertex="1">
           <mxGeometry x="1620" y="350" width="150" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="pety45B3u8wGdrX-bXSJ-25" value="&lt;b&gt;DANGER&lt;/b&gt;: Do not use this file for input. Use the designated files for testing the package. That has the same terms and relationships without the guide text." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=24;dashed=1;strokeWidth=5;" parent="1" vertex="1">
-          <mxGeometry x="650" y="80" width="880" height="110" as="geometry" />
-        </mxCell>
         <mxCell id="pety45B3u8wGdrX-bXSJ-30" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="pety45B3u8wGdrX-bXSJ-26" target="pety45B3u8wGdrX-bXSJ-23" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>

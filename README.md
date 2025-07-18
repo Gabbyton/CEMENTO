@@ -107,14 +107,9 @@ If you aren't planning on leveraging stratified layouts like the ones used in `d
 
 The following diagram goes through an example supplied with the repository called `happy-example.drawio` with its corresponding `.ttl` file called `happy-example.ttl`. We used [CCO terms](https://github.com/CommonCoreOntology/CommonCoreOntologies) to model the ontology, so please download that file and place it into your `ONTO_REF_FOLDER` so you can follow along.
 
-**NOTE:** If the embedded viewer does not display, please refer to the `do-not-input-this-happy-example-explainer.drawio` file found in the `figures` folder.
+![happy-exampl-explainer-diagram](figures/happy-example-explainer.drawio.svg)
 
-<iframe
-  src="https://viewer.diagrams.net/?highlight=0000ff&edit=_blank&layers=1&nav=1#U=https://raw.githubusercontent.com/Gabbyton/CEMENTO/refs/heads/master/figures/do-not-input-this-happy-example-explainer.drawio"
-  width="800"
-  height="600"
-  frameborder="0">
-</iframe>
+**NOTE:** If the text is too small on the figure, please refer to the `do-not-input-this-happy-example-explainer.drawio` file found in the `figures` folder.
 
 ## Future Features
 
