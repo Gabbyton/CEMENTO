@@ -17,8 +17,9 @@ def register(subparsers):
         "-z",
         "--horizontal",
         help="set whether to make the tree horizontal or stay with the default vertical layout.",
-        metavar="folder_path",
-        default=None,
+        metavar="is_horizontal",
+        type=bool,
+        default=False,
     )
     parser.set_defaults(_handler=run)
 
