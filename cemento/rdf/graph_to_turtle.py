@@ -24,7 +24,7 @@ from cemento.rdf.transforms import (
     construct_literal,
     construct_term_uri,
     get_class_terms,
-    get_doms_ranges,
+    get_domains_ranges,
     get_literal_data_type,
     get_literal_lang_annotation,
     get_term_value,
@@ -63,7 +63,6 @@ def convert_graph_to_ttl(
         term
         for term in filter(lambda term: ('"' in term), get_diagram_terms_iter(graph))
     }
-    print(literal_terms)
     constructed_terms = {
         term: term_uri_ref
         for term, term_uri_ref in map(
@@ -119,8 +118,6 @@ def convert_graph_to_ttl(
     literal_terms = set(constructed_literal_terms.values())
     class_terms -= predicate_terms
     all_terms = (output_graph.nodes() | predicate_terms) - literal_terms
-
-    pred_doms_ranges = get_doms_ranges(output_graph)
 
     # # create the rdf graph to store the ttl output
     rdf_graph = rdflib.Graph()
@@ -211,16 +208,16 @@ def convert_graph_to_ttl(
         ),
         rdf_graph,
     )
-    rdf_graph = reduce(
-        lambda rdf_graph, graph_term: add_domains_ranges(
-            term=graph_term,
-            domains_ranges=pred_doms_ranges[graph_term],
-            rdf_graph=rdf_graph,
-        ),
+    predicate_domains_ranges = map(
+        partial(get_domains_ranges, graph=output_graph),
         filter(
             term_not_in_default_namespace_filter,
             filterfalse(term_in_search_results_filter, predicate_terms),
         ),
+    )
+    rdf_graph = reduce(
+        lambda rdf_graph, triples: add_domains_ranges(triples, rdf_graph),
+        predicate_domains_ranges,
         rdf_graph,
     )
 

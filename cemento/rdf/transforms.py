@@ -1,5 +1,5 @@
 import re
-from collections import defaultdict
+from collections.abc import Iterable
 from functools import reduce
 
 import networkx as nx
@@ -10,8 +10,8 @@ from rdflib.namespace import split_uri
 
 from cemento.rdf.constants import PREDICATES
 from cemento.rdf.preprocessing import clean_literal_string
-
 from cemento.term_matching.transforms import substitute_term
+
 
 def construct_term_uri(
     prefix: str,
@@ -45,29 +45,16 @@ def get_literal_data_type(
 
 
 def get_class_terms(graph: DiGraph) -> set[URIRef]:
-    class_terms = set()
-    for subj, obj, data in graph.edges(data=True):
-        predicate = data["label"]
-
-        if predicate == RDFS.subClassOf:
-            # we assume terms between RDFS.subClassOf is a class
-            class_terms.update([subj, obj])
-
-        if predicate == RDF.type:
-            # we assume the object of an RDF.type is also a class
-            class_terms.add(obj)
-
-    return class_terms
-
-
-def get_doms_ranges(graph: DiGraph) -> dict[URIRef, dict[str, list[URIRef]]]:
-    doms_ranges = defaultdict(lambda: defaultdict(list))
-    for domain_term, range_term, data in graph.edges(data=True):
-        predicate_term = data.get("label", None)
-        if predicate_term:
-            doms_ranges[predicate_term]["domain"].append(domain_term)
-            doms_ranges[predicate_term]["range"].append(range_term)
-    return doms_ranges
+    subclass_terms = {
+        term
+        for subj, obj, data in graph.edges(data=True)
+        if data["label"] == RDFS.subClassOf
+        for term in (subj, obj)
+    }
+    type_terms = {
+        obj for subj, obj, data in graph.edges(data=True) if data["label"] == RDF.type
+    }
+    return subclass_terms | type_terms
 
 
 def get_term_value(subj: URIRef, pred: URIRef, ref_rdf_graph: Graph):
@@ -81,7 +68,8 @@ def bind_prefixes(rdf_graph: Graph, prefixes: dict[str, URIRef | Namespace]) -> 
 
 
 def add_rdf_triples(
-    rdf_graph: Graph, triples: tuple[URIRef | Literal, URIRef, URIRef | Literal]
+    rdf_graph: Graph,
+    triples: Iterable[tuple[URIRef | Literal, URIRef, URIRef | Literal]],
 ) -> Graph:
     # TODO: set to strictly immutable rdf_graph
     return reduce(lambda graph, triple: graph.add(triple), triples, rdf_graph)
@@ -100,33 +88,58 @@ def add_labels(rdf_graph: Graph, term: URIRef, labels: list[str]) -> Graph:
     return rdf_graph
 
 
-def add_domains_ranges(
-    term: URIRef,
-    domains_ranges: dict[str, list[URIRef]],
-    rdf_graph: Graph,
-) -> Graph:
-    predicate_domain = domains_ranges["domain"]
-    predicate_range = domains_ranges["range"]
+def get_term_domain(term: URIRef, graph: DiGraph) -> Iterable[URIRef]:
+    return (subj for subj, _, data in graph.edges(data=True) if data["label"] == term)
 
-    for dom_or_range_term, term_dom_range in {
-        RDFS.domain: predicate_domain,
-        RDFS.range: predicate_range,
-    }.items():
-        if term_dom_range:
-            # if there are more than one term, save the domain or range as a collection
-            if len(term_dom_range) > 1:
-                collection_node = BNode()
-                Collection(rdf_graph, collection_node, term_dom_range)
-                # create class that points to the collection
-                collection_class = BNode()
-                rdf_graph.add((collection_class, RDF.type, OWL.Class))
-                # connect them all together
-                # TODO: assume union for now but fix later
-                rdf_graph.add((collection_class, OWL.unionOf, collection_node))
-                rdf_graph.add((term, dom_or_range_term, collection_class))
-            else:
-                # if there is only one term, use that term directly
-                rdf_graph.add((term, dom_or_range_term, term_dom_range[0]))
+
+def get_term_range(term: URIRef, graph: DiGraph) -> Iterable[URIRef]:
+    return (obj for _, obj, data in graph.edges(data=True) if data["label"] == term)
+
+
+def get_domains_ranges(
+    predicate: Iterable[URIRef], graph: DiGraph
+) -> tuple[URIRef, Iterable[URIRef], Iterable[URIRef]]:
+    return (
+        predicate,
+        get_term_domain(predicate, graph),
+        get_term_range(predicate, graph),
+    )
+
+
+def get_term_collection_triples(
+    rdf_graph: Graph,
+    head_term: Iterable[URIRef],
+    member_terms: Iterable[URIRef],
+    member_rel: URIRef,
+    term_collection_rel: URIRef,
+) -> list[tuple[URIRef, URIRef, URIRef]]:
+    triples = []
+    collection_node = BNode()
+    Collection(rdf_graph, collection_node, member_terms)
+    # create class that points to the collection
+    collection_class = BNode()
+    triples.append((collection_class, RDF.type, OWL.Class))
+    # connect them all together
+    # TODO: assume union for now but fix later
+    triples.append((collection_class, member_rel, collection_node))
+    triples.append((head_term, term_collection_rel, collection_class))
+    return triples
+
+
+def add_domains_ranges(
+    term_domains_ranges: [URIRef, Iterable[URIRef], Iterable[URIRef]],
+    rdf_graph: DiGraph,
+) -> Graph:
+    predicate_term, domains, ranges = term_domains_ranges
+    domain_collection_triples = get_term_collection_triples(
+        rdf_graph, predicate_term, domains, OWL.unionOf, RDFS.domain
+    )
+    range_collection_triples = get_term_collection_triples(
+        rdf_graph, predicate_term, ranges, OWL.unionOf, RDFS.range
+    )
+    return add_rdf_triples(
+        rdf_graph, domain_collection_triples + range_collection_triples
+    )
 
 
 def get_instances(
