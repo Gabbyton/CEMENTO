@@ -37,7 +37,7 @@ cemento ttl_drawio your_triples.ttl your_output_diagram.drawio
 cemento drawio_ttl your_output_diagram.drawio your_triples.ttl
 ```
 
-It is that simple.By default, the program compiles with the versions of the reference ontologies it needs to do term matching. Specifically, it comes bundled with the following ontologies.
+It is that simple. By default, the program compiles with the versions of the reference ontologies it needs to do term matching. Specifically, it comes bundled with the following ontologies.
 
 - [Common Core Ontologies](https://github.com/CommonCoreOntology/CommonCoreOntologies)
 - [OWL Schema](https://www.w3.org/2002/07/owl#)

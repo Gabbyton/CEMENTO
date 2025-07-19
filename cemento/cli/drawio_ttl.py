@@ -20,21 +20,21 @@ def register(subparsers):
     )
     parser.add_argument(
         "-r",
-        "--ontoref",
+        "--onto-ref-folder-path",
         help="the path to the folder containing the reference ontologies.",
         metavar="ref_ontologies_folder_path",
         default=get_default_references_folder(),
     )
     parser.add_argument(
         "-d",
-        "--defaults",
+        "--defaults-folder-path",
         help="the path to the folder containing the ttl files of the default namespaces.",
         default=get_default_defaults_folder(),
         metavar="default_ontologies_folder_path",
     )
     parser.add_argument(
         "-p",
-        "--prefixfile",
+        "--prefix-file-path",
         help="the path to the json file containing prefixes.",
         default=get_default_prefixes_file(),
         metavar="prefix_file_path",
@@ -45,5 +45,9 @@ def register(subparsers):
 def run(args):
     print(f"converting {args.input} into a ttl file at {args.output}...")
     convert_drawio_to_ttl(
-        args.input, args.output, args.ontoref, args.defaults, args.prefixfile
+        args.input,
+        args.output,
+        args.onto_ref_folder_path,
+        args.defaults_folder_path,
+        args.prefix_file_path,
     )
