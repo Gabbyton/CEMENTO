@@ -5,7 +5,7 @@ import networkx as nx
 from bs4 import BeautifulSoup
 from networkx import DiGraph
 
-from cemento.draw_io.constants import NxEdge, Shape
+from cemento.draw_io.constants import Connector, NxEdge, Shape
 
 
 def remove_literal_id(literal_content: str) -> str:
@@ -36,6 +36,11 @@ def remove_literal_shape_id(shape: Shape) -> Shape:
     # TODO: implement immutable object copy
     shape.shape_content = remove_literal_id(shape.shape_content)
     return shape
+
+
+def remove_literal_connector_id(connector: Connector) -> Connector:
+    connector.connector_val = remove_literal_id(connector.connector_val)
+    return connector
 
 
 def clean_term(term: str) -> str:
