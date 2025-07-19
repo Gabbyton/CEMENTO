@@ -1,5 +1,5 @@
 import re
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from functools import reduce
 from uuid import uuid4
 
@@ -228,16 +228,32 @@ def assign_edge_attr(
     return new_graph
 
 
-def assign_strat_status(graph: DiGraph, strat_terms: set[URIRef] = None) -> DiGraph:
+def assign_edge_binary_attr(
+    graph: Graph, filter_func: Callable[[dict[str, any]], bool], attr: str
+):
     new_graph = graph.copy()
-    strat_edge_graph = filter_graph(
+    positive_graph = filter_graph(
         graph,
-        lambda data: data["label"] in (strat_terms if strat_terms else RANK_PROPS),
+        filter_func,
     )
-    non_strat_edges = graph.edges - strat_edge_graph.edges
-    new_graph = assign_edge_attr(new_graph, strat_edge_graph.edges, {"is_strat": True})
-    new_graph = assign_edge_attr(new_graph, non_strat_edges, {"is_strat": False})
+    negative_edges = graph.edges - positive_graph.edges
+    new_graph = assign_edge_attr(new_graph, positive_graph.edges, {attr: True})
+    new_graph = assign_edge_attr(new_graph, negative_edges, {attr: False})
     return new_graph
+
+
+def assign_rank_status(graph, rank_terms: set[URIRef] = RANK_PROPS):
+    return assign_edge_binary_attr(
+        graph, lambda data: data["label"] in rank_terms, "is_rank"
+    )
+
+
+def assign_strat_status(
+    graph: DiGraph, strat_terms: set[URIRef] = RANK_PROPS
+) -> DiGraph:
+    return assign_edge_binary_attr(
+        graph, lambda data: data["label"] in strat_terms, "is_strat"
+    )
 
 
 def assign_literal_status(graph: DiGraph, all_literals: set[Literal]) -> DiGraph:

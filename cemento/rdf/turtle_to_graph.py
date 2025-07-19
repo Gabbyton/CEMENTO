@@ -9,6 +9,7 @@ from cemento.rdf.transforms import (
     add_triples_to_digraph,
     assign_literal_ids,
     assign_literal_status,
+    assign_rank_status,
     assign_strat_status,
     check_graph_validity,
     get_classes,
@@ -87,9 +88,11 @@ def convert_ttl_to_graph(
         )
 
         graph = assign_strat_status(graph, strat_terms=strat_props)
-        # print(graph.edges(data=True))
         # TODO: assign literal status from read drawio as well
         graph = assign_literal_status(graph, all_literals)
+        graph = assign_rank_status(graph)
+        # print(len(list(filter(lambda x: x[2]["is_strat"], graph.edges(data=True)))))
+        # print(len(list(filter(lambda x: x[2]["is_rank"], graph.edges(data=True)))))
 
         all_terms = all_classes | all_instances | all_predicates | default_terms
         aliases = get_aliases(rdf_graph)
