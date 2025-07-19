@@ -4,8 +4,5 @@ __pycache__
 cemento.egg-info
 dist
 .*
-test_cases/out/
 sandbox/
-data/
-!data/xsd.ttl
 *test*.py
