@@ -3,7 +3,7 @@ from pathlib import Path
 
 import networkx as nx
 from networkx import DiGraph
-from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS, URIRef
+from rdflib import RDF, RDFS, URIRef
 
 from cemento.rdf.transforms import (
     add_triples_to_digraph,
@@ -20,6 +20,7 @@ from cemento.rdf.transforms import (
     get_predicates,
     rename_edges,
 )
+from cemento.term_matching.constants import get_default_namespace_prefixes
 from cemento.term_matching.io import read_ttl
 from cemento.term_matching.transforms import (
     get_aliases,
@@ -37,45 +38,30 @@ def convert_ttl_to_graph(
     check_ttl_validity: bool = True,
     set_unique_literals=True,
 ) -> DiGraph:
-    default_namespaces = [RDF, RDFS, OWL, DCTERMS, SKOS]
-    default_namespace_prefixes = ["rdf", "rdfs", "owl", "dcterms", "skos"]
 
-    strat_props = None
-    if all([onto_ref_folder, prefixes_path, defaults_folder]):
-        prefixes, inv_prefixes = get_prefixes(prefixes_path, onto_ref_folder)
-        strat_props = set(
-            get_strat_predicates(onto_ref_folder, defaults_folder, inv_prefixes)
-        )
-        # TODO: find better solution for including these options
-        strat_props.add(RDFS.subClassOf)
-        strat_props.add(RDF.type)
-        print(strat_props)
-    elif any([onto_ref_folder, prefixes_path, defaults_folder]):
+    file_args = [onto_ref_folder, prefixes_path, defaults_folder]
+    if not all(file_args) and any(file_args):
         raise ValueError("Either all the folders are set or none at all!")
+
+    prefixes, inv_prefixes = get_prefixes(prefixes_path, onto_ref_folder)
+    default_namespace_prefixes = get_default_namespace_prefixes()
+    default_terms = {
+        term
+        for ns in default_namespace_prefixes.values()
+        for term in dir(ns)
+        if isinstance(term, URIRef)
+    }
+    strat_props = set(
+        get_strat_predicates(onto_ref_folder, defaults_folder, inv_prefixes)
+    )
+    # TODO: find better solution for including these options
+    strat_props.add(RDFS.subClassOf)
+    strat_props.add(RDF.type)
 
     with read_ttl(input_path) as rdf_graph:
 
         if check_ttl_validity:
             check_graph_validity(rdf_graph)
-
-        prefixes = {prefix: ns for prefix, ns in rdf_graph.namespaces()}
-        prefixes.update(
-            {
-                prefix: ns
-                for prefix, ns in zip(
-                    default_namespace_prefixes, default_namespaces, strict=True
-                )
-            }
-        )
-
-        inv_prefix = {str(value): key for key, value in prefixes.items()}
-
-        default_terms = {
-            term
-            for ns in default_namespaces
-            for term in dir(ns)
-            if isinstance(term, URIRef)
-        }
 
         term_types = get_term_types(rdf_graph)
         all_classes = get_classes(rdf_graph, default_terms, term_types)
@@ -110,7 +96,7 @@ def convert_ttl_to_graph(
         all_terms = all_classes | all_instances | all_predicates | default_terms
         aliases = get_aliases(rdf_graph)
         rename_terms = get_graph_relabel_mapping(
-            all_terms, all_classes, all_instances, aliases, inv_prefix
+            all_terms, all_classes, all_instances, aliases, inv_prefixes
         )
         graph = nx.relabel_nodes(graph, rename_terms)
         graph = rename_edges(graph, rename_terms)
