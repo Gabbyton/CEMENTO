@@ -10,7 +10,7 @@ from rdflib.collection import Collection
 from rdflib.namespace import split_uri
 
 from cemento.rdf.constants import PREDICATES
-from cemento.rdf.preprocessing import clean_literal_string
+from cemento.rdf.preprocessing import clean_literal_string, format_literal
 from cemento.term_matching.transforms import substitute_term
 from cemento.utils.utils import filter_graph
 
@@ -198,6 +198,13 @@ def get_graph_relabel_mapping(
                 new_name = f"{prefix}:{aliases[term][0]}"
         rename_mapping[term] = new_name
     return rename_mapping
+
+
+def get_literal_format_mapping(graph: DiGraph) -> dict[Literal, str]:
+    return {
+        literal: format_literal(literal)
+        for literal in filter(lambda term: isinstance(term, Literal), graph.nodes)
+    }
 
 
 def add_triples_to_digraph(

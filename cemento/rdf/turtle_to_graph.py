@@ -14,6 +14,7 @@ from cemento.rdf.transforms import (
     get_classes,
     get_graph_relabel_mapping,
     get_instances,
+    get_literal_format_mapping,
     get_literal_values_with_id,
     get_literals,
     get_predicates,
@@ -79,6 +80,7 @@ def convert_ttl_to_graph(
         )
 
         graph = assign_strat_status(graph)
+        # TODO: assign literal status from read drawio as well
         graph = assign_literal_status(graph, all_literals)
 
         all_terms = all_classes | all_instances | all_predicates | default_terms
@@ -88,4 +90,6 @@ def convert_ttl_to_graph(
         )
         graph = nx.relabel_nodes(graph, rename_terms)
         graph = rename_edges(graph, rename_terms)
+        rename_format_literals = get_literal_format_mapping(graph)
+        graph = nx.relabel_nodes(graph, rename_format_literals)
         return graph
