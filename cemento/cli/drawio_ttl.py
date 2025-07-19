@@ -1,4 +1,4 @@
-from cemento.cli.io import (
+from cemento.utils.io import (
     get_default_defaults_folder,
     get_default_prefixes_file,
     get_default_references_folder,

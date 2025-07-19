@@ -40,6 +40,7 @@ from cemento.term_matching.transforms import (
     get_term_search_keys,
     get_term_types,
 )
+from cemento.utils.io import get_default_prefixes_file
 from cemento.utils.utils import fst, get_abbrev_term, snd
 
 
@@ -84,9 +85,14 @@ def convert_graph_to_ttl(
     except KeyError as e:
         offending_key = e.args[0]
         if prefixes_path:
-            raise ValueError(
-                f"The prefix {offending_key} was used but it was not in the prefix.json file located in {prefixes_path}. Please consider adding it there."
-            ) from KeyError
+            if Path(prefixes_path) == get_default_prefixes_file():
+                raise ValueError(
+                    f"The prefix {offending_key} was used but it was not in the default_prefixes.json file. Please consider making your own file and adding it there. Don't forget to set '--prefixes-file-path' when using the cli or setting 'prefixes_path' arguments when scripting."
+                ) from KeyError
+            else:
+                raise ValueError(
+                    f"The prefix {offending_key} was used but it was not in the prefix.json file located in {prefixes_path}. Please consider adding it there."
+                ) from KeyError
         else:
             raise ValueError(
                 f"The prefix {offending_key} was used but it is not part of the default namespace. Consider creating a prefixes.json file and add set the prefixes_path argument."
