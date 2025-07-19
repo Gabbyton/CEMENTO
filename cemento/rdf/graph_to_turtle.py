@@ -59,6 +59,7 @@ def convert_graph_to_ttl(
         )
     }
 
+    # TODO: assign literal terms IDs so identical values get treated separately
     literal_terms = {
         term
         for term in filter(lambda term: ('"' in term), get_diagram_terms_iter(graph))
