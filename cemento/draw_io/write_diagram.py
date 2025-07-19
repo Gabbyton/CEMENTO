@@ -45,6 +45,7 @@ def draw_tree(
     )
     ranked_subtrees = [tree for trees in split_subtrees for tree in trees]
     severed_links = [edge for edges in severed_links for edge in edges]
+    print(severed_links)
 
     ranked_subtrees = map(
         lambda subtree: compute_grid_allocations(
@@ -62,7 +63,6 @@ def draw_tree(
 
     # flip the graph back once the positions have been computed
     graph = graph.reverse(copy=True)
-    severed_links = [(obj, subj) for edge in severed_links for subj, obj in edge]
 
     ranked_subtrees = list(ranked_subtrees)
 

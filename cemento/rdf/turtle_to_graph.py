@@ -3,7 +3,7 @@ from pathlib import Path
 
 import networkx as nx
 from networkx import DiGraph
-from rdflib import RDF, RDFS, URIRef
+from rdflib import RDF, RDFS, SKOS, URIRef
 
 from cemento.rdf.transforms import (
     add_triples_to_digraph,
@@ -68,6 +68,7 @@ def convert_ttl_to_graph(
         all_instances = get_instances(rdf_graph, default_terms, term_types)
         all_predicates = get_predicates(rdf_graph, default_terms)
         all_predicates.update([RDF.type, RDFS.subClassOf])
+        all_predicates.add(SKOS.definition)
         all_literals = get_literals(rdf_graph)
 
         if set_unique_literals:
