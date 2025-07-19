@@ -21,14 +21,37 @@ from cemento.rdf.transforms import (
     rename_edges,
 )
 from cemento.term_matching.io import read_ttl
-from cemento.term_matching.transforms import get_aliases, get_term_types
+from cemento.term_matching.transforms import (
+    get_aliases,
+    get_prefixes,
+    get_strat_predicates,
+    get_term_types,
+)
 
 
 def convert_ttl_to_graph(
-    input_path: str | Path, check_ttl_validity: bool = True, set_unique_literals=True
+    input_path: str | Path,
+    onto_ref_folder: str | Path = None,
+    defaults_folder: str | Path = None,
+    prefixes_path: str | Path = None,
+    check_ttl_validity: bool = True,
+    set_unique_literals=True,
 ) -> DiGraph:
     default_namespaces = [RDF, RDFS, OWL, DCTERMS, SKOS]
     default_namespace_prefixes = ["rdf", "rdfs", "owl", "dcterms", "skos"]
+
+    strat_props = None
+    if all([onto_ref_folder, prefixes_path, defaults_folder]):
+        prefixes, inv_prefixes = get_prefixes(prefixes_path, onto_ref_folder)
+        strat_props = set(
+            get_strat_predicates(onto_ref_folder, defaults_folder, inv_prefixes)
+        )
+        # TODO: find better solution for including these options
+        strat_props.add(RDFS.subClassOf)
+        strat_props.add(RDF.type)
+        print(strat_props)
+    elif any([onto_ref_folder, prefixes_path, defaults_folder]):
+        raise ValueError("Either all the folders are set or none at all!")
 
     with read_ttl(input_path) as rdf_graph:
 
@@ -79,7 +102,8 @@ def convert_ttl_to_graph(
             graph,
         )
 
-        graph = assign_strat_status(graph)
+        graph = assign_strat_status(graph, strat_terms=strat_props)
+        # print(graph.edges(data=True))
         # TODO: assign literal status from read drawio as well
         graph = assign_literal_status(graph, all_literals)
 

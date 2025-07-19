@@ -11,6 +11,7 @@ from rdflib.namespace import split_uri
 
 from cemento.rdf.constants import PREDICATES
 from cemento.rdf.preprocessing import clean_literal_string, format_literal
+from cemento.term_matching.constants import RANK_PROPS
 from cemento.term_matching.transforms import substitute_term
 from cemento.utils.utils import filter_graph
 
@@ -227,11 +228,11 @@ def assign_edge_attr(
     return new_graph
 
 
-def assign_strat_status(graph: DiGraph) -> DiGraph:
-    # FIXME: implement search for strat preds here too instead of manual assignment
+def assign_strat_status(graph: DiGraph, strat_terms: set[URIRef] = None) -> DiGraph:
     new_graph = graph.copy()
     strat_edge_graph = filter_graph(
-        graph, lambda data: data["label"] in {RDF.type, RDFS.subClassOf}
+        graph,
+        lambda data: data["label"] in (strat_terms if strat_terms else RANK_PROPS),
     )
     non_strat_edges = graph.edges - strat_edge_graph.edges
     new_graph = assign_edge_attr(new_graph, strat_edge_graph.edges, {"is_strat": True})

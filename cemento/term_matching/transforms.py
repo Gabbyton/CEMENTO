@@ -275,19 +275,32 @@ def get_term_aliases_from_graph(rdf_graph: Graph, term: URIRef) -> list[URIRef]:
     )
 
 
+# TODO: make these functions more pure by taking rdf_graphs and type_refs
+def get_strat_predicates(
+    onto_ref_folder: str | Path,
+    defaults_folder: str | Path,
+    inv_prefixes: dict[URIRef | Namespace, str],
+) -> list[URIRef]:
+    type_refs = get_strat_props(defaults_folder, inv_prefixes)
+    return list(
+        chain(
+            *map(
+                partial(get_preds_in_ref, type_refs=type_refs),
+                get_ttl_file_iter(onto_ref_folder),
+            )
+        )
+    )
+
+
 def get_strat_predicates_str(
     onto_ref_folder: str | Path,
     defaults_folder: str | Path,
     inv_prefixes: dict[URIRef | Namespace, str],
 ) -> set[str]:
-    type_refs = get_strat_props(defaults_folder, inv_prefixes)
-    rdf_graphs = list(get_ttl_file_iter(onto_ref_folder))
-    strat_preds = list(
-        chain(*map(partial(get_preds_in_ref, type_refs=type_refs), rdf_graphs))
-    )
+    strat_preds = get_strat_predicates(onto_ref_folder, defaults_folder, inv_prefixes)
     stat_pred_aliases = (
         get_term_aliases_from_graph(graph, pred)
-        for graph in rdf_graphs
+        for graph in get_ttl_file_iter(onto_ref_folder)
         for pred in strat_preds
     )
     stat_preds_str = map(

@@ -1,4 +1,9 @@
 from cemento.rdf.turtle_to_drawio import convert_ttl_to_drawio
+from cemento.utils.io import (
+    get_default_defaults_folder,
+    get_default_prefixes_file,
+    get_default_references_folder,
+)
 
 
 def register(subparsers):
@@ -24,6 +29,27 @@ def register(subparsers):
         action="store_true",
     )
     parser.add_argument(
+        "-r",
+        "--onto-ref-folder-path",
+        help="the path to the folder containing the reference ontologies.",
+        metavar="ref_ontologies_folder_path",
+        default=get_default_references_folder(),
+    )
+    parser.add_argument(
+        "-d",
+        "--defaults-folder-path",
+        help="the path to the folder containing the ttl files of the default namespaces.",
+        default=get_default_defaults_folder(),
+        metavar="default_ontologies_folder_path",
+    )
+    parser.add_argument(
+        "-p",
+        "--prefix-file-path",
+        help="the path to the json file containing prefixes.",
+        default=get_default_prefixes_file(),
+        metavar="prefix_file_path",
+    )
+    parser.add_argument(
         "-dct",
         "--dont-check-turtle",
         help="set whether to stop evaluating turtle file for potential errors prior to conversion. Computation will be marginally shorter.",
@@ -44,6 +70,9 @@ def run(args):
         args.input,
         args.output,
         args.horizontal_graph,
+        onto_ref_folder=args.onto_ref_folder_path,
+        defaults_folder=args.defaults_folder_path,
+        prefixes_path=args.prefix_file_path,
         check_ttl_validity=args.dont_check_turtle,
         set_unique_literals=args.no_unique_literals,
     )
