@@ -1,3 +1,4 @@
+import re
 from collections.abc import Iterable
 
 import networkx as nx
@@ -7,18 +8,35 @@ from networkx import DiGraph
 from cemento.draw_io.constants import NxEdge, Shape
 
 
+def remove_literal_id(literal_content: str) -> str:
+    # TODO: replace with hashed id pattern
+    return re.sub(r"literal_id-(\w+):", "", literal_content)
+
+
 def replace_term_quotes(graph: DiGraph) -> DiGraph:
     replace_nodes = {term: replace_quotes(term) for term in graph.nodes}
     return nx.relabel_nodes(graph, replace_nodes, copy=True)
 
 
+def get_terms_with_quotes(graph: DiGraph) -> list[str]:
+    return [term for term in graph.nodes if "&quot;" in term]
+
+
 def remove_predicate_quotes(edges: Iterable[NxEdge]) -> Iterable[NxEdge]:
     return map(lambda edge: (edge.subj, edge.obj, remove_quotes(edge.pred)), edges)
+
 
 def replace_shape_html_quotes(shape: Shape) -> Shape:
     # TODO: implement immutable object copy
     shape.shape_content = replace_quotes(shape.shape_content)
     return shape
+
+
+def remove_literal_shape_id(shape: Shape) -> Shape:
+    # TODO: implement immutable object copy
+    shape.shape_content = remove_literal_id(shape.shape_content)
+    return shape
+
 
 def clean_term(term: str) -> str:
     soup = BeautifulSoup(term, "html.parser")

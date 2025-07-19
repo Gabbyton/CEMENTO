@@ -1,4 +1,7 @@
 import re
+from collections.abc import Callable
+
+from networkx import DiGraph
 
 
 def fst(x: tuple[any, any]) -> any:
@@ -43,3 +46,18 @@ def get_abbrev_term(
         )
 
     return prefix, abbrev_term
+
+
+# TODO: assign graph utils to their own module
+def filter_graph(
+    graph: DiGraph, data_filter: Callable[[dict[str, any]], bool]
+) -> DiGraph:
+    filtered_graph = graph.copy()
+    filtered_graph.remove_edges_from(
+        [
+            (subj, obj)
+            for subj, obj, data in graph.edges(data=True)
+            if (not data_filter(data) if data_filter else False)
+        ]
+    )
+    return filtered_graph

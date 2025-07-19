@@ -3,7 +3,10 @@ from uuid import uuid4
 
 from networkx import DiGraph
 
-from cemento.draw_io.preprocessing import replace_shape_html_quotes, replace_term_quotes
+from cemento.draw_io.preprocessing import (
+    replace_shape_html_quotes,
+    replace_term_quotes,
+)
 from cemento.draw_io.transforms import (
     compute_draw_positions,
     compute_grid_allocations,
@@ -55,6 +58,10 @@ def draw_tree(
         ranked_subtrees,
     )
 
+    # flip the graph back once the positions have been computed
+    graph = graph.reverse(copy=True)
+    severed_links = [(obj, subj) for edge in severed_links for subj, obj in edge]
+
     ranked_subtrees = list(ranked_subtrees)
 
     diagram_uid = str(uuid4()).split("-")[-1]
@@ -91,7 +98,7 @@ def draw_tree(
         diagram_uid,
         entity_idx_start=entity_idx_start + 1,
     )
-
+    # shapes = map(remove_literal_shape_id, shapes)
     write_content = generate_diagram_content(
         diagram_output_path.stem,
         diagram_uid,

@@ -1,6 +1,7 @@
 import re
 from collections.abc import Iterable
 from functools import reduce
+from uuid import uuid4
 
 import networkx as nx
 from networkx import DiGraph
@@ -11,6 +12,7 @@ from rdflib.namespace import split_uri
 from cemento.rdf.constants import PREDICATES
 from cemento.rdf.preprocessing import clean_literal_string
 from cemento.term_matching.transforms import substitute_term
+from cemento.utils.utils import filter_graph
 
 
 def construct_term_uri(
@@ -152,6 +154,10 @@ def get_instances(
     }
 
 
+def get_literals(rdf_graph: Graph) -> list[Literal]:
+    return [term for term in rdf_graph.all_nodes() if isinstance(term, Literal)]
+
+
 def get_classes(
     rdf_graph: Graph, default_terms: set[URIRef], term_types: dict[URIRef, URIRef]
 ) -> set[URIRef]:
@@ -194,23 +200,43 @@ def get_graph_relabel_mapping(
     return rename_mapping
 
 
-def get_graph(
-    rdf_graph: Graph, all_predicates: set[URIRef], default_terms: set[URIRef]
+def add_triples_to_digraph(
+    subj: Literal,
+    pred: URIRef,
+    obj: URIRef | Literal,
+    graph: DiGraph,
 ) -> DiGraph:
-    graph = DiGraph()
-    for subj, pred, obj in rdf_graph:
-        if (
-            pred in all_predicates
-            and subj not in default_terms
-            and obj not in default_terms
-        ):
-            # TODO: add pred check here for annotations
-            is_strat = pred in {RDF.type, RDFS.subClassOf}
-            if is_strat:
-                graph.add_edge(subj, obj, label=pred, is_strat=is_strat)
-            else:
-                graph.add_edge(obj, subj, label=pred, is_strat=is_strat)
-    return graph
+    new_graph = graph.copy()
+    new_graph.add_edge(subj, obj, label=pred)
+    return new_graph
+
+
+def assign_edge_attr(
+    graph: DiGraph, edges: tuple[any, any], new_attrs: dict[str, any]
+) -> DiGraph:
+    new_graph = graph.copy()
+    edge_attr_dict = {edge: new_attrs for edge in edges}
+    nx.set_edge_attributes(new_graph, edge_attr_dict)
+    return new_graph
+
+
+def assign_strat_status(graph: DiGraph) -> DiGraph:
+    # FIXME: implement search for strat preds here too instead of manual assignment
+    new_graph = graph.copy()
+    strat_edge_graph = filter_graph(
+        graph, lambda data: data["label"] in {RDF.type, RDFS.subClassOf}
+    )
+    non_strat_edges = graph.edges - strat_edge_graph.edges
+    new_graph = assign_edge_attr(new_graph, strat_edge_graph.edges, {"is_strat": True})
+    new_graph = assign_edge_attr(new_graph, non_strat_edges, {"is_strat": False})
+    return new_graph
+
+
+def assign_literal_status(graph: DiGraph, all_literals: set[Literal]) -> DiGraph:
+    new_graph = graph.copy()
+    node_values = {node: {"is_literal": node in all_literals} for node in graph.nodes}
+    nx.set_node_attributes(new_graph, node_values)
+    return new_graph
 
 
 def rename_edges(graph: DiGraph, rename_mapping: dict[URIRef, str]) -> DiGraph:
@@ -223,3 +249,79 @@ def rename_edges(graph: DiGraph, rename_mapping: dict[URIRef, str]) -> DiGraph:
         edge_rename_mapping[(subj, obj)] = data
     nx.set_edge_attributes(graph, edge_rename_mapping)
     return graph
+
+
+def get_literal_values_with_id(
+    literal_terms: list[Literal],
+) -> Iterable[tuple[Literal, Literal]]:
+    # TODO: add a hashed version of the tag literal_id- to prevent conflict if people put this string
+    unique_ids = (f"literal_id-{get_uuid()}" for _ in range(len(literal_terms)))
+    return (
+        (
+            literal,
+            Literal(
+                f"{unique_id}:{literal.value}",
+                lang=literal.language if hasattr(literal, "language") else None,
+                datatype=literal.datatype if hasattr(literal, "datatype") else None,
+            ),
+        )
+        for (unique_id, literal) in zip(unique_ids, literal_terms, strict=True)
+    )
+
+
+def assign_literal_ids(
+    rdf_graph: Graph, literal_replacements: Iterable[tuple[Literal, Literal]]
+) -> DiGraph:
+    # TODO: assign hashed constant for determining literal ids
+    literal_terms, new_literal_values = zip(*literal_replacements, strict=True)
+    replace_triples = list(rdf_graph.triples_choices((None, None, list(literal_terms))))
+    substitute_triples = (
+        (subj, pred, new_literal)
+        for ((subj, pred, obj), new_literal) in zip(
+            replace_triples, new_literal_values, strict=True
+        )
+    )
+    # TODO: setup immutable copy for rdf_graph
+    new_graph = reduce(
+        lambda rdf_graph, triple: rdf_graph.remove(triple),
+        replace_triples,
+        rdf_graph,
+    )
+    new_graph = reduce(
+        lambda rdf_graph, triple: rdf_graph.add(triple),
+        substitute_triples,
+        new_graph,
+    )
+    print(new_graph.all_nodes())
+    return new_graph
+
+
+def get_uuid():
+    return str(uuid4()).split("-")[-1]
+
+
+def check_graph_literal_validity(rdf_graph: Graph) -> bool:
+    all_literals = get_literals(rdf_graph)
+
+    literals_as_subjects = list(rdf_graph.triples_choices((all_literals, None, None)))
+    literals_as_predicates = list(rdf_graph.triples_choices((None, all_literals, None)))
+    literals_as_objects = list(rdf_graph.triples_choices((None, None, all_literals)))
+    literal_triples_ct = len(
+        literals_as_subjects + literals_as_objects + literals_as_predicates
+    )
+    if literal_triples_ct > len(literals_as_objects):
+        raise ValueError(
+            f"A literal value was used as the subject or the predicate of a triple, which is not allowed! Please fix the following triples: {literals_as_subjects + literals_as_predicates}"
+        )
+
+    # TODO: transfer all integrity checks in a module
+    if literal_triples_ct > len(all_literals):
+        raise ValueError(
+            "A literal value was referenced more than once! Literal values must only be objects in the rdf triple and must only be referenced once."
+        )
+
+    return True
+
+
+def check_graph_validity(rdf_graph: Graph) -> bool:
+    return check_graph_validity()

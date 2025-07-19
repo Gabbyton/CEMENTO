@@ -24,7 +24,7 @@ from cemento.draw_io.constants import (
 from cemento.draw_io.io import get_template_files
 from cemento.draw_io.preprocessing import clean_term, remove_predicate_quotes
 from cemento.term_matching.constants import RANK_PROPS
-from cemento.utils.utils import fst, snd
+from cemento.utils.utils import filter_graph, fst, snd
 
 
 def parse_elements(file_path: str | Path) -> dict[str, dict[str, any]]:
@@ -174,20 +174,6 @@ def relabel_graph_nodes_with_node_attr(
         for current_node_label in graph.nodes
     }
     return nx.relabel_nodes(graph, relabel_mapping)
-
-
-def filter_graph(
-    graph: DiGraph, data_filter: Callable[[dict[str, any]], bool]
-) -> DiGraph:
-    filtered_graph = graph.copy()
-    filtered_graph.remove_edges_from(
-        [
-            (subj, obj)
-            for subj, obj, data in graph.edges(data=True)
-            if (not data_filter(data) if data_filter else False)
-        ]
-    )
-    return filtered_graph
 
 
 def get_ranked_subgraph(graph: DiGraph) -> DiGraph:
