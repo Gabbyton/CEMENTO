@@ -175,7 +175,7 @@ def get_classes(
     return instance_superclasses | subclass_terms
 
 
-def get_predicates(rdf_graph: Graph, default_terms: set[URIRef]) -> set[URIRef]:
+def get_predicates(rdf_graph: Graph) -> set[URIRef]:
     # TODO: add the dynamic predicate retrieval from term matching
     return {term for prop in PREDICATES for term in rdf_graph.subjects(RDF.type, prop)}
 
