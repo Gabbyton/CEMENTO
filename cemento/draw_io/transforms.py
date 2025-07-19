@@ -431,7 +431,7 @@ def get_severed_link_connectors(
         lambda edge: NxEdge(
             subj=fst(edge),
             obj=snd(edge),
-            pred=graph.get_edge_data(snd(edge), fst(edge), default={"label": None})[
+            pred=graph.get_edge_data(fst(edge), snd(edge), default={"label": None})[
                 "label"
             ],
         ),
