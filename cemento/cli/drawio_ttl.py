@@ -1,3 +1,8 @@
+from cemento.cli.io import (
+    get_default_defaults_folder,
+    get_default_prefixes_file,
+    get_default_references_folder,
+)
 from cemento.rdf.drawio_to_turtle import convert_drawio_to_ttl
 
 
@@ -17,22 +22,22 @@ def register(subparsers):
         "-r",
         "--ontoref",
         help="the path to the folder containing the reference ontologies.",
-        metavar="folder_path",
-        default=None,
+        metavar="ref_ontologies_folder_path",
+        default=get_default_references_folder(),
     )
     parser.add_argument(
         "-d",
         "--defaults",
         help="the path to the folder containing the ttl files of the default namespaces.",
-        default=None,
-        metavar="folder_path",
+        default=get_default_defaults_folder(),
+        metavar="default_ontologies_folder_path",
     )
     parser.add_argument(
         "-p",
         "--prefixfile",
         help="the path to the json file containing prefixes.",
-        default=None,
-        metavar="folder_path",
+        default=get_default_prefixes_file(),
+        metavar="prefix_file_path",
     )
     parser.set_defaults(_handler=run)
 
