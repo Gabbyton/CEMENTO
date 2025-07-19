@@ -292,7 +292,6 @@ def assign_literal_ids(
         substitute_triples,
         new_graph,
     )
-    print(new_graph.all_nodes())
     return new_graph
 
 
@@ -324,4 +323,4 @@ def check_graph_literal_validity(rdf_graph: Graph) -> bool:
 
 
 def check_graph_validity(rdf_graph: Graph) -> bool:
-    return check_graph_validity()
+    return check_graph_literal_validity(rdf_graph)

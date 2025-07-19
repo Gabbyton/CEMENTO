@@ -4,6 +4,7 @@ from uuid import uuid4
 from networkx import DiGraph
 
 from cemento.draw_io.preprocessing import (
+    remove_literal_shape_id,
     replace_shape_html_quotes,
     replace_term_quotes,
 )
@@ -98,7 +99,9 @@ def draw_tree(
         diagram_uid,
         entity_idx_start=entity_idx_start + 1,
     )
-    # shapes = map(remove_literal_shape_id, shapes)
+
+    shapes = map(remove_literal_shape_id, shapes)
+
     write_content = generate_diagram_content(
         diagram_output_path.stem,
         diagram_uid,
