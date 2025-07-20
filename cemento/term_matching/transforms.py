@@ -207,6 +207,11 @@ def get_abbrev_uri(
     return f"{prefix}:{abbrev_term.strip()}"
 
 
+def get_abbrev_uri_with_prefix(term: URIRef, prefix: str) -> str:
+    ns, abbrev_term = split_uri(term)
+    return f"{prefix}:{abbrev_term.strip()}"
+
+
 def get_prop_family_from_defaults(
     prop: URIRef,
     defaults_folder: str | Path,

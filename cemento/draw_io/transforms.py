@@ -135,7 +135,13 @@ def generate_graph(
     # add all terms
     for term_id in term_ids:
         term = elements[term_id]["value"]
-        graph.add_node(term_id, term_id=term_id, label=clean_term(term))
+        # TODO: find more sophisticated method to detect literals, or mention method in the docs
+        graph.add_node(
+            term_id,
+            term_id=term_id,
+            label=clean_term(term),
+            is_literal=('"' in term or "&quot;" in term),
+        )
 
     # add all relationships
     for rel_id in relationship_ids:
@@ -148,6 +154,8 @@ def generate_graph(
         else:
             # default to just taking rank terms, which are always known
             is_strat = pred in RANK_PROPS
+        # TODO: add set to a list on constants, dynamically retrieve
+        pred, is_rank = substitute_term(pred, {"rdfs:subClassOf", "rdf:type"})
         # arrow conventions are inverted for rank relationships, flip assignments to conform
         if inverted_rank_arrow and is_strat:
             temp = subj_id
@@ -160,6 +168,7 @@ def generate_graph(
             label=pred,
             pred_id=rel_id,
             is_strat=is_strat,
+            is_rank=is_rank,
             is_predicate=True,
         )
 
