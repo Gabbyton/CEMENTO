@@ -210,7 +210,7 @@ def get_literal_format_mapping(graph: DiGraph) -> dict[Literal, str]:
 
 
 def add_triples_to_digraph(
-    subj: Literal,
+    subj: URIRef | Literal,
     pred: URIRef,
     obj: URIRef | Literal,
     graph: DiGraph,

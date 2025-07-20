@@ -1,3 +1,4 @@
+from itertools import chain
 from pathlib import Path
 from uuid import uuid4
 
@@ -113,8 +114,6 @@ def draw_tree(
         diagram_uid,
         entity_idx_start=entity_idx_start + 1,
     )
-
-    from itertools import chain
 
     shape_positions_by_id = get_shape_positions_by_id(shapes)
 

@@ -12,12 +12,9 @@ from cemento.rdf.transforms import (
     assign_rank_status,
     assign_strat_status,
     check_graph_validity,
-    get_classes,
     get_graph_relabel_mapping,
-    get_instances,
     get_literal_format_mapping,
     get_literal_values_with_id,
-    get_literals,
     rename_edges,
 )
 from cemento.term_matching.constants import get_default_namespace_prefixes
@@ -26,7 +23,6 @@ from cemento.term_matching.transforms import (
     get_aliases,
     get_prefixes,
     get_strat_predicates,
-    get_term_types,
 )
 
 
@@ -45,6 +41,8 @@ def convert_ttl_to_graph(
         raise ValueError("Either all the folders are set or none at all!")
 
     print("retrieving reference data...")
+    file_strat_preds = set()
+    ref_strat_preds = set()
     prefixes, inv_prefixes = get_prefixes(prefixes_path, onto_ref_folder)
     default_namespace_prefixes = get_default_namespace_prefixes()
     default_terms = {
@@ -53,14 +51,14 @@ def convert_ttl_to_graph(
         for term in dir(ns)
         if isinstance(term, URIRef)
     }
-    strat_props = set()
+
     if not classes_only:
-        strat_props = set(
+        ref_strat_preds = set(
             get_strat_predicates(onto_ref_folder, defaults_folder, inv_prefixes)
         )
     # TODO: find better solution for including these options
-    strat_props.add(RDFS.subClassOf)
-    strat_props.add(RDF.type)
+    ref_strat_preds.add(RDFS.subClassOf)
+    ref_strat_preds.add(RDF.type)
 
     with read_ttl(input_path) as rdf_graph:
 
@@ -68,69 +66,102 @@ def convert_ttl_to_graph(
             check_graph_validity(rdf_graph)
 
         print("retrieving terms...")
-        term_types = get_term_types(rdf_graph)
-        all_classes = get_classes(rdf_graph, default_terms, term_types)
-        all_instances = get_instances(rdf_graph, default_terms, term_types)
+
+        file_uri_refs = set(
+            filter(
+                lambda x: isinstance(x, URIRef),
+                rdf_graph.all_nodes(),
+            )
+        )
+        all_classes = set(
+            filter(
+                lambda x: x in file_uri_refs,
+                rdf_graph.transitive_subjects(RDF.type, OWL.Class),
+            )
+        )
+        all_instances = reduce(
+            lambda acc, display_class: acc
+            | set(
+                filter(
+                    lambda x: isinstance(x, URIRef),
+                    rdf_graph.transitive_subjects(RDF.type, display_class),
+                )
+            ),
+            all_classes,
+            set(),
+        )
 
         if not classes_only:
             # TODO: find a better solution for this section, move to transforms
-            self_referentials = {pred for subj, pred, obj in rdf_graph if subj == obj}
-            all_predicates = set(
-                filter(
-                    lambda pred: (
-                        pred in strat_props
-                        or pred in {RDF.type, RDFS.subClassOf}
-                        or (
-                            pred in term_types
-                            and term_types[pred]
-                            in {
-                                OWL.ObjectProperty,
-                                OWL.AnnotationProperty,
-                                OWL.DatatypeProperty,
-                            }
-                        )
-                    )
-                    and pred not in {RDFS.label, SKOS.altLabel}
-                    and pred not in self_referentials,
-                    rdf_graph.predicates(),
-                )
+            file_self_referentials = {
+                pred for subj, pred, obj in rdf_graph if subj == obj
+            }
+            file_strat_pred_types = {
+                OWL.AnnotationProperty,
+                OWL.DatatypeProperty,
+            }
+            file_strat_preds = reduce(
+                lambda acc, file_strat_pred: acc
+                | set(rdf_graph.transitive_subjects(RDF.type, file_strat_pred)),
+                file_strat_pred_types,
+                set(),
             )
-            all_literals = get_literals(rdf_graph)
+            syntax_reserved_preds = {RDFS.label, SKOS.altLabel}
+            all_predicates = (
+                (file_strat_preds | ref_strat_preds)
+                - file_self_referentials
+                - syntax_reserved_preds
+            )
 
+            all_literals = set(
+                filter(lambda x: isinstance(x, Literal), rdf_graph.all_nodes())
+            )
         else:
             all_predicates = {RDFS.subClassOf, RDF.type}
             all_literals = {}
+
+        object_properties = set(
+            rdf_graph.transitive_subjects(RDF.type, OWL.ObjectProperty)
+        )
+        all_predicates.update(object_properties)
 
         if set_unique_literals:
             print("creating unique literals...")
             literal_replacements = get_literal_values_with_id(all_literals)
             rdf_graph = assign_literal_ids(rdf_graph, literal_replacements)
+            all_literals = set(
+                filter(lambda x: isinstance(x, Literal), rdf_graph.all_nodes())
+            )
 
-        graph = DiGraph()
-        graph_triples = (
+        display_terms = set(
+            filter(
+                lambda term: term not in default_terms,
+                all_classes | all_instances | all_literals,
+            )
+        )
+        graph_triples = [
             (subj, pred, obj)
             for subj, pred, obj in rdf_graph
-            if subj not in default_terms
-            and obj not in default_terms
-            and (isinstance(subj, URIRef) or isinstance(subj, Literal))
-            and (isinstance(obj, URIRef) or isinstance(obj, Literal))
+            if (subj in display_terms and obj in display_terms)
             and pred in all_predicates
-        )
+        ]
+        graph = DiGraph()
         graph = reduce(
-            lambda graph, triples: add_triples_to_digraph(*triples, graph),
+            lambda graph, triple: add_triples_to_digraph(*triple, graph),
             graph_triples,
             graph,
         )
 
         print("assigining additional properties...")
-        graph = assign_strat_status(graph, strat_terms=strat_props)
+        graph = assign_strat_status(
+            graph, strat_terms=(ref_strat_preds | file_strat_preds)
+        )
         # TODO: assign literal status from read drawio as well
         graph = assign_literal_status(graph, all_literals)
         graph = assign_rank_status(graph)
 
         print("renaming terms...")
         all_terms = all_classes | all_instances | all_predicates | default_terms
-        all_terms = filter(lambda term: isinstance(term, URIRef), all_terms)
         aliases = get_aliases(rdf_graph)
         rename_terms = get_graph_relabel_mapping(
             all_terms, all_classes, all_instances, aliases, inv_prefixes
