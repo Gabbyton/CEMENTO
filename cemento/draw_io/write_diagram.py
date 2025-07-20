@@ -12,6 +12,7 @@ from cemento.draw_io.preprocessing import (
 from cemento.draw_io.transforms import (
     compute_draw_positions,
     compute_grid_allocations,
+    flip_edges,
     flip_edges_of_graphs,
     generate_diagram_content,
     get_graph_root_nodes,
@@ -25,7 +26,6 @@ from cemento.draw_io.transforms import (
     get_shape_positions_by_id,
     get_shapes_from_trees,
     get_subgraphs,
-    flip_edges,
     split_multiple_inheritances,
 )
 
@@ -53,8 +53,6 @@ def draw_tree(
         *map(split_multiple_inheritances, ranked_subtrees), strict=True
     )
     ranked_subtrees = [tree for trees in split_subtrees for tree in trees if tree]
-    # for tree in ranked_subtrees:
-    #     print(tree.edges(data=True))
     severed_links = [edge for edges in severed_links for edge in edges]
 
     ranked_subtrees = map(
@@ -118,21 +116,12 @@ def draw_tree(
     from itertools import chain
 
     shape_positions_by_id = get_shape_positions_by_id(shapes)
-    inv_shape_id = {value: key for key, value in new_shape_ids.items()}
-    for connector in chain(connectors + predicate_connectors + predicate_connectors):
-        print(
-            inv_shape_id[connector.source_id],
-            connector.connector_val,
-            inv_shape_id[connector.target_id],
-        )
-        print(shape_positions_by_id[connector.source_id])
-        print(shape_positions_by_id[connector.target_id])
+
+    for connector in chain(connectors, predicate_connectors, predicate_connectors):
         connector.resolve_position(
-            "property",
             shape_positions_by_id[connector.source_id],
             shape_positions_by_id[connector.target_id],
         )
-        print()
 
     shapes = map(remove_literal_shape_id, shapes)
     connectors = map(remove_literal_connector_id, connectors)

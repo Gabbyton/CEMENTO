@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from math import atan2, pi, degrees
+from math import atan2, pi
 from typing import NamedTuple
 
 
@@ -69,58 +69,28 @@ class Connector(DiagramObject):
         target_shape_y: float,
     ) -> tuple[float, float, float, float]:
         crit_angle = abs(atan2(SHAPE_HEIGHT, SHAPE_WIDTH))
-        # apple around banana
-        current_angle = atan2(
-            target_shape_y - source_shape_y, target_shape_x - source_shape_x
-        )
-        print(degrees(current_angle), degrees(crit_angle))
-        match current_angle:
-            # left
-            case angle if (
-                pi - crit_angle
-            ) <= angle <= pi or -pi <= angle < crit_angle:
-                print('left')
-                return (0, 0.5, 1, 0.5)
-            # top
-            case angle if -(pi - crit_angle) <= angle < -crit_angle:
-                print('top')
-                return (0.5, 0, 0.5, 1)
-            # right
-            case angle if -crit_angle <= angle < crit_angle or angle == 2 * pi:
-                print('right')
-                return (0, 0.5, 1, 0.5)
-            # bottom
-            case angle if crit_angle <= angle < (pi - crit_angle):
-                print('bottom')
-                return (0.5, 1, 0.5, 0)
-            case _:
-                return (0, 0, 0, 0)
+        angle = atan2(target_shape_y - source_shape_y, target_shape_x - source_shape_x)
+
+        if -crit_angle <= angle <= crit_angle:
+            return (1, 0.5, 0, 0.5)
+        elif crit_angle < angle <= pi - crit_angle:
+            return (0.5, 1, 0.5, 0)
+        elif angle > pi - crit_angle or angle < -(pi - crit_angle):
+            return (0, 0.5, 1, 0.5)
+            # return (1, 0.5, 0, 0.5)
+        elif -(pi - crit_angle) <= angle < -crit_angle:
+            return (0.5, 0, 0.5, 1)
+        else:
+            return (0, 0, 0, 0)
 
     def resolve_position(
         self,
-        connector_type: str | ConnectorType = None,
         source_shape_pos: tuple[float, float] = None,
         target_shape_pos: tuple[float, float] = None,
     ) -> None:
-        match connector_type:
-            case ConnectorType.RANK_CONNECTOR | ConnectorType.RANK_CONNECTOR.value:
-                self.start_pos_x = 0.5
-                self.start_pos_x = 1
-                self.end_pos_x = 0.5
-                self.end_pos_y = 0
-                return
-            case (
-                ConnectorType.PROPERTY_CONNECTOR
-                | ConnectorType.PROPERTY_CONNECTOR.value
-            ):
-                self.start_pos_x, self.start_pos_y, self.end_pos_x, self.end_pos_y = (
-                    Connector.compute_dynamic_position(
-                        *source_shape_pos, *target_shape_pos
-                    )
-                )
-                print(self.start_pos_x, self.start_pos_y, self.end_pos_x, self.end_pos_y)
-            case _:
-                return
+        self.start_pos_x, self.start_pos_y, self.end_pos_x, self.end_pos_y = (
+            Connector.compute_dynamic_position(*source_shape_pos, *target_shape_pos)
+        )
 
 
 @dataclass

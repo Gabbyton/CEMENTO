@@ -3,7 +3,7 @@ from pathlib import Path
 
 import networkx as nx
 from networkx import DiGraph
-from rdflib import OWL, RDF, RDFS, SKOS, URIRef
+from rdflib import OWL, RDF, RDFS, SKOS, URIRef, Literal
 
 from cemento.rdf.transforms import (
     add_triples_to_digraph,
@@ -43,6 +43,7 @@ def convert_ttl_to_graph(
     if not all(file_args) and any(file_args):
         raise ValueError("Either all the folders are set or none at all!")
 
+    print("retrieving reference data...")
     prefixes, inv_prefixes = get_prefixes(prefixes_path, onto_ref_folder)
     default_namespace_prefixes = get_default_namespace_prefixes()
     default_terms = {
@@ -63,6 +64,7 @@ def convert_ttl_to_graph(
         if check_ttl_validity:
             check_graph_validity(rdf_graph)
 
+        print("retrieving terms...")
         term_types = get_term_types(rdf_graph)
         all_classes = get_classes(rdf_graph, default_terms, term_types)
         all_instances = get_instances(rdf_graph, default_terms, term_types)
@@ -91,6 +93,7 @@ def convert_ttl_to_graph(
         all_literals = get_literals(rdf_graph)
 
         if set_unique_literals:
+            print("creating unique literals...")
             literal_replacements = get_literal_values_with_id(all_literals)
             rdf_graph = assign_literal_ids(rdf_graph, literal_replacements)
 
@@ -100,6 +103,8 @@ def convert_ttl_to_graph(
             for subj, pred, obj in rdf_graph
             if subj not in default_terms
             and obj not in default_terms
+            and (isinstance(subj, URIRef) or isinstance(subj, Literal))
+            and (isinstance(obj, URIRef) or isinstance(obj, Literal))
             and pred in all_predicates
         )
         graph = reduce(
@@ -108,18 +113,23 @@ def convert_ttl_to_graph(
             graph,
         )
 
+        print("assigining additional properties...")
         graph = assign_strat_status(graph, strat_terms=strat_props)
         # TODO: assign literal status from read drawio as well
         graph = assign_literal_status(graph, all_literals)
         graph = assign_rank_status(graph)
 
+        print("renaming terms...")
         all_terms = all_classes | all_instances | all_predicates | default_terms
+        all_terms = filter(lambda term: isinstance(term, URIRef), all_terms)
         aliases = get_aliases(rdf_graph)
         rename_terms = get_graph_relabel_mapping(
             all_terms, all_classes, all_instances, aliases, inv_prefixes
         )
         graph = nx.relabel_nodes(graph, rename_terms)
         graph = rename_edges(graph, rename_terms)
+
+        print("formatting literals...")
         rename_format_literals = get_literal_format_mapping(graph)
         graph = nx.relabel_nodes(graph, rename_format_literals)
         return graph

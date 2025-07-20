@@ -171,6 +171,7 @@ def get_classes(
         term
         for subj, obj in rdf_graph.subject_objects(RDFS.subClassOf)
         for term in (subj, obj)
+        if isinstance(term, URIRef)
     }
     return instance_superclasses | subclass_terms
 

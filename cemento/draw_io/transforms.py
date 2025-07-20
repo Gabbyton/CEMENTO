@@ -25,7 +25,7 @@ from cemento.draw_io.constants import (
 from cemento.draw_io.io import get_template_files
 from cemento.draw_io.preprocessing import clean_term, remove_predicate_quotes
 from cemento.term_matching.constants import RANK_PROPS
-from cemento.utils.utils import filter_graph, fst, snd
+from cemento.utils.utils import filter_graph, fst, snd, trd
 
 
 def parse_elements(file_path: str | Path) -> dict[str, dict[str, any]]:
@@ -254,7 +254,8 @@ def split_multiple_inheritances(
     for fork_node in fork_nodes:
         fork_predecessors = list(dummy_graph.predecessors(fork_node))
         edges_to_cut = [
-            (predecessor, fork_node) for predecessor in fork_predecessors[1:]
+            (predecessor, fork_node, dummy_graph.get_edge_data(predecessor, fork_node))
+            for predecessor in fork_predecessors[1:]
         ]
         dummy_graph.remove_edges_from(edges_to_cut)
         severed_links.extend(edges_to_cut)
@@ -262,7 +263,12 @@ def split_multiple_inheritances(
     for diamond_head in diamond_heads:
         diamond_successors = list(dummy_graph.successors(diamond_head))
         edges_to_cut = [
-            (diamond_head, successor) for successor in diamond_successors[1:]
+            (
+                diamond_head,
+                successor,
+                dummy_graph.get_edge_data(diamond_head, successor),
+            )
+            for successor in diamond_successors[1:]
         ]
         dummy_graph.remove_edges_from(edges_to_cut)
         severed_links.extend(edges_to_cut)
@@ -455,7 +461,7 @@ def get_rank_connectors(
 
 def get_severed_link_connectors(
     graph: DiGraph,
-    edges: list[tuple[any, any]],
+    edges: list[tuple[any, any, dict[str, any]]],
     shape_positions: dict[str, tuple[float, float]],
     shape_ids: dict[str, str],
     diagram_uid: str,
@@ -466,9 +472,7 @@ def get_severed_link_connectors(
         lambda edge: NxEdge(
             subj=fst(edge),
             obj=snd(edge),
-            pred=graph.get_edge_data(fst(edge), snd(edge), default={"label": None})[
-                "label"
-            ],
+            pred=trd(edge)["label"],
         ),
         edges,
     )

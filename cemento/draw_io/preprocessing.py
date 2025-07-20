@@ -23,7 +23,12 @@ def get_terms_with_quotes(graph: DiGraph) -> list[str]:
 
 
 def remove_predicate_quotes(edges: Iterable[NxEdge]) -> Iterable[NxEdge]:
-    return map(lambda edge: (edge.subj, edge.obj, remove_quotes(edge.pred)), edges)
+    return map(
+        lambda edge: (
+            (edge.subj, edge.obj, remove_quotes(edge.pred)) if edge.pred else None
+        ),
+        edges,
+    )
 
 
 def replace_shape_html_quotes(shape: Shape) -> Shape:
@@ -58,4 +63,6 @@ def remove_html_quote(input_str: str) -> str:
 
 
 def remove_quotes(input_str: str) -> str:
+    if not input_str or not isinstance(input_str, str):
+        return input_str
     return remove_html_quote(input_str.replace('"', "").strip())

@@ -12,6 +12,10 @@ def snd(x: tuple[any, any]) -> any:
     return x[1]
 
 
+def trd(x: tuple[any, any, any]) -> any:
+    return x[2]
+
+
 def remove_term_names(term: str) -> str:
     match = re.search(r"^([^(]*)", term)
     return match.group(1).strip() if match else term
