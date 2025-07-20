@@ -124,18 +124,33 @@ def convert_graph_to_ttl(
 
     if log_substitution_path:
         log_entries = [
-            (original_term, matched_term, term, score)
-            for original_term, (matched_term, matches) in substitution_results.items()
-            for term, score in matches
+            (original_term, search_key, term, score, matched_term)
+            for original_term, (
+                matched_term,
+                search_keys,
+                matches,
+            ) in substitution_results.items()
+            for (search_key, (term, score)) in zip(search_keys, matches, strict=False)
         ]
         df = pd.DataFrame(
-            log_entries, columns=["term", "matched_term", "search_result", "score"]
+            log_entries,
+            columns=[
+                "original_term",
+                "search_key",
+                "search_result",
+                "score",
+                "matched_term",
+            ],
         )
         df.to_csv(log_substitution_path)
 
         substitution_results = {
             key: matched_term
-            for key, (matched_term, matches) in substitution_results.items()
+            for key, (
+                matched_term,
+                _,
+                _,
+            ) in substitution_results.items()
             if matched_term is not None
         }
 

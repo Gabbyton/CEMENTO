@@ -50,6 +50,7 @@ def substitute_term_multikey(
     score_cutoff: int = 80,
     log_results: bool = False,
 ) -> URIRef | tuple[URIRef, list[tuple[URIRef, int]]]:
+    search_keys = search_keys if not log_results else list(search_keys)
     search_results = search_similar_terms_multikey(
         search_keys, search_terms.keys(), score_cutoff=score_cutoff
     )
@@ -60,7 +61,7 @@ def substitute_term_multikey(
     )
     term_substitute = search_terms[best_match] if best_match else None
     if log_results:
-        return (term_substitute, search_results)
+        return (term_substitute, search_keys, search_results)
     return term_substitute
 
 
