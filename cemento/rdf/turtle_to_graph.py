@@ -11,7 +11,6 @@ from cemento.rdf.transforms import (
     assign_literal_status,
     assign_rank_status,
     assign_strat_status,
-    check_graph_validity,
     get_graph_relabel_mapping,
     get_literal_format_mapping,
     get_literal_values_with_id,
@@ -32,7 +31,6 @@ def convert_ttl_to_graph(
     onto_ref_folder: str | Path = None,
     defaults_folder: str | Path = None,
     prefixes_path: str | Path = None,
-    check_ttl_validity: bool = True,
     set_unique_literals=True,
 ) -> DiGraph:
 
@@ -61,9 +59,6 @@ def convert_ttl_to_graph(
     ref_strat_preds.add(RDF.type)
 
     with read_ttl(input_path) as rdf_graph:
-
-        if check_ttl_validity:
-            check_graph_validity(rdf_graph)
 
         print("retrieving terms...")
 

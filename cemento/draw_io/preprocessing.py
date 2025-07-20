@@ -18,10 +18,6 @@ def replace_term_quotes(graph: DiGraph) -> DiGraph:
     return nx.relabel_nodes(graph, replace_nodes, copy=True)
 
 
-def get_terms_with_quotes(graph: DiGraph) -> list[str]:
-    return [term for term in graph.nodes if "&quot;" in term]
-
-
 def remove_predicate_quotes(edges: Iterable[NxEdge]) -> Iterable[NxEdge]:
     return map(
         lambda edge: (

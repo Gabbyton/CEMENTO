@@ -9,7 +9,6 @@ from rdflib import OWL, RDF, RDFS, SKOS, BNode, Graph, Literal, Namespace, URIRe
 from rdflib.collection import Collection
 from rdflib.namespace import split_uri
 
-from cemento.rdf.constants import PREDICATES
 from cemento.rdf.preprocessing import clean_literal_string, format_literal
 from cemento.term_matching.constants import RANK_PROPS
 from cemento.term_matching.transforms import substitute_term
@@ -143,42 +142,6 @@ def add_domains_ranges(
     return add_rdf_triples(
         rdf_graph, domain_collection_triples + range_collection_triples
     )
-
-
-def get_instances(
-    rdf_graph: Graph, default_terms: set[URIRef], term_types: dict[URIRef, URIRef]
-) -> set[URIRef]:
-    return {
-        subj
-        for subj, obj in rdf_graph.subject_objects(RDF.type)
-        if obj not in default_terms and term_types[obj] == OWL.Class
-    }
-
-
-def get_literals(rdf_graph: Graph) -> list[Literal]:
-    return [term for term in rdf_graph.all_nodes() if isinstance(term, Literal)]
-
-
-def get_classes(
-    rdf_graph: Graph, default_terms: set[URIRef], term_types: dict[URIRef, URIRef]
-) -> set[URIRef]:
-    instance_superclasses = {
-        subj
-        for subj, obj in rdf_graph.subject_objects(RDF.type)
-        if obj not in default_terms and term_types[subj] == OWL.Class
-    }
-    subclass_terms = {
-        term
-        for subj, obj in rdf_graph.subject_objects(RDFS.subClassOf)
-        for term in (subj, obj)
-        if isinstance(term, URIRef)
-    }
-    return instance_superclasses | subclass_terms
-
-
-def get_predicates(rdf_graph: Graph) -> set[URIRef]:
-    # TODO: add the dynamic predicate retrieval from term matching
-    return {term for prop in PREDICATES for term in rdf_graph.subjects(RDF.type, prop)}
 
 
 def get_graph_relabel_mapping(
@@ -322,30 +285,3 @@ def assign_literal_ids(
 
 def get_uuid():
     return str(uuid4()).split("-")[-1]
-
-
-def check_graph_literal_validity(rdf_graph: Graph) -> bool:
-    all_literals = get_literals(rdf_graph)
-
-    literals_as_subjects = list(rdf_graph.triples_choices((all_literals, None, None)))
-    literals_as_predicates = list(rdf_graph.triples_choices((None, all_literals, None)))
-    literals_as_objects = list(rdf_graph.triples_choices((None, None, all_literals)))
-    literal_triples_ct = len(
-        literals_as_subjects + literals_as_objects + literals_as_predicates
-    )
-    if literal_triples_ct > len(literals_as_objects):
-        raise ValueError(
-            f"A literal value was used as the subject or the predicate of a triple, which is not allowed! Please fix the following triples: {literals_as_subjects + literals_as_predicates}"
-        )
-
-    # TODO: transfer all integrity checks in a module
-    if literal_triples_ct > len(all_literals):
-        raise ValueError(
-            "A literal value was referenced more than once! Literal values must only be objects in the rdf triple and must only be referenced once."
-        )
-
-    return True
-
-
-def check_graph_validity(rdf_graph: Graph) -> bool:
-    return check_graph_literal_validity(rdf_graph)

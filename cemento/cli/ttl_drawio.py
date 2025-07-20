@@ -56,12 +56,6 @@ def register(subparsers):
         metavar="prefix_file_path",
     )
     parser.add_argument(
-        "-dct",
-        "--dont-check-turtle",
-        help="set whether to stop evaluating turtle file for potential errors prior to conversion. Computation will be marginally shorter.",
-        action="store_false",
-    )
-    parser.add_argument(
         "-nul",
         "--no-unique-literals",
         help="set whether to to append a unique id to each encountered literal term. Affects labels, definitions and any other literal values.",
@@ -80,6 +74,5 @@ def run(args):
         onto_ref_folder=args.onto_ref_folder_path,
         defaults_folder=args.defaults_folder_path,
         prefixes_path=args.prefix_file_path,
-        check_ttl_validity=args.dont_check_turtle,
         set_unique_literals=args.no_unique_literals,
     )
