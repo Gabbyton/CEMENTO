@@ -184,15 +184,18 @@ def get_non_ranked_strat_edges(graph: DiGraph) -> Iterable[tuple[any, any]]:
     }
 
 
-def replace_edges(graph: DiGraph, edge_ref: list[tuple[any, any]]) -> DiGraph:
+def replace_edges(
+    graph: DiGraph, filter_func: Callable[[any, any, dict[str, any]], bool] = None
+) -> DiGraph:
     to_remove = []
     new_graph = graph.copy()
-    for subj, obj, data in graph.edges(data=True):
-        if (subj, obj) in edge_ref:
-            data = graph.get_edge_data(subj, obj)
-            to_remove.append((subj, obj))
-            new_graph.add_edge(obj, subj, **data)
+    to_remove = [
+        (subj, obj, data)
+        for subj, obj, data in graph.edges(data=True)
+        if (filter_func(subj, obj, data) if filter_func else True)
+    ]
     new_graph.remove_edges_from(to_remove)
+    new_graph.add_edges_from((obj, subj, data) for subj, obj, data in to_remove)
     return new_graph
 
 

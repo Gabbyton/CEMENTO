@@ -45,7 +45,9 @@ def draw_tree(
     ranked_graph = ranked_graph.reverse(copy=True)
 
     not_rank_is_strat = get_non_ranked_strat_edges(ranked_graph)
-    ranked_graph = replace_edges(ranked_graph, not_rank_is_strat)
+    ranked_graph = replace_edges(
+        ranked_graph, lambda subj, obj, data: (subj, obj) in not_rank_is_strat
+    )
     ranked_subtrees = get_subgraphs(ranked_graph)
     split_subtrees, severed_links = zip(
         *map(split_multiple_inheritances, ranked_subtrees), strict=True
