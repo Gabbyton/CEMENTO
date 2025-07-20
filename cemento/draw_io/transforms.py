@@ -176,6 +176,42 @@ def relabel_graph_nodes_with_node_attr(
     return nx.relabel_nodes(graph, relabel_mapping)
 
 
+def get_non_ranked_strat_edges(graph: DiGraph) -> Iterable[tuple[any, any]]:
+    return {
+        (subj, obj)
+        for subj, obj, data in graph.edges(data=True)
+        if not data["is_rank"] and data["is_strat"]
+    }
+
+
+def replace_edges(graph: DiGraph, edge_ref: list[tuple[any, any]]) -> DiGraph:
+    to_remove = []
+    new_graph = graph.copy()
+    for subj, obj, data in graph.edges(data=True):
+        if (subj, obj) in edge_ref:
+            data = graph.get_edge_data(subj, obj)
+            to_remove.append((subj, obj))
+            new_graph.add_edge(obj, subj, **data)
+    new_graph.remove_edges_from(to_remove)
+    return new_graph
+
+
+def flip_edges(
+    graphs: Iterable[DiGraph], edge_ref: list[tuple[any, any]]
+) -> Iterable[DiGraph]:
+    to_remove = []
+    new_trees = []
+    for tree in graphs:
+        new_tree = tree.copy()
+        for subj, obj, data in tree.edges(data=True):
+            if (obj, subj) in edge_ref:
+                to_remove.append((subj, obj))
+                new_tree.add_edge(obj, subj, **data)
+        new_tree.remove_edges_from(to_remove)
+        new_trees.append(new_tree)
+    return new_trees
+
+
 def get_ranked_subgraph(graph: DiGraph) -> DiGraph:
     return filter_graph(graph, lambda data: data["is_strat"])
 

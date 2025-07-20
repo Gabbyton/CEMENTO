@@ -12,8 +12,10 @@ from cemento.draw_io.preprocessing import (
 from cemento.draw_io.transforms import (
     compute_draw_positions,
     compute_grid_allocations,
+    flip_edges,
     generate_diagram_content,
     get_graph_root_nodes,
+    get_non_ranked_strat_edges,
     get_predicate_connectors,
     get_rank_connectors_from_trees,
     get_ranked_subgraph,
@@ -23,6 +25,7 @@ from cemento.draw_io.transforms import (
     get_shape_positions_by_id,
     get_shapes_from_trees,
     get_subgraphs,
+    replace_edges,
     split_multiple_inheritances,
 )
 
@@ -41,21 +44,9 @@ def draw_tree(
     ranked_graph = get_ranked_subgraph(graph)
     ranked_graph = ranked_graph.reverse(copy=True)
 
-    not_rank_is_strat = {
-        (subj, obj)
-        for subj, obj, data in ranked_graph.edges(data=True)
-        if not data["is_rank"] and data["is_strat"]
-    }
-    to_remove = []
-    new_ranked_graph = ranked_graph.copy()
-    for subj, obj, data in ranked_graph.edges(data=True):
-        if (subj, obj) in not_rank_is_strat:
-            data = ranked_graph.get_edge_data(subj, obj)
-            to_remove.append((subj, obj))
-            new_ranked_graph.add_edge(obj, subj, **data)
-    new_ranked_graph.remove_edges_from(to_remove)
-
-    ranked_subtrees = get_subgraphs(new_ranked_graph)
+    not_rank_is_strat = get_non_ranked_strat_edges(ranked_graph)
+    ranked_graph = replace_edges(ranked_graph, not_rank_is_strat)
+    ranked_subtrees = get_subgraphs(ranked_graph)
     split_subtrees, severed_links = zip(
         *map(split_multiple_inheritances, ranked_subtrees), strict=True
     )
@@ -83,18 +74,7 @@ def draw_tree(
 
     ranked_subtrees = list(ranked_subtrees)
 
-    to_remove = []
-    new_trees = []
-    for tree in ranked_subtrees:
-        new_tree = tree.copy()
-        for subj, obj, data in tree.edges(data=True):
-            if (obj, subj) in not_rank_is_strat:
-                to_remove.append((subj, obj))
-                new_tree.add_edge(obj, subj, **data)
-        new_tree.remove_edges_from(to_remove)
-        new_trees.append(new_tree)
-
-    ranked_subtrees = new_trees
+    ranked_subtrees = flip_edges(ranked_subtrees, not_rank_is_strat)
 
     diagram_uid = str(uuid4()).split("-")[-1]
     entity_idx_start = 0
@@ -134,9 +114,13 @@ def draw_tree(
     from itertools import chain
 
     shape_positions_by_id = get_shape_positions_by_id(shapes)
-    inv_shape_id = {value:key for key, value in new_shape_ids.items()}
+    inv_shape_id = {value: key for key, value in new_shape_ids.items()}
     for connector in chain(connectors + predicate_connectors + predicate_connectors):
-        print(inv_shape_id[connector.source_id], connector.connector_val, inv_shape_id[connector.target_id])
+        print(
+            inv_shape_id[connector.source_id],
+            connector.connector_val,
+            inv_shape_id[connector.target_id],
+        )
         print(shape_positions_by_id[connector.source_id])
         print(shape_positions_by_id[connector.target_id])
         connector.resolve_position(
