@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from math import atan2, pi
+from math import atan2, pi, degrees
 from typing import NamedTuple
 
 
@@ -73,20 +73,25 @@ class Connector(DiagramObject):
         current_angle = atan2(
             target_shape_y - source_shape_y, target_shape_x - source_shape_x
         )
+        print(degrees(current_angle), degrees(crit_angle))
         match current_angle:
             # left
             case angle if (
                 pi - crit_angle
-            ) <= angle <= 180 or -180 <= angle < crit_angle:
+            ) <= angle <= pi or -pi <= angle < crit_angle:
+                print('left')
                 return (0, 0.5, 1, 0.5)
             # top
             case angle if -(pi - crit_angle) <= angle < -crit_angle:
+                print('top')
                 return (0.5, 0, 0.5, 1)
             # right
             case angle if -crit_angle <= angle < crit_angle or angle == 2 * pi:
+                print('right')
                 return (0, 0.5, 1, 0.5)
             # bottom
             case angle if crit_angle <= angle < (pi - crit_angle):
+                print('bottom')
                 return (0.5, 1, 0.5, 0)
             case _:
                 return (0, 0, 0, 0)
@@ -113,6 +118,7 @@ class Connector(DiagramObject):
                         *source_shape_pos, *target_shape_pos
                     )
                 )
+                print(self.start_pos_x, self.start_pos_y, self.end_pos_x, self.end_pos_y)
             case _:
                 return
 

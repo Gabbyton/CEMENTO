@@ -354,6 +354,10 @@ def get_shape_positions(shapes: list[Shape]) -> dict[str, tuple[float, float]]:
     return {shape.shape_content: (shape.x_pos, shape.y_pos) for shape in shapes}
 
 
+def get_shape_positions_by_id(shapes: list[Shape]) -> dict[str, tuple[float, float]]:
+    return {shape.shape_id: (shape.x_pos, shape.y_pos) for shape in shapes}
+
+
 def get_graph_edges(
     graph: DiGraph,
     data_filter: Callable[[dict[str, any]], bool] = None,

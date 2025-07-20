@@ -20,6 +20,7 @@ from cemento.draw_io.transforms import (
     get_severed_link_connectors,
     get_shape_ids,
     get_shape_positions,
+    get_shape_positions_by_id,
     get_shapes_from_trees,
     get_subgraphs,
     split_multiple_inheritances,
@@ -39,13 +40,29 @@ def draw_tree(
     graph = replace_term_quotes(graph)
     ranked_graph = get_ranked_subgraph(graph)
     ranked_graph = ranked_graph.reverse(copy=True)
-    ranked_subtrees = get_subgraphs(ranked_graph)
+
+    not_rank_is_strat = {
+        (subj, obj)
+        for subj, obj, data in ranked_graph.edges(data=True)
+        if not data["is_rank"] and data["is_strat"]
+    }
+    to_remove = []
+    new_ranked_graph = ranked_graph.copy()
+    for subj, obj, data in ranked_graph.edges(data=True):
+        if (subj, obj) in not_rank_is_strat:
+            data = ranked_graph.get_edge_data(subj, obj)
+            to_remove.append((subj, obj))
+            new_ranked_graph.add_edge(obj, subj, **data)
+    new_ranked_graph.remove_edges_from(to_remove)
+
+    ranked_subtrees = get_subgraphs(new_ranked_graph)
     split_subtrees, severed_links = zip(
         *map(split_multiple_inheritances, ranked_subtrees), strict=True
     )
-    ranked_subtrees = [tree for trees in split_subtrees for tree in trees]
+    ranked_subtrees = [tree for trees in split_subtrees for tree in trees if tree]
+    # for tree in ranked_subtrees:
+    #     print(tree.edges(data=True))
     severed_links = [edge for edges in severed_links for edge in edges]
-    print(severed_links)
 
     ranked_subtrees = map(
         lambda subtree: compute_grid_allocations(
@@ -65,6 +82,19 @@ def draw_tree(
     graph = graph.reverse(copy=True)
 
     ranked_subtrees = list(ranked_subtrees)
+
+    to_remove = []
+    new_trees = []
+    for tree in ranked_subtrees:
+        new_tree = tree.copy()
+        for subj, obj, data in tree.edges(data=True):
+            if (obj, subj) in not_rank_is_strat:
+                to_remove.append((subj, obj))
+                new_tree.add_edge(obj, subj, **data)
+        new_tree.remove_edges_from(to_remove)
+        new_trees.append(new_tree)
+
+    ranked_subtrees = new_trees
 
     diagram_uid = str(uuid4()).split("-")[-1]
     entity_idx_start = 0
@@ -100,6 +130,21 @@ def draw_tree(
         diagram_uid,
         entity_idx_start=entity_idx_start + 1,
     )
+
+    from itertools import chain
+
+    shape_positions_by_id = get_shape_positions_by_id(shapes)
+    inv_shape_id = {value:key for key, value in new_shape_ids.items()}
+    for connector in chain(connectors + predicate_connectors + predicate_connectors):
+        print(inv_shape_id[connector.source_id], connector.connector_val, inv_shape_id[connector.target_id])
+        print(shape_positions_by_id[connector.source_id])
+        print(shape_positions_by_id[connector.target_id])
+        connector.resolve_position(
+            "property",
+            shape_positions_by_id[connector.source_id],
+            shape_positions_by_id[connector.target_id],
+        )
+        print()
 
     shapes = map(remove_literal_shape_id, shapes)
     connectors = map(remove_literal_connector_id, connectors)

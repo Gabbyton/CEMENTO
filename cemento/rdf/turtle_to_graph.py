@@ -3,7 +3,7 @@ from pathlib import Path
 
 import networkx as nx
 from networkx import DiGraph
-from rdflib import RDF, RDFS, URIRef
+from rdflib import OWL, RDF, RDFS, SKOS, URIRef
 
 from cemento.rdf.transforms import (
     add_triples_to_digraph,
@@ -66,7 +66,28 @@ def convert_ttl_to_graph(
         term_types = get_term_types(rdf_graph)
         all_classes = get_classes(rdf_graph, default_terms, term_types)
         all_instances = get_instances(rdf_graph, default_terms, term_types)
-        all_predicates = set(rdf_graph.predicates())
+        # TODO: find a better solution for this section, move to transforms
+        self_referentials = {pred for subj, pred, obj in rdf_graph if subj == obj}
+        all_predicates = set(
+            filter(
+                lambda pred: (
+                    pred in strat_props
+                    or pred in {RDF.type, RDFS.subClassOf}
+                    or (
+                        pred in term_types
+                        and term_types[pred]
+                        in {
+                            OWL.ObjectProperty,
+                            OWL.AnnotationProperty,
+                            OWL.DatatypeProperty,
+                        }
+                    )
+                )
+                and pred not in {RDFS.label, SKOS.altLabel}
+                and pred not in self_referentials,
+                rdf_graph.predicates(),
+            )
+        )
         all_literals = get_literals(rdf_graph)
 
         if set_unique_literals:
@@ -91,8 +112,6 @@ def convert_ttl_to_graph(
         # TODO: assign literal status from read drawio as well
         graph = assign_literal_status(graph, all_literals)
         graph = assign_rank_status(graph)
-        # print(len(list(filter(lambda x: x[2]["is_strat"], graph.edges(data=True)))))
-        # print(len(list(filter(lambda x: x[2]["is_rank"], graph.edges(data=True)))))
 
         all_terms = all_classes | all_instances | all_predicates | default_terms
         aliases = get_aliases(rdf_graph)
