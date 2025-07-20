@@ -1,5 +1,6 @@
 from collections.abc import Callable, Container, Iterable
 from dataclasses import asdict
+from functools import partial
 from itertools import accumulate
 from pathlib import Path
 
@@ -184,7 +185,7 @@ def get_non_ranked_strat_edges(graph: DiGraph) -> Iterable[tuple[any, any]]:
     }
 
 
-def replace_edges(
+def flip_edges(
     graph: DiGraph, filter_func: Callable[[any, any, dict[str, any]], bool] = None
 ) -> DiGraph:
     to_remove = []
@@ -199,20 +200,11 @@ def replace_edges(
     return new_graph
 
 
-def flip_edges(
-    graphs: Iterable[DiGraph], edge_ref: list[tuple[any, any]]
+def flip_edges_of_graphs(
+    graphs: Iterable[DiGraph],
+    filter_func: Callable[[any, any, dict[str, any]], bool] = None,
 ) -> Iterable[DiGraph]:
-    to_remove = []
-    new_trees = []
-    for tree in graphs:
-        new_tree = tree.copy()
-        for subj, obj, data in tree.edges(data=True):
-            if (obj, subj) in edge_ref:
-                to_remove.append((subj, obj))
-                new_tree.add_edge(obj, subj, **data)
-        new_tree.remove_edges_from(to_remove)
-        new_trees.append(new_tree)
-    return new_trees
+    return list(map(partial(flip_edges, filter_func=filter_func), graphs))
 
 
 def get_ranked_subgraph(graph: DiGraph) -> DiGraph:

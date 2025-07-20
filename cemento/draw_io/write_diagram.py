@@ -12,7 +12,7 @@ from cemento.draw_io.preprocessing import (
 from cemento.draw_io.transforms import (
     compute_draw_positions,
     compute_grid_allocations,
-    flip_edges,
+    flip_edges_of_graphs,
     generate_diagram_content,
     get_graph_root_nodes,
     get_non_ranked_strat_edges,
@@ -25,7 +25,7 @@ from cemento.draw_io.transforms import (
     get_shape_positions_by_id,
     get_shapes_from_trees,
     get_subgraphs,
-    replace_edges,
+    flip_edges,
     split_multiple_inheritances,
 )
 
@@ -45,7 +45,7 @@ def draw_tree(
     ranked_graph = ranked_graph.reverse(copy=True)
 
     not_rank_is_strat = get_non_ranked_strat_edges(ranked_graph)
-    ranked_graph = replace_edges(
+    ranked_graph = flip_edges(
         ranked_graph, lambda subj, obj, data: (subj, obj) in not_rank_is_strat
     )
     ranked_subtrees = get_subgraphs(ranked_graph)
@@ -76,7 +76,9 @@ def draw_tree(
 
     ranked_subtrees = list(ranked_subtrees)
 
-    ranked_subtrees = flip_edges(ranked_subtrees, not_rank_is_strat)
+    ranked_subtrees = flip_edges_of_graphs(
+        ranked_subtrees, lambda subj, obj, data: (obj, subj) in not_rank_is_strat
+    )
 
     diagram_uid = str(uuid4()).split("-")[-1]
     entity_idx_start = 0
