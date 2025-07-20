@@ -49,7 +49,14 @@ def substitute_term_multikey(
     search_terms: dict[str, URIRef],
     score_cutoff: int = 80,
     log_results: bool = False,
+    suppression_key: str = "*",
 ) -> URIRef | tuple[URIRef, list[tuple[URIRef, int]]]:
+
+    if any([suppression_key in key for key in search_keys]):
+        if log_results:
+            return (None, [None], [(None, None)])
+        return None
+
     search_keys = search_keys if not log_results else list(search_keys)
     search_results = search_similar_terms_multikey(
         search_keys, search_terms.keys(), score_cutoff=score_cutoff

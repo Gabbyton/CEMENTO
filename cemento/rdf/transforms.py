@@ -9,7 +9,11 @@ from rdflib import OWL, RDF, RDFS, SKOS, BNode, Graph, Literal, Namespace, URIRe
 from rdflib.collection import Collection
 from rdflib.namespace import split_uri
 
-from cemento.rdf.preprocessing import clean_literal_string, format_literal
+from cemento.rdf.preprocessing import (
+    clean_literal_string,
+    format_literal,
+    remove_suppression_key,
+)
 from cemento.term_matching.constants import RANK_PROPS
 from cemento.term_matching.transforms import substitute_term_multikey
 from cemento.utils.utils import filter_graph
@@ -21,6 +25,7 @@ def construct_term_uri(
     prefixes: dict[str, URIRef | Namespace],
 ) -> URIRef:
     ns_uri = prefixes[prefix]
+    abbrev_term = remove_suppression_key(abbrev_term)
     return URIRef(f"{ns_uri}{abbrev_term}")
 
 

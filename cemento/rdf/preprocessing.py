@@ -10,6 +10,10 @@ def clean_literal_string(literal_term: str) -> str:
     new_literal_term = re.sub(r"\^\^\w+:\w+", "", new_literal_term)
     return new_literal_term
 
+# TODO: set supppression key as constant
+def remove_suppression_key(term: str) -> str:
+    return term.replace("*", "")
+
 
 def get_term_aliases(term: str) -> list[str]:
     match = re.search(r"\(([^)]*)\)", term)
