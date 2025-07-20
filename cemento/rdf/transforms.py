@@ -206,10 +206,15 @@ def assign_edge_binary_attr(
     return new_graph
 
 
-def assign_rank_status(graph, rank_terms: set[URIRef] = RANK_PROPS):
+def assign_rank_status(graph: DiGraph, rank_terms: set[URIRef] = RANK_PROPS):
     return assign_edge_binary_attr(
         graph, lambda data: data["label"] in rank_terms, "is_rank"
     )
+
+
+def assign_pred_status(graph: DiGraph) -> DiGraph:
+    # all edges are predicates
+    return assign_edge_binary_attr(graph, lambda data: True, "is_predicate")
 
 
 def assign_strat_status(

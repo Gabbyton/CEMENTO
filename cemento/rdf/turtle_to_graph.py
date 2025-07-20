@@ -9,6 +9,7 @@ from cemento.rdf.transforms import (
     add_triples_to_digraph,
     assign_literal_ids,
     assign_literal_status,
+    assign_pred_status,
     assign_rank_status,
     assign_strat_status,
     get_graph_relabel_mapping,
@@ -154,6 +155,7 @@ def convert_ttl_to_graph(
         # TODO: assign literal status from read drawio as well
         graph = assign_literal_status(graph, all_literals)
         graph = assign_rank_status(graph)
+        graph = assign_pred_status(graph)
 
         print("renaming terms...")
         all_terms = all_classes | all_instances | all_predicates | default_terms
