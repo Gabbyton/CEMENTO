@@ -118,7 +118,7 @@ def convert_ttl_to_graph(
             )
         else:
             all_predicates = {RDFS.subClassOf, RDF.type}
-            all_literals = {}
+            all_literals = set()
 
         object_properties = set(
             rdf_graph.transitive_subjects(RDF.type, OWL.ObjectProperty)
