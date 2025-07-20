@@ -85,16 +85,30 @@ class Connector(DiagramObject):
 
     def resolve_position(
         self,
-        source_shape_pos: tuple[float, float] = None,
-        target_shape_pos: tuple[float, float] = None,
+        source_shape_pos: tuple[float, float],
+        target_shape_pos: tuple[float, float],
+        classes_only: bool = False,
+        horizontal_tree: bool = False,
     ) -> None:
-        self.start_pos_x, self.start_pos_y, self.end_pos_x, self.end_pos_y = (
-            Connector.compute_dynamic_position(*source_shape_pos, *target_shape_pos)
-        )
+
+        if not classes_only:
+            self.start_pos_x, self.start_pos_y, self.end_pos_x, self.end_pos_y = (
+                Connector.compute_dynamic_position(*source_shape_pos, *target_shape_pos)
+            )
+
+        if horizontal_tree:
+            temp = self.start_pos_x
+            self.start_pos_x = self.start_pos_y
+            self.start_pos_y = temp
+
+            temp = self.end_pos_x
+            self.end_pos_x = self.end_pos_y
+            self.end_pos_y = temp
 
 
 @dataclass
 class GhostConnector(Connector):
+
     is_curved: bool = 1
     is_dashed: bool = 1
 

@@ -35,6 +35,7 @@ def draw_tree(
     diagram_output_path: str | Path,
     translate_x: int = 0,
     translate_y: int = 0,
+    classes_only: bool = False,
     horizontal_tree: bool = False,
 ) -> None:
     diagram_output_path = Path(diagram_output_path)
@@ -64,7 +65,7 @@ def draw_tree(
 
     ranked_subtrees = map(
         lambda subtree: compute_draw_positions(
-            subtree, get_graph_root_nodes(subtree)[0]
+            subtree, get_graph_root_nodes(subtree)[0], horizontal_tree=horizontal_tree
         ),
         ranked_subtrees,
     )
@@ -121,6 +122,8 @@ def draw_tree(
         connector.resolve_position(
             shape_positions_by_id[connector.source_id],
             shape_positions_by_id[connector.target_id],
+            classes_only=classes_only,
+            horizontal_tree=horizontal_tree,
         )
 
     shapes = map(remove_literal_shape_id, shapes)

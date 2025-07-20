@@ -24,4 +24,6 @@ def convert_ttl_to_drawio(
         check_ttl_validity=check_ttl_validity,
         set_unique_literals=set_unique_literals,
     )
-    draw_tree(graph, output_path, horizontal_tree=horizontal_tree)
+    draw_tree(
+        graph, output_path, classes_only=classes_only, horizontal_tree=horizontal_tree
+    )
