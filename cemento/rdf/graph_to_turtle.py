@@ -123,13 +123,13 @@ def convert_graph_to_ttl(
     }
 
     if log_substitution_path:
-        log_enties = []
-        for original_term, value in substitution_results.items():
-            matched_term, matches = value
-            for term, score in matches:
-                log_enties.append((original_term, matched_term, term, score))
+        log_entries = [
+            (original_term, matched_term, term, score)
+            for original_term, (matched_term, matches) in substitution_results.items()
+            for term, score in matches
+        ]
         df = pd.DataFrame(
-            log_enties, columns=["term", "matched_term", "search_result", "score"]
+            log_entries, columns=["term", "matched_term", "search_result", "score"]
         )
         df.to_csv(log_substitution_path)
 
