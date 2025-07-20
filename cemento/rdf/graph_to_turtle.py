@@ -266,4 +266,4 @@ def convert_graph_to_ttl(
         predicate_term = data["label"]
         rdf_graph.add((domain_term, predicate_term, range_term))
     # serialize the output as a turtle file
-    rdf_graph.serialize(output_path)
+    rdf_graph.serialize(destination=output_path, format='turtle')

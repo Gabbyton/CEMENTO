@@ -1,6 +1,6 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.0.4 Chrome/138.0.7204.97 Electron/37.2.1 Safari/537.36" version="28.0.4">
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.0.4 Chrome/138.0.7204.97 Electron/37.2.1 Safari/537.36" version="28.0.4">
   <diagram name="Page-1" id="lND-QSQxQTkuNe-5z4FQ">
-    <mxGraphModel dx="1026" dy="918" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1600" pageHeight="1200" background="#ffffff" math="0" shadow="0">
+    <mxGraphModel dx="1426" dy="859" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1600" pageHeight="1200" background="#ffffff" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -45,7 +45,7 @@
           <mxGeometry x="1290" y="390" width="120" height="80" as="geometry" />
         </mxCell>
         <mxCell id="pety45B3u8wGdrX-bXSJ-23" value="&lt;span style=&quot;font-size: 12px;&quot;&gt;cco:Nickname&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;resizable=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;arcSize=0;movable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;enumerate=0;" parent="1" vertex="1">
-          <mxGeometry x="1620" y="350" width="150" height="60" as="geometry" />
+          <mxGeometry x="1870" y="390" width="150" height="60" as="geometry" />
         </mxCell>
         <mxCell id="pety45B3u8wGdrX-bXSJ-30" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="pety45B3u8wGdrX-bXSJ-26" target="pety45B3u8wGdrX-bXSJ-23" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -53,6 +53,7 @@
         <mxCell id="pety45B3u8wGdrX-bXSJ-31" value="cco:designates" style="edgeStyle=isometricEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="pety45B3u8wGdrX-bXSJ-26" target="pety45B3u8wGdrX-bXSJ-11" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
+              <mxPoint x="1330" y="670" />
               <mxPoint x="1430" y="680" />
             </Array>
           </mxGeometry>
@@ -61,13 +62,13 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="pety45B3u8wGdrX-bXSJ-26" value="&lt;span style=&quot;font-size: 12px;&quot;&gt;Nickname of Happy Gilmore&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;resizable=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;arcSize=0;movable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;enumerate=0;" parent="1" vertex="1">
-          <mxGeometry x="1620" y="470" width="150" height="60" as="geometry" />
+          <mxGeometry x="1870" y="510" width="150" height="60" as="geometry" />
         </mxCell>
         <mxCell id="pety45B3u8wGdrX-bXSJ-32" value="&quot;Happy&quot;^^xsd:string" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;resizable=1;strokeWidth=2;arcSize=0;movable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;enumerate=0;" parent="1" vertex="1">
-          <mxGeometry x="1620" y="660" width="150" height="60" as="geometry" />
+          <mxGeometry x="1870" y="700" width="150" height="60" as="geometry" />
         </mxCell>
         <mxCell id="SXdeazEO2DghoHzH-gUt-1" value="&lt;span style=&quot;font-size: 12px;&quot;&gt;cco:ICE&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;resizable=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;arcSize=0;movable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;enumerate=0;" parent="1" vertex="1">
-          <mxGeometry x="840" y="350" width="150" height="60" as="geometry" />
+          <mxGeometry x="580" y="350" width="150" height="60" as="geometry" />
         </mxCell>
         <mxCell id="SXdeazEO2DghoHzH-gUt-6" value="rdfs:subclassOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SXdeazEO2DghoHzH-gUt-5" target="SXdeazEO2DghoHzH-gUt-1" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -75,11 +76,11 @@
         <mxCell id="SXdeazEO2DghoHzH-gUt-13" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="SXdeazEO2DghoHzH-gUt-5" target="SXdeazEO2DghoHzH-gUt-7" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="SXdeazEO2DghoHzH-gUt-5" value="&lt;span&gt;mds:CatchPhrase (catch phrase, slogan)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;resizable=0;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;enumerate=0;" parent="1" vertex="1">
-          <mxGeometry x="855" y="477.5" width="120" height="60" as="geometry" />
+        <mxCell id="SXdeazEO2DghoHzH-gUt-5" value="&lt;span&gt;mds:CatchPhrase (catch phrase, slogan)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;resizable=0;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;enumerate=0;" parent="1" vertex="1">
+          <mxGeometry x="595" y="477.5" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="SXdeazEO2DghoHzH-gUt-7" value="&lt;span&gt;&quot;a well-known sentence or phrase, especially one that is associated with a particular famous person.&quot;@en&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" parent="1" vertex="1">
-          <mxGeometry x="580" y="512.5" width="120" height="80" as="geometry" />
+          <mxGeometry x="320" y="512.5" width="120" height="80" as="geometry" />
         </mxCell>
         <mxCell id="SXdeazEO2DghoHzH-gUt-22" value="cco:is_tokenized_by" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="SXdeazEO2DghoHzH-gUt-15" target="SXdeazEO2DghoHzH-gUt-21" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -88,10 +89,22 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="SXdeazEO2DghoHzH-gUt-15" value="&lt;span&gt;Catch Phrase of Happy Gilmore&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;resizable=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;enumerate=0;" parent="1" vertex="1">
-          <mxGeometry x="855" y="722.5" width="120" height="60" as="geometry" />
+          <mxGeometry x="595" y="722.5" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="SXdeazEO2DghoHzH-gUt-21" value="&quot;¿Por que no te vas a casa? ¡Eso es tu casa!&quot;@es" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;resizable=1;strokeWidth=2;arcSize=0;movable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;enumerate=0;" parent="1" vertex="1">
-          <mxGeometry x="550" y="722.5" width="150" height="60" as="geometry" />
+          <mxGeometry x="290" y="722.5" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="K3G7bkNG8lY27Z329QrO-1" value="&lt;span style=&quot;font-size: 12px;&quot;&gt;cco:Act&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;resizable=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;arcSize=0;movable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;enumerate=0;" vertex="1" parent="1">
+          <mxGeometry x="1510" y="350" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="K3G7bkNG8lY27Z329QrO-4" value="obo:has_participant" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="K3G7bkNG8lY27Z329QrO-2" target="pety45B3u8wGdrX-bXSJ-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="K3G7bkNG8lY27Z329QrO-5" value="rdfs:subClassOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="K3G7bkNG8lY27Z329QrO-2" target="K3G7bkNG8lY27Z329QrO-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="K3G7bkNG8lY27Z329QrO-2" value="&lt;span style=&quot;font-size: 12px;&quot;&gt;mds:Act of Playing Golf*&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;resizable=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;arcSize=0;movable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;enumerate=0;" vertex="1" parent="1">
+          <mxGeometry x="1510" y="477.5" width="150" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

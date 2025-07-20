@@ -15,6 +15,7 @@ To summarize, the package offers the following features:
 5. Tree-splitting diagram layouts to suppport multiple inheritance between classes (though multiple inheritance is not recommended by BFO)
 6. Support for URI prefixes (via binding) and literal annotations (language annotations like `@en` and datatype annotations like `^^xsd:string`)
 7. Domain and range collection as a union for custom object properties.
+8. Providing a log for substitutions made and suppresing substitutions by adding a key (\*).
 
 ## Installation
 
@@ -153,8 +154,6 @@ The following diagram goes through an example supplied with the repository calle
 
 This package was designed with end-to-end conversion in mind. The package is still in active development, and future features may include, but are not limited to the following:
 
-- **Providing substitution lists.** The package will also be able to provide a list of substituted terms.
-- **Suppressing substitutions.** The package will be able to take a special symbol to suppress substitutions for when your custom term is a little bit too close to an existing term.
 - **Object Property definitions.** A future version of this package will be able to support object property definitions.
 - **Multi-page diagrams.** The package parses terms with the same name as being the same entity. The package will be able to support multiple pages for when you want to organize terms your way.
 - **An interactive mode.** Users will be able to visualize syntax errors, improper term connections (leveraging domains and ranges), and substitutions and make edits in iterations before finalizing a draw.io or `.ttl` output.
