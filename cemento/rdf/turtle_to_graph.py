@@ -3,7 +3,7 @@ from pathlib import Path
 
 import networkx as nx
 from networkx import DiGraph
-from rdflib import OWL, RDF, RDFS, SKOS, URIRef, Literal
+from rdflib import OWL, RDF, RDFS, SKOS, Literal, URIRef
 
 from cemento.rdf.transforms import (
     add_triples_to_digraph,
@@ -32,6 +32,7 @@ from cemento.term_matching.transforms import (
 
 def convert_ttl_to_graph(
     input_path: str | Path,
+    classes_only: bool = False,
     onto_ref_folder: str | Path = None,
     defaults_folder: str | Path = None,
     prefixes_path: str | Path = None,
@@ -52,9 +53,11 @@ def convert_ttl_to_graph(
         for term in dir(ns)
         if isinstance(term, URIRef)
     }
-    strat_props = set(
-        get_strat_predicates(onto_ref_folder, defaults_folder, inv_prefixes)
-    )
+    strat_props = set()
+    if not classes_only:
+        strat_props = set(
+            get_strat_predicates(onto_ref_folder, defaults_folder, inv_prefixes)
+        )
     # TODO: find better solution for including these options
     strat_props.add(RDFS.subClassOf)
     strat_props.add(RDF.type)
@@ -68,29 +71,35 @@ def convert_ttl_to_graph(
         term_types = get_term_types(rdf_graph)
         all_classes = get_classes(rdf_graph, default_terms, term_types)
         all_instances = get_instances(rdf_graph, default_terms, term_types)
-        # TODO: find a better solution for this section, move to transforms
-        self_referentials = {pred for subj, pred, obj in rdf_graph if subj == obj}
-        all_predicates = set(
-            filter(
-                lambda pred: (
-                    pred in strat_props
-                    or pred in {RDF.type, RDFS.subClassOf}
-                    or (
-                        pred in term_types
-                        and term_types[pred]
-                        in {
-                            OWL.ObjectProperty,
-                            OWL.AnnotationProperty,
-                            OWL.DatatypeProperty,
-                        }
+
+        if not classes_only:
+            # TODO: find a better solution for this section, move to transforms
+            self_referentials = {pred for subj, pred, obj in rdf_graph if subj == obj}
+            all_predicates = set(
+                filter(
+                    lambda pred: (
+                        pred in strat_props
+                        or pred in {RDF.type, RDFS.subClassOf}
+                        or (
+                            pred in term_types
+                            and term_types[pred]
+                            in {
+                                OWL.ObjectProperty,
+                                OWL.AnnotationProperty,
+                                OWL.DatatypeProperty,
+                            }
+                        )
                     )
+                    and pred not in {RDFS.label, SKOS.altLabel}
+                    and pred not in self_referentials,
+                    rdf_graph.predicates(),
                 )
-                and pred not in {RDFS.label, SKOS.altLabel}
-                and pred not in self_referentials,
-                rdf_graph.predicates(),
             )
-        )
-        all_literals = get_literals(rdf_graph)
+            all_literals = get_literals(rdf_graph)
+
+        else:
+            all_predicates = {RDFS.subClassOf, RDF.type}
+            all_literals = {}
 
         if set_unique_literals:
             print("creating unique literals...")
