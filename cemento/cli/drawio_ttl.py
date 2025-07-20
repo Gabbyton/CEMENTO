@@ -13,10 +13,10 @@ def register(subparsers):
     )
 
     parser.add_argument(
-        "input", help="the path to the input drawio diagram file.", metavar="file_path"
+        "input", help="the path to the input drawio diagram file.", metavar="input_file_path"
     )
     parser.add_argument(
-        "output", help="the path to the desired output .ttl file.", metavar="file_path"
+        "output", help="the path to the desired output .ttl file.", metavar="output_file_path"
     )
     parser.add_argument(
         "-r",
