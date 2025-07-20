@@ -26,27 +26,42 @@ from cemento.term_matching.preprocessing import merge_dictionaries
 from cemento.utils.utils import get_abbrev_term, remove_term_names
 
 
-def substitute_term(
-    search_keys: Iterable[str], search_terms: dict[str, URIRef], score_cutoff: int = 80
-) -> URIRef:
-    best_match, score = max(
-        (
-            result
-            for search_key in search_keys
-            if (
-                result := process.extractOne(
-                    search_key,
-                    search_terms.keys(),
-                    scorer=fuzz.token_sort_ratio,
-                    score_cutoff=score_cutoff,
-                )
+def search_similar_terms_multikey(
+    search_keys: Iterable[str], search_terms: Iterable[str], score_cutoff: int = 80
+) -> list[tuple[URIRef, int]]:
+    return [
+        result
+        for search_key in search_keys
+        if (
+            result := process.extractOne(
+                search_key,
+                search_terms,
+                scorer=fuzz.token_sort_ratio,
+                score_cutoff=score_cutoff,
             )
-            is not None
-        ),
+        )
+        is not None
+    ]
+
+
+def substitute_term_multikey(
+    search_keys: Iterable[str],
+    search_terms: dict[str, URIRef],
+    score_cutoff: int = 80,
+    log_results: bool = False,
+) -> URIRef | tuple[URIRef, list[tuple[URIRef, int]]]:
+    search_results = search_similar_terms_multikey(
+        search_keys, search_terms.keys(), score_cutoff=score_cutoff
+    )
+    best_match, _ = max(
+        search_results,
         key=lambda x: x[1] if x is not None else -1,
         default=(None, -1),
     )
-    return search_terms[best_match] if best_match else None
+    term_substitute = search_terms[best_match] if best_match else None
+    if log_results:
+        return (term_substitute, search_results)
+    return term_substitute
 
 
 def get_term_search_keys(term: str, inv_prefix: dict[URIRef, str]) -> list[str]:

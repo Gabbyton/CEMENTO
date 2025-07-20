@@ -11,7 +11,7 @@ from rdflib.namespace import split_uri
 
 from cemento.rdf.preprocessing import clean_literal_string, format_literal
 from cemento.term_matching.constants import RANK_PROPS
-from cemento.term_matching.transforms import substitute_term
+from cemento.term_matching.transforms import substitute_term_multikey
 from cemento.utils.utils import filter_graph
 
 
@@ -39,7 +39,7 @@ def get_literal_data_type(
 ) -> URIRef | None:
     search_key = res[0] if (res := re.findall(r"\^\^(\w+:\w+)", literal_term)) else None
     if search_key:
-        datatype = substitute_term(
+        datatype = substitute_term_multikey(
             [search_key], search_terms, score_cutoff=score_cutoff
         )
         return datatype

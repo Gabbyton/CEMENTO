@@ -4,6 +4,7 @@ from itertools import filterfalse
 from pathlib import Path
 
 import networkx as nx
+import pandas as pd
 import rdflib
 from networkx import DiGraph
 from rdflib import OWL, RDF, RDFS
@@ -28,7 +29,7 @@ from cemento.rdf.transforms import (
     get_literal_data_type,
     get_literal_lang_annotation,
     get_term_value,
-    substitute_term,
+    substitute_term_multikey,
 )
 from cemento.term_matching.constants import get_default_namespace_prefixes
 from cemento.term_matching.io import get_ttl_file_iter
@@ -49,6 +50,7 @@ def convert_graph_to_ttl(
     output_path: str | Path,
     onto_ref_folder: str | Path = None,
     prefixes_path: str | Path = None,
+    log_substitution_path: str | Path = None,
 ) -> None:
     prefixes, inv_prefixes = get_prefixes(prefixes_path, onto_ref_folder)
     search_terms = get_search_terms(inv_prefixes, onto_ref_folder)
@@ -107,11 +109,35 @@ def convert_graph_to_ttl(
     substitution_results = {
         term: substituted_value
         for term, substituted_value in map(
-            lambda term: (term, substitute_term(search_keys[term], search_terms)),
+            lambda term: (
+                term,
+                substitute_term_multikey(
+                    search_keys[term],
+                    search_terms,
+                    log_results=bool(log_substitution_path),
+                ),
+            ),
             get_diagram_terms_iter(graph),
         )
         if substituted_value is not None
     }
+
+    if log_substitution_path:
+        log_enties = []
+        for original_term, value in substitution_results.items():
+            matched_term, matches = value
+            for term, score in matches:
+                log_enties.append((original_term, matched_term, term, score))
+        df = pd.DataFrame(
+            log_enties, columns=["term", "matched_term", "search_result", "score"]
+        )
+        df.to_csv(log_substitution_path)
+
+        substitution_results = {
+            key: matched_term
+            for key, (matched_term, matches) in substitution_results.items()
+            if matched_term is not None
+        }
 
     inv_constructed_terms = {value: key for key, value in constructed_terms.items()}
 

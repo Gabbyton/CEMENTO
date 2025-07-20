@@ -1,9 +1,9 @@
+from cemento.rdf.drawio_to_turtle import convert_drawio_to_ttl
 from cemento.utils.io import (
     get_default_defaults_folder,
     get_default_prefixes_file,
     get_default_references_folder,
 )
-from cemento.rdf.drawio_to_turtle import convert_drawio_to_ttl
 
 
 def register(subparsers):
@@ -39,6 +39,13 @@ def register(subparsers):
         default=get_default_prefixes_file(),
         metavar="prefix_file_path",
     )
+    parser.add_argument(
+        "-lsp",
+        "--log-substitution-path",
+        help="the path to a csv file containing substitution results from term matching.",
+        default=None,
+        metavar="log_file_path",
+    )
     parser.set_defaults(_handler=run)
 
 
@@ -50,4 +57,5 @@ def run(args):
         args.onto_ref_folder_path,
         args.defaults_folder_path,
         args.prefix_file_path,
+        log_substitution_path=args.log_substitution_path,
     )
