@@ -7,3 +7,7 @@ thefuzz
 tldextract
 build
 twine
+sphinx
+pydata-sphinx-theme
+sphinx-design
+sphinxcontrib-shtest
