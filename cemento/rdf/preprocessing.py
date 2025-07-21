@@ -36,6 +36,6 @@ def format_literal(literal: Literal) -> str:
     if hasattr(literal, "datatype") and literal.datatype:
         datatype = literal.datatype
         _, abbrev = split_uri(datatype)
-        datatype_str = f"xsd:{abbrev}"
+        datatype_str = f"^^xsd:{abbrev}"
 
     return f"{literal_str}{lang_str}{datatype_str}"
