@@ -33,7 +33,7 @@
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx_iframe.css?v=96c28b52" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=b6fe4ae5" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=aaf4a6a1" />
   
   <!-- So that users can add custom icons -->
   <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -49,7 +49,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'quickstart';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="User Guide" href="user-guide.html" />
+    <link rel="next" title="User Guide" href="user-guide/user-guide.html" />
     <link rel="prev" title="CEMENTO" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -137,7 +137,7 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="user-guide.html">
+  <a class="nav-link nav-internal" href="user-guide/user-guide.html">
     User Guide
   </a>
 </li>
@@ -223,7 +223,7 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="user-guide.html">
+  <a class="nav-link nav-internal" href="user-guide/user-guide.html">
     User Guide
   </a>
 </li>
@@ -255,7 +255,12 @@
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"></div>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="user-guide/user-guide.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="simple">
+</ul>
+</details></li>
+</ul>
+</div>
 </nav></div>
     </div>
   
@@ -313,17 +318,60 @@
                   
   <section id="quickstart">
 <h1>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">#</a></h1>
+<div class="toctree-wrapper compound">
+</div>
 <section id="before-converting">
 <h2>Before converting<a class="headerlink" href="#before-converting" title="Link to this heading">#</a></h2>
 <p>Install cemento with pip.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>cemento
 </pre></div>
 </div>
-<p>Run the following to see its properly installed:</p>
+<p>Run the following to see if it’s properly installed:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>--help
 </pre></div>
 </div>
 <p>It should show the following:</p>
+<a class="reference internal image-reference" href="_images/good-output.png"><img alt="_images/good-output.png" src="_images/good-output.png" style="width: 500px;" />
+</a>
+</section>
+<section id="download-the-example">
+<h2>Download the Example<a class="headerlink" href="#download-the-example" title="Link to this heading">#</a></h2>
+<p>Clone the official repo to get the example. Prefer the master branch:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>git<span class="w"> </span>pull<span class="w"> </span>https://github.com/Gabbyton/CEMENTO.git
+<span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>CEMENTO/examples/
+</pre></div>
+</div>
+<p>There should be two files <code class="docutils literal notranslate"><span class="pre">happy-example.drawio</span></code> and <code class="docutils literal notranslate"><span class="pre">happy-example.ttl</span></code></p>
+</section>
+<section id="converting-from-draw-io-to-ttl">
+<h2>Converting from draw.io to .ttl<a class="headerlink" href="#converting-from-draw-io-to-ttl" title="Link to this heading">#</a></h2>
+<p>Inside the <code class="docutils literal notranslate"><span class="pre">examples</span></code> folder, run the following command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>drawio_ttl<span class="w"> </span>happy-example.drawio<span class="w"> </span>sample.ttl
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><strong>NOTE:</strong> Paths can be absolute or relative.</div>
+</div>
+</section>
+<section id="converting-from-ttl-to-draw-io">
+<h2>Converting from .ttl to draw.io<a class="headerlink" href="#converting-from-ttl-to-draw-io" title="Link to this heading">#</a></h2>
+<p>Similar to the above, run the following command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>ttl_drawio<span class="w"> </span>happy-example.ttl<span class="w"> </span>happy-example.drawio
+</pre></div>
+</div>
+</section>
+<section id="help-message">
+<h2>Help message<a class="headerlink" href="#help-message" title="Link to this heading">#</a></h2>
+<p>If you get lost, there is always:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>--help
+<span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>drawio_ttl<span class="w"> </span>--help
+<span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>ttl_drawio<span class="w"> </span>--help
+</pre></div>
+</div>
+</section>
+<section id="what-now">
+<h2>What now?<a class="headerlink" href="#what-now" title="Link to this heading">#</a></h2>
+<p>You can now start converting your diagrams from draw.io to turtle format and vice versa! To read more about other cool features, start with the <a class="reference internal" href="user-guide/user-guide.html"><span class="doc">User Guide</span></a>.</p>
 </section>
 </section>
 
@@ -347,7 +395,7 @@
       </div>
     </a>
     <a class="right-next"
-       href="user-guide.html"
+       href="user-guide/user-guide.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
@@ -375,6 +423,11 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#before-converting">Before converting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-example">Download the Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-from-draw-io-to-ttl">Converting from draw.io to .ttl</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-from-ttl-to-draw-io">Converting from .ttl to draw.io</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#help-message">Help message</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-now">What now?</a></li>
 </ul>
   </nav></div>
 

@@ -1,2 +1,2 @@
-sphinx-build -M html docs/source docs/build
-cp -r cemento/build/html/* docs/
+sphinx-build -M html docs-src/source docs-src/build
+cp -r docs-src/build/html/* docs/

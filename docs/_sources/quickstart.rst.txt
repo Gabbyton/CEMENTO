@@ -1,7 +1,15 @@
 Quickstart
-=====
+==========
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   quickstart
+   user-guide/user-guide
+
 Before converting
------
+-----------------
 
 Install cemento with pip.
 
@@ -9,10 +17,61 @@ Install cemento with pip.
 
     (.venv) $ pip install cemento
 
-Run the following to see its properly installed:
+Run the following to see if it's properly installed:
 
 .. code-block:: console
 
     (.venv) $ cemento --help
 
 It should show the following:
+
+.. image:: /_static/good-output.png
+    :width: 500px
+
+Download the Example
+--------------------
+
+Clone the official repo to get the example. Prefer the master branch:
+
+.. code-block:: console
+
+    (.venv) $ git pull https://github.com/Gabbyton/CEMENTO.git
+    (.venv) $ cd CEMENTO/examples/
+
+There should be two files ``happy-example.drawio`` and ``happy-example.ttl``
+
+Converting from draw.io to .ttl
+-------------------------------
+
+Inside the ``examples`` folder, run the following command:
+
+.. code-block:: console
+
+    (.venv) $ cemento drawio_ttl happy-example.drawio sample.ttl
+
+| **NOTE:** Paths can be absolute or relative.
+
+Converting from .ttl to draw.io
+-------------------------------
+
+Similar to the above, run the following command:
+
+.. code-block:: console
+
+    (.venv) $ cemento ttl_drawio happy-example.ttl happy-example.drawio
+
+Help message
+-----------
+
+If you get lost, there is always:
+
+.. code-block:: console
+
+    (.venv) $ cemento --help
+    (.venv) $ cemento drawio_ttl --help
+    (.venv) $ cemento ttl_drawio --help
+
+What now?
+---------
+
+You can now start converting your diagrams from draw.io to turtle format and vice versa! To read more about other cool features, start with the :doc:`User Guide </user-guide/user-guide>`.
