@@ -6,3 +6,4 @@ dist
 .*
 sandbox/
 *test*.py
+!.nojekyll
