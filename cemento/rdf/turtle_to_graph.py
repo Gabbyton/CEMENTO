@@ -60,7 +60,10 @@ def convert_ttl_to_graph(
     ref_strat_preds.add(RDF.type)
 
     with read_ttl(input_path) as rdf_graph:
-
+        prefixes.update({key: value for key, value in rdf_graph.namespaces()})
+        inv_prefixes.update({str(value): key for key, value in rdf_graph.namespaces()})
+        # print(prefixes)
+        # print(inv_prefixes)
         print("retrieving terms...")
 
         file_uri_refs = set(

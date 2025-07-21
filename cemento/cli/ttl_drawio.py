@@ -56,10 +56,10 @@ def register(subparsers):
         metavar="prefix_file_path",
     )
     parser.add_argument(
-        "-nul",
-        "--no-unique-literals",
+        "-ul",
+        "--unique-literals",
         help="set whether to to append a unique id to each encountered literal term. Affects labels, definitions and any other literal values.",
-        action="store_false",
+        action="store_true",
     )
     parser.set_defaults(_handler=run)
 
@@ -74,5 +74,5 @@ def run(args):
         onto_ref_folder=args.onto_ref_folder_path,
         defaults_folder=args.defaults_folder_path,
         prefixes_path=args.prefix_file_path,
-        set_unique_literals=args.no_unique_literals,
+        set_unique_literals=args.unique_literals,
     )

@@ -163,12 +163,12 @@ def get_graph_relabel_mapping(
     all_classes: set[URIRef],
     all_instances: set[URIRef],
     aliases: dict[URIRef, Literal],
-    inv_prefix: dict[URIRef | Namespace, str],
+    inv_prefix: dict[str, str],
 ) -> dict[URIRef, str]:
     rename_mapping = dict()
     for term in terms:
         ns, abbrev_term = split_uri(term)
-        prefix = inv_prefix[ns]
+        prefix = inv_prefix[str(ns)]
         new_name = f"{prefix}:{abbrev_term}"
         if term in aliases and aliases[term]:
             if term in all_classes or term in all_instances:
@@ -280,6 +280,7 @@ def assign_literal_ids(
     rdf_graph: Graph, literal_replacements: Iterable[tuple[Literal, Literal]]
 ) -> DiGraph:
     # TODO: assign hashed constant for determining literal ids
+    # FIXME: zip is shorter in one argument
     literal_terms, new_literal_values = zip(*literal_replacements, strict=True)
     replace_triples = list(rdf_graph.triples_choices((None, None, list(literal_terms))))
     substitute_triples = (
