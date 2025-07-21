@@ -1,5 +1,5 @@
 User Guide
-=====
+==========
 
 .. _installation:
 
@@ -14,6 +14,21 @@ To use CEMENTO, first install it with pip:
 
 Ideally, you can create a python environment where `CEMENTO` will reside. This command will automatically install CEMENTO dependencies.
 
+Scripting
+----------
+
+Converting draw.io to ttl
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: cemento.rdf.drawio_to_turtle
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: cemento.rdf.turtle_to_drawio
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 In this page add:
 - how to install with a conda environment

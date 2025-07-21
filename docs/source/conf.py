@@ -6,6 +6,10 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).resolve().parents[2] / "cemento"))
 
 project = "CEMENTO"
 copyright = "2025, Gabriel Obsequio Ponon"
@@ -19,10 +23,11 @@ extensions = [
     "sphinx.ext.duration",
     "sphinx.ext.doctest",
     "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
     "sphinx.ext.autosummary",
     "sphinx_design",
     "sphinx_iframes",
-    "sphinxcontrib.shtest"
+    "sphinxcontrib.shtest",
 ]
 
 templates_path = ["_templates"]
@@ -34,4 +39,4 @@ exclude_patterns = []
 
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
-html_css_files = ['custom.css']
+html_css_files = ["custom.css"]

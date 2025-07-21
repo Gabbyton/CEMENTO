@@ -22,10 +22,10 @@ CEMENTO
 `MDS-Onto Website <https://cwrusdle.bitbucket.io>`_
 
 
-What is CEMENTO?
-===============
 
-CEMENTO stands for the Centralized Entity Mapping & Extraction Nexus for Triples and Ontologies -- a mouthful, but an important metaphor for the package building the road to ontologies for materials data.This package is part of the larger SDLE FAIR application suite that features tools to create scientific ontologies faster and more efficiently. This package provides functional interfaces for converting draw.io diagrams of ontologies into RDF triples in the turtle (`.ttl`) format and vice versa. This package is able to provide term matching between reference ontology files and terms used in draw.io diagrams allowing for faster ontology deployment while maintaining robust cross-references.
+CEMENTO is a component python package of the larger **SDLE FAIR application suite** of tools for creating scientific ontologies more efficiently. This package provides functional interfaces for converting draw.io diagrams of ontologies into RDF triples in the turtle (`.ttl`) format and vice versa. This package is able to provide term matching between reference ontology files and terms used in draw.io diagrams allowing for faster ontology deployment while maintaining robust cross-references.
+
+CEMENTO stands for the Centralized Entity Mapping & Extraction Nexus for Triples and Ontologies -- a mouthful for an acronym, but an important metaphor for the package building the road to ontologies for materials data.
 
 .. grid:: 2
    
@@ -61,7 +61,24 @@ CEMENTO stands for the Centralized Entity Mapping & Extraction Nexus for Triples
             :color: dark
             :click-parent:
 
-            To the user guide
+            To the User Guide
+
+    .. grid-item-card::
+        :img-top: _static/more.svg
+
+        API Reference
+        ^^^^^^^^^^^^^
+
+        The full documentation for all things CEMENTO.
+
+        +++
+
+        .. button-ref:: modules
+            :expand:
+            :color: dark
+            :click-parent:
+
+            To the API Reference
 
 Indices and tables
 ==================

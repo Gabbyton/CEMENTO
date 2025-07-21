@@ -319,6 +319,55 @@
 </pre></div>
 </div>
 <p>Ideally, you can create a python environment where <cite>CEMENTO</cite> will reside. This command will automatically install CEMENTO dependencies.</p>
+</section>
+<section id="scripting">
+<h2>Scripting<a class="headerlink" href="#scripting" title="Link to this heading">#</a></h2>
+<section id="module-cemento.rdf.drawio_to_turtle">
+<span id="converting-draw-io-to-ttl"></span><h3>Converting draw.io to ttl<a class="headerlink" href="#module-cemento.rdf.drawio_to_turtle" title="Link to this heading">#</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="cemento.rdf.drawio_to_turtle.convert_drawio_to_ttl">
+<span class="sig-prename descclassname"><span class="pre">cemento.rdf.drawio_to_turtle.</span></span><span class="sig-name descname"><span class="pre">convert_drawio_to_ttl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onto_ref_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaults_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefixes_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_substitution_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cemento.rdf.drawio_to_turtle.convert_drawio_to_ttl" title="Link to this definition">#</a></dt>
+<dd><p>Convert an input draw.io diagram file of an ontology into RDF triples in the turtle format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_path</strong> (<em>str</em><em> | </em><em>Path</em>) – The path to the draw.io file input.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em><em> | </em><em>Path</em>) – The desired file path for saving the RDF triples in the turtle format.</p></li>
+<li><p><strong>onto_ref_folder</strong> (<em>str</em><em> | </em><em>Path</em>) – The path to the folder containing the reference ontologies.</p></li>
+<li><p><strong>defaults_folder</strong> (<em>str</em><em> | </em><em>Path</em>) – The path to the folder containing the turtle files of the default namespaces.</p></li>
+<li><p><strong>prefixes_path</strong> (<em>str</em><em> | </em><em>Path</em>) – The path to the json file containing prefixes.</p></li>
+<li><p><strong>log_substitution_path</strong> (<em>str</em><em> | </em><em>Path</em><em>, </em><em>optional</em>) – The path to a csv file containing substitution results from term matching. Defaults to <strong>None</strong>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function" id="module-cemento.rdf.turtle_to_drawio">
+<dt class="sig sig-object py" id="cemento.rdf.turtle_to_drawio.convert_ttl_to_drawio">
+<span class="sig-prename descclassname"><span class="pre">cemento.rdf.turtle_to_drawio.</span></span><span class="sig-name descname"><span class="pre">convert_ttl_to_drawio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizontal_tree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onto_ref_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaults_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefixes_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_unique_literals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cemento.rdf.turtle_to_drawio.convert_ttl_to_drawio" title="Link to this definition">#</a></dt>
+<dd><p>Convert RDF triples in the turtle format as an ontology diagram in a draw.io file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_path</strong> (<em>str</em><em> | </em><em>Path</em>) – The path to the turtle input file.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em><em> | </em><em>Path</em>) – The desired file path for saving an ontology diagram as a draw.io file.</p></li>
+<li><p><strong>horizontal_tree</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to make the tree horizontal or stay with the default vertical layout. Defaults to <strong>False</strong>.</p></li>
+<li><p><strong>classes_only</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to just display classes and instances (taxonomy tree). Defaults to <strong>False</strong>.</p></li>
+<li><p><strong>onto_ref_folder</strong> (<em>str</em><em> | </em><em>Path</em><em>, </em><em>optional</em>) – The path to the folder containing the reference ontologies. Defaults to <strong>None</strong>.</p></li>
+<li><p><strong>defaults_folder</strong> (<em>str</em><em> | </em><em>Path</em><em>, </em><em>optional</em>) – The path to the folder containing the turtle files of the default namespaces. Defaults to <strong>None</strong>.</p></li>
+<li><p><strong>prefixes_path</strong> (<em>str</em><em> | </em><em>Path</em><em>, </em><em>optional</em>) – The path to the json file containing prefixes. Defaults to <strong>None</strong>.</p></li>
+<li><p><strong>log_substitution_path</strong> (<em>str</em><em> | </em><em>Path</em><em>, </em><em>optional</em>) – The path to a csv file containing substitution results from term matching. Defaults to <strong>None</strong>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 <p>In this page add:
 - how to install with a conda environment
 - installation prerequisites (Python version etc.)
@@ -333,6 +382,7 @@
             <iframe class="sphinx" None src="https://viewer.diagrams.net?#Uhttps%3A%2F%2Fraw.githubusercontent.com%2FGabbyton%2FCEMENTO%2Frefs%2Fheads%2Fmaster%2Ffigures%2Fdo-not-input-this-happy-example-explainer.drawio" allow="fullscreen *;autoplay *; geolocation *; microphone *; camera *; midi *; encrypted-media *" frameborder="0"></iframe>
         
 </div></section>
+</section>
 </section>
 
 
@@ -374,6 +424,14 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scripting">Scripting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cemento.rdf.drawio_to_turtle">Converting draw.io to ttl</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.rdf.drawio_to_turtle.convert_drawio_to_ttl"><code class="docutils literal notranslate"><span class="pre">convert_drawio_to_ttl()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.rdf.turtle_to_drawio.convert_ttl_to_drawio"><code class="docutils literal notranslate"><span class="pre">convert_ttl_to_drawio()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
