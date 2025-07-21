@@ -1,0 +1,17 @@
+.sd-card-img-top {
+    height: auto !important;
+    width: 25% !important;
+}
+
+.sd-card-header {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+img.sd-card-img-top {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+}
