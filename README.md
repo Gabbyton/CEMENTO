@@ -44,7 +44,6 @@ It is that simple. By default, the program compiles with the versions of the ref
 - [OWL Schema](https://www.w3.org/2002/07/owl#)
 - [RDF Schema](https://www.w3.org/1999/02/22-rdf-syntax-ns#)
 - [RDFS Schema](https://www.w3.org/2000/01/rdf-schema#)
-- Hand-made [XSD Schema](https://www.w3.org/2001/XMLSchema#)
 
 These ontology files are used by `CEMENTO` for referencing terms and predicates. As you can imagine, the default reference ontology is CCO, which is the preferred mid-level ontology by the SDLE center. The next section details how you can add your own reference ontologies.
 
