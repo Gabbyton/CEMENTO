@@ -29,6 +29,7 @@ from cemento.rdf.transforms import (
     get_literal_data_type,
     get_literal_lang_annotation,
     get_term_value,
+    get_xsd_terms,
     substitute_term_multikey,
 )
 from cemento.term_matching.constants import get_default_namespace_prefixes
@@ -136,12 +137,13 @@ def convert_graph_to_ttl(
 
     inv_constructed_terms = {value: key for key, value in constructed_terms.items()}
 
+    xsd_terms = get_xsd_terms()
     constructed_terms.update(substitution_results)
     constructed_literal_terms = {
         term: construct_literal(
             term,
             lang=get_literal_lang_annotation(term),
-            datatype=get_literal_data_type(term, search_terms),
+            datatype=get_literal_data_type(term, xsd_terms),
         )
         for term in literal_terms
     }
@@ -266,4 +268,4 @@ def convert_graph_to_ttl(
         predicate_term = data["label"]
         rdf_graph.add((domain_term, predicate_term, range_term))
     # serialize the output as a turtle file
-    rdf_graph.serialize(destination=output_path, format='turtle')
+    rdf_graph.serialize(destination=output_path, format="turtle")

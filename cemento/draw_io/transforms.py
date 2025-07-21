@@ -1,4 +1,4 @@
-from collections.abc import Callable, Container, Iterable
+from collections.abc import Callable, Iterable
 from dataclasses import asdict
 from functools import partial
 from itertools import accumulate
@@ -7,7 +7,6 @@ from pathlib import Path
 import networkx as nx
 from defusedxml import ElementTree as ET
 from networkx import DiGraph
-from thefuzz import process
 
 from cemento.draw_io.constants import (
     FILL_COLOR,
@@ -25,6 +24,7 @@ from cemento.draw_io.constants import (
 from cemento.draw_io.io import get_template_files
 from cemento.draw_io.preprocessing import clean_term, remove_predicate_quotes
 from cemento.term_matching.constants import RANK_PROPS
+from cemento.term_matching.transforms import substitute_term
 from cemento.utils.utils import filter_graph, fst, snd, trd
 
 
@@ -99,28 +99,6 @@ def extract_elements(
             rel_id = element
             rel_ids.add(rel_id)
     return term_ids, rel_ids
-
-
-def get_term_matches(
-    term: str, search_pool: Container[str], score_cutoff: int = None
-) -> tuple[str, int]:
-    return process.extractOne(
-        term.lower(),
-        [search_term.lower() for search_term in search_pool],
-        score_cutoff=score_cutoff,
-    )
-
-
-def substitute_term(
-    term: str, search_terms: set[str], score_cutoff=90
-) -> tuple[str, bool]:
-    matched_rank_term, score = (
-        match_res if (match_res := get_term_matches(term, search_terms)) else (None, 0)
-    )
-    return (
-        matched_rank_term if (meets_cutoff := score > score_cutoff) else term,
-        meets_cutoff,
-    )
 
 
 def generate_graph(

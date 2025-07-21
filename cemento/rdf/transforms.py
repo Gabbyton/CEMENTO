@@ -5,7 +5,7 @@ from uuid import uuid4
 
 import networkx as nx
 from networkx import DiGraph
-from rdflib import OWL, RDF, RDFS, SKOS, BNode, Graph, Literal, Namespace, URIRef
+from rdflib import OWL, RDF, RDFS, SKOS, XSD, BNode, Graph, Literal, Namespace, URIRef
 from rdflib.collection import Collection
 from rdflib.namespace import split_uri
 
@@ -16,7 +16,7 @@ from cemento.rdf.preprocessing import (
 )
 from cemento.term_matching.constants import RANK_PROPS
 from cemento.term_matching.transforms import substitute_term_multikey
-from cemento.utils.utils import filter_graph
+from cemento.utils.utils import filter_graph, snd
 
 
 def construct_term_uri(
@@ -29,8 +29,17 @@ def construct_term_uri(
     return URIRef(f"{ns_uri}{abbrev_term}")
 
 
+def get_xsd_terms() -> dict[str, URIRef]:
+    terms = list(filter(lambda term: isinstance(term, URIRef), dir(XSD)))
+    abbrev_terms = map(lambda term: f"xsd:{snd(split_uri(term))}", terms)
+    return {
+        abbrev_term: term
+        for (abbrev_term, term) in zip(abbrev_terms, terms, strict=True)
+    }
+
+
 def construct_literal(term: str, lang="en", datatype=None) -> Literal:
-    return Literal(clean_literal_string(term), lang=lang, datatype=None)
+    return Literal(clean_literal_string(term), lang=lang, datatype=datatype)
 
 
 def get_literal_lang_annotation(literal_term: str, default=None) -> str:

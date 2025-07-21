@@ -1,6 +1,6 @@
 import re
 from collections import defaultdict
-from collections.abc import Iterable
+from collections.abc import Container, Iterable
 from functools import partial, reduce
 from itertools import chain, groupby
 from pathlib import Path
@@ -42,6 +42,28 @@ def search_similar_terms_multikey(
         )
         is not None
     ]
+
+
+def get_term_matches(
+    term: str, search_pool: Container[str], score_cutoff: int = None
+) -> tuple[str, int]:
+    return process.extractOne(
+        term.lower(),
+        [search_term.lower() for search_term in search_pool],
+        score_cutoff=score_cutoff,
+    )
+
+
+def substitute_term(
+    term: str, search_terms: set[str], score_cutoff=90
+) -> tuple[str, bool]:
+    matched_rank_term, score = (
+        match_res if (match_res := get_term_matches(term, search_terms)) else (None, 0)
+    )
+    return (
+        matched_rank_term if (meets_cutoff := score > score_cutoff) else term,
+        meets_cutoff,
+    )
 
 
 def substitute_term_multikey(
