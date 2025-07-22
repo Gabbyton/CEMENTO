@@ -1,8 +1,9 @@
+***********
 Quickstart
-==========
+***********
 
 Before converting
------------------
+================
 
 Install cemento with pip.
 
