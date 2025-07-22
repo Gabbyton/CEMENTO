@@ -67,4 +67,4 @@ If you get lost, there is always:
 What now?
 ---------
 
-You can now start converting your diagrams from draw.io to turtle format and vice versa! To read more about other cool features, start with the :doc:`User Guide </user-guide/user-guide>`.
+You can now start converting your diagrams from draw.io to turtle format and vice versa! To read more about other cool features, start with the :doc:`User Guide </user-guide>`.

@@ -12,7 +12,8 @@ CEMENTO
    :hidden:
 
    quickstart
-   user-guide/user-guide
+   user-guide
+   modules
 
 **Version:** |release|
 
@@ -56,7 +57,7 @@ CEMENTO stands for the Centralized Entity Mapping & Extraction Nexus for Triples
 
         +++
 
-        .. button-ref:: user-guide/user-guide
+        .. button-ref:: user-guide
             :expand:
             :color: dark
             :click-parent:

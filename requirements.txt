@@ -10,4 +10,5 @@ twine
 sphinx
 pydata-sphinx-theme
 sphinx-design
+sphinx-iframes
 sphinxcontrib-shtest

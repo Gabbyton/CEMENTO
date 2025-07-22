@@ -1,18 +1,9 @@
 User Guide
 ==========
 
-.. _installation:
-
 Installation
 ------------
 
-To use CEMENTO, first install it with pip:
-
-.. code-block:: console
-
-    (.venv) $ pip install cemento
-
-Ideally, you can create a python environment where `CEMENTO` will reside. This command will automatically install CEMENTO dependencies.
 
 Scripting
 ----------
