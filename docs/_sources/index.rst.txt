@@ -20,7 +20,8 @@ CEMENTO
 **Useful links**:
 `Source Repository <https://github.com/Gabbyton/CEMENTO>`_ |
 `Issue Tracker <https://github.com/Gabbyton/CEMENTO/issues>`_ |
-`MDS-Onto Website <https://cwrusdle.bitbucket.io>`_
+`MDS-Onto Website <https://cwrusdle.bitbucket.io>`_ |
+`PyPI Page <https://pypi.org/project/cemento/>`_
 
 
 
@@ -36,7 +37,7 @@ CEMENTO stands for the Centralized Entity Mapping & Extraction Nexus for Triples
         Quick Start
         ^^^^^^^^^^^
 
-        You just want to convert files? Check out our quick start guide to take you through the CEMENTO cli and convert ontology diagrams like a pro.
+        You just want to convert files? Check out our quick start guide get your started converting ontology diagrams and ``.ttl`` files.
 
         +++
 
