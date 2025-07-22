@@ -50,7 +50,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Drawing Basics" href="drawing-basics.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="cli-guide.html" />
+    <link rel="prev" title="CLI Guide" href="cli-guide.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -271,6 +271,7 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli-guide.html">CLI Guide</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Scripting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="drawing-basics.html">Drawing Basics</a></li>
 </ul>
@@ -335,6 +336,116 @@
                   
   <section id="scripting">
 <h1>Scripting<a class="headerlink" href="#scripting" title="Link to this heading">#</a></h1>
+<p>The package is composed of four main modules that can be imported into a python script. The following sections can show how to use the package for the its most common (and simplest) use-cases:</p>
+<section id="converting-draw-io-to-ttl-files">
+<h2>Converting draw.io to .ttl files<a class="headerlink" href="#converting-draw-io-to-ttl-files" title="Link to this heading">#</a></h2>
+<p>Using the actual function is as easy as importing and calling it in a python script. The function takes the exact same arguments that you can set in <code class="docutils literal notranslate"><span class="pre">cemento</span> <span class="pre">drawio_ttl</span></code>. In this case, the script needs to set those arguments explicitly.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cemento.rdf.drawio_to_turtle</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_drawio_to_ttl</span>
+
+<span class="n">INPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;your_onto_diagram.drawio&quot;</span>
+<span class="n">OUTPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;your_triples.ttl&quot;</span>
+<span class="n">ONTO_PATH</span> <span class="o">=</span> <span class="s2">&quot;data&quot;</span> <span class="c1"># this path points to the folder containing all the ttl files you want to reference (optional)</span>
+<span class="n">DEFAULTS_FOLDER</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="c1"># path to the folder containing default terms. It should come with the cloned repo (optional)</span>
+<span class="n">PREFIXES_PATH</span> <span class="o">=</span> <span class="s2">&quot;prefixes.json&quot;</span> <span class="c1"># this path points to a prefixes file with custom prefix assignments (optional)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">convert_drawio_to_ttl</span><span class="p">(</span><span class="n">INPUT_PATH</span><span class="p">,</span> <span class="n">OUTPUT_PATH</span><span class="p">,</span> <span class="n">ONTO_PATH</span><span class="p">,</span> <span class="n">PREFIXES_PATH</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="converting-ttl-files-to-draw-io-files">
+<h2>Converting .ttl files to draw.io files<a class="headerlink" href="#converting-ttl-files-to-draw-io-files" title="Link to this heading">#</a></h2>
+<p>This case is very similiar to the previous one. The .ttl was assumed to contain the necessary information so you only need to set the INPUT_PATH and OUTPUT_PATH. The options check_ttl_validity and set_unique_literals set the default behavior of rule-checking the ttl file first, and treating literals with the same name as different things, respectively.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cemento.rdf.turtle_to_drawio</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_ttl_to_drawio</span>
+
+<span class="n">INPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;your_triples.ttl&quot;</span>
+<span class="n">OUTPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;your_onto_diagram.drawio&quot;</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># the horizontal tree parameter controls whether you want the default vertical tree (False) or an inverted horizontal tree (True)</span>
+    <span class="n">convert_ttl_to_drawio</span><span class="p">(</span><span class="n">INPUT_PATH</span><span class="p">,</span> <span class="n">OUTPUT_PATH</span><span class="p">,</span> <span class="n">horizontal_tree</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">check_ttl_validity</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">set_unique_literals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="converting-draw-io-to-a-networkx-digraph">
+<h2>Converting draw.io to a networkx DiGraph<a class="headerlink" href="#converting-draw-io-to-a-networkx-digraph" title="Link to this heading">#</a></h2>
+<p>We used a directed networkx graph (DiGraph) as an intermediary data structure that provides a much richer interface for graph manipulation than the default rdflib Graph. If you are interested in using this data structure, you are free to use the functions shown below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cemento.draw_io.read_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_drawio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cemento.draw_io.rdf.turtle_to_graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_ttl_to_graph</span>
+
+<span class="n">DRAWIO_INPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;your_onto_diagram.drawio&quot;</span>
+<span class="n">TTL_INPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;your_triples.ttl&quot;</span>
+<span class="n">ONTO_FOLDER</span> <span class="o">=</span> <span class="s2">&quot;data&quot;</span>  <span class="c1"># this path points to the folder containing all the ttl files you want to reference (optional)</span>
+<span class="n">DEFAULTS_FOLDER</span> <span class="o">=</span> <span class="s2">&quot;defaults&quot;</span>  <span class="c1"># path to the folder containing default terms. It should come with the cloned repo (optional)</span>
+<span class="n">PREFIXES_PATH</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;&quot;</span>  <span class="c1"># this path points to a prefixes file with custom prefix assignments (optional)</span>
+<span class="p">)</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># reads a draw.io diagram and converts it the graph</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">read_drawio</span><span class="p">(</span><span class="n">DRAWIO_INPUT_PATH</span><span class="p">,</span> <span class="n">ONTO_FOLDER</span><span class="p">,</span> <span class="n">PREFIXES_PATH</span><span class="p">,</span> <span class="n">DEFAULTS_FOLDER</span><span class="p">)</span>
+    <span class="c1"># use the graph here as proof</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+    <span class="c1">#reads a ttl file and converts it to a graph</span>
+    <span class="n">convert_ttl_to_graph</span><span class="p">(</span><span class="n">TTL_INPUT_PATH</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In fact, the functions <code class="docutils literal notranslate"><span class="pre">read_drawio</span></code> and <code class="docutils literal notranslate"><span class="pre">convert_ttl_to_graph</span></code> are actually wrapped around to form the <code class="docutils literal notranslate"><span class="pre">convert_ttl_to_drawio</span></code> and <code class="docutils literal notranslate"><span class="pre">convert_drawio_to_ttl</span></code> functions. You are already using the former pair when using the latter.</p>
+<section id="important-note-on-read-drawio">
+<h3>Important Note on <code class="docutils literal notranslate"><span class="pre">read_drawio</span></code><a class="headerlink" href="#important-note-on-read-drawio" title="Link to this heading">#</a></h3>
+<p>When using the <code class="docutils literal notranslate"><span class="pre">read_drawio</span></code>, please exercise caution when providing the paths. The function has a signature:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">read_drawio</span><span class="p">(</span> <span class="n">input_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">onto_ref_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">prefixes_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">defaults_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">relabel_key</span><span class="p">:</span> <span class="n">DiagramKey</span> <span class="o">=</span> <span class="n">DiagramKey</span><span class="o">.</span><span class="n">LABEL</span><span class="p">,</span> <span class="n">inverted_rank_arrow</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you aren’t planning on leveraging stratified layouts like the ones used in <code class="docutils literal notranslate"><span class="pre">draw_tree</span></code>, please supply just the arguments for <code class="docutils literal notranslate"><span class="pre">input_path</span></code> and optionally, <code class="docutils literal notranslate"><span class="pre">relabel_key</span></code> and <code class="docutils literal notranslate"><span class="pre">inverted_rank_arrow</span></code>.</p>
+</section>
+<section id="a-note-on-unique-literals">
+<h3>A Note on “Unique” Literals<a class="headerlink" href="#a-note-on-unique-literals" title="Link to this heading">#</a></h3>
+<p>By default, the package will not treat all literals as being unique from one another. Classes and instances, by design, have singular, unique IRIs so they are treated to be the same if drawn in multiple locations. By default, literals will be treated the same way even though they don’t have unique IRIs.</p>
+<p>To make unique literals (which don’t come with IRIs), the package can append all literal terms with a unique ID that prevents merging. To do so, set the <code class="docutils literal notranslate"><span class="pre">set_unique_literals</span></code> argument when using the functions <code class="docutils literal notranslate"><span class="pre">convert_ttl_to_drawio</span></code> and <code class="docutils literal notranslate"><span class="pre">convert_ttl_to_graph</span></code>.</p>
+<p>You are free to remove them using <code class="docutils literal notranslate"><span class="pre">remove_literal_id</span></code> which is just one of the functions we wrote in <code class="docutils literal notranslate"><span class="pre">cemento.draw_io.preprocessing</span></code>. You are also free to implement your own algorithm as well.</p>
+</section>
+</section>
+<section id="using-other-modules">
+<h2>Using Other Modules<a class="headerlink" href="#using-other-modules" title="Link to this heading">#</a></h2>
+<p>This package was built along the paradigms of <a class="reference external" href="https://en.wikipedia.org/wiki/Functional_programming">functional programming</a> which is only possible in Python through a <a class="reference external" href="https://docs.python.org/3/howto/functional.html">hybrid approach</a>. The modules are divided by four main logical groupings, and are as follows:</p>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">cemento.cli</span></code></dt><dd><p>This module contains code with the CLI interface definitions.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">cemento.draw_io</span></code></dt><dd><p>This module has code that parses, reads and converts draw.io diagrams of ontoligies into <code class="docutils literal notranslate"><span class="pre">networkx</span></code> DiGraph objects (with proper formatted content) and vice versa. The content generated here is subsequently used in the <code class="docutils literal notranslate"><span class="pre">rdf</span></code> module.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">cemento.rdf</span></code></dt><dd><p>This module handles the conversion of <code class="docutils literal notranslate"><span class="pre">draw.io</span></code> to <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> and vice versa. It bridges and orchestrates some functions in cemento.draw_io to do so.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">cemento.term_matching</span></code></dt><dd><p>This module contains functions related to term matching and substitution, such as prefixes, namespace mappings and fuzzy search.</p>
+</dd>
+</dl>
+</li>
+</ol>
+<p>Each module is again subdivided into different submodules that envelope functions based on their purpose:</p>
+<ul class="simple">
+<li><p><strong>preprocessing</strong> - contains functions that deal with cleaning and organizing terms prior to use in other functions.</p></li>
+<li><p><strong>transforms</strong> - deals with data transformations, aggregations and splitting for both final and intermediate data.</p></li>
+<li><p><strong>filters</strong> - some functions that filter data that ended up being reused across modules.</p></li>
+<li><p><strong>io</strong> - handles file or data loading from file or library sources.</p></li>
+<li><p><strong>constants</strong> - contains fixed constants and definitions for dataclasses and enums.</p></li>
+</ul>
+<p>As you can imagine, these combinations can help navigate the function you probably want to inspect. For example, you can bet that <code class="docutils literal notranslate"><span class="pre">cemento.draw_io.io</span></code> and <code class="docutils literal notranslate"><span class="pre">cemento.draw_io.transforms</span></code> will contain the functions for actually reading and writing a draw.io diagram.</p>
+<section id="the-api-guide">
+<h3>The API guide<a class="headerlink" href="#the-api-guide" title="Link to this heading">#</a></h3>
+<p>We invite you to read through our <a class="reference internal" href="../modules.html"><span class="doc">API guide</span></a> to get an in-depth understanding of what each of the functions do. This codebase is more than 2000 lines, and is still in active development. We cannot guarantee that all functions will have documentation, but we will slowly add as many of them as possible starting with the major functions for conversion.</p>
+</section>
+</section>
 </section>
 
 
@@ -353,7 +464,7 @@
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">&lt;no title&gt;</p>
+        <p class="prev-next-title">CLI Guide</p>
       </div>
     </a>
     <a class="right-next"
@@ -375,6 +486,28 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-draw-io-to-ttl-files">Converting draw.io to .ttl files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-ttl-files-to-draw-io-files">Converting .ttl files to draw.io files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-draw-io-to-a-networkx-digraph">Converting draw.io to a networkx DiGraph</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#important-note-on-read-drawio">Important Note on <code class="docutils literal notranslate"><span class="pre">read_drawio</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-note-on-unique-literals">A Note on “Unique” Literals</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-other-modules">Using Other Modules</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-api-guide">The API guide</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">
