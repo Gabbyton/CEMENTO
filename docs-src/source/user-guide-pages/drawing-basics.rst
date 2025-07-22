@@ -14,6 +14,8 @@ The following diagram goes through an example supplied with the repository calle
     :width: 100%
     :aspectratio: 1.77
 
+Having trouble? Download the figure above as an :download:`svg image <https://raw.githubusercontent.com/Gabbyton/CEMENTO/refs/heads/master/figures/happy-example-explainer.drawio.svg>` or :download:`drawio diagram <https://raw.githubusercontent.com/Gabbyton/CEMENTO/refs/heads/master/figures/do-not-input-this-happy-example-explainer.drawio>`.
+
 In Case You Missed It
 =====================
 
