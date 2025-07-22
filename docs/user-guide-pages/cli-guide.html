@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>&lt;no title&gt; &#8212; CEMENTO 0.8.4 documentation</title>
+    <title>CLI Guide &#8212; CEMENTO 0.8.4 documentation</title>
   
   
   
@@ -49,6 +49,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'user-guide-pages/cli-guide';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Scripting" href="scripting.html" />
+    <link rel="prev" title="Installation" href="installation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -134,7 +136,7 @@
 </li>
 
 
-<li class="nav-item ">
+<li class="nav-item current active">
   <a class="nav-link nav-internal" href="../user-guide.html">
     User Guide
   </a>
@@ -143,7 +145,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../modules.html">
-    CEMENTO Module List
+    CEMENTO Modules
   </a>
 </li>
 
@@ -204,10 +206,8 @@
       
       
       
-        
-      
       <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -229,7 +229,7 @@
 </li>
 
 
-<li class="nav-item ">
+<li class="nav-item current active">
   <a class="nav-link nav-internal" href="../user-guide.html">
     User Guide
   </a>
@@ -238,7 +238,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../modules.html">
-    CEMENTO Module List
+    CEMENTO Modules
   </a>
 </li>
 
@@ -263,6 +263,21 @@
       </div>
     
   </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">CLI Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripting.html">Scripting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drawing-basics.html">Drawing Basics</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
@@ -299,7 +314,10 @@
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">&lt;no title&gt;</span></li>
+    
+    <li class="breadcrumb-item"><a href="../user-guide.html" class="nav-link">User Guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">CLI Guide</span></li>
   </ul>
 </nav>
 </div>
@@ -316,7 +334,71 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  
+  <section id="cli-guide">
+<h1>CLI Guide<a class="headerlink" href="#cli-guide" title="Link to this heading">#</a></h1>
+<p>This guide provides an in-depth introduction to the CLI and some caveats that are important to note to take advantage of all the features <code class="docutils literal notranslate"><span class="pre">CEMENTO</span></code> offers. If you just want to convert files, go to <a class="reference internal" href="../quickstart.html"><span class="doc">Quick Start</span></a>.</p>
+<section id="command-line-interface">
+<h2>Command Line Interface<a class="headerlink" href="#command-line-interface" title="Link to this heading">#</a></h2>
+<p>Once the package is installed, you will have access to a cemento CLI command for converting files. This CLI interface allows you to convert <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files into draw.io diagrams and vice versa. To do so:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>converting<span class="w"> </span>from<span class="w"> </span>.ttl<span class="w"> </span>to<span class="w"> </span>drawio
+<span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>ttl_drawio<span class="w"> </span>your_triples.ttl<span class="w"> </span>your_output_diagram.drawio
+
+<span class="gp"># </span>converting<span class="w"> </span>from<span class="w"> </span>.drawio<span class="w"> </span>to<span class="w"> </span>.ttl
+<span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>drawio_ttl<span class="w"> </span>your_output_diagram.drawio<span class="w"> </span>your_triples.ttl
+</pre></div>
+</div>
+<p>It is that simple. In case you do need help, the CLI already comes with useful help pages. Just use the <code class="docutils literal notranslate"><span class="pre">--help</span></code> flag on the command or any of its subcommands:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>--help
+<span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>drawio_ttl<span class="w"> </span>--help
+<span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>ttl_drawio<span class="w"> </span>--help
+</pre></div>
+</div>
+</section>
+<section id="term-matching">
+<h2>Term Matching<a class="headerlink" href="#term-matching" title="Link to this heading">#</a></h2>
+<p>When converting from draw.io to <code class="docutils literal notranslate"><span class="pre">.ttl</span></code>, your draw.io diagrams can have classes, instances, or predicates that can correspond with those in a reference ontology like CCO or PMDCO. To avoid redundancy, <code class="docutils literal notranslate"><span class="pre">CEMENTO</span></code> automatically matches them for you. This section describes how it does so, but only from the perspective of CLI use. If you want to learn more about diagram drawing, please refer to the Drawing Basics Section (pending).</p>
+<section id="acceptable-format-for-term-matching">
+<h3>Acceptable Format for Term Matching<a class="headerlink" href="#acceptable-format-for-term-matching" title="Link to this heading">#</a></h3>
+<p>A term in a diagram is only matched if it is on a shape or an arrow label. They can have the following format:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">prefix</span><span class="o">&gt;</span><span class="p">:</span><span class="o">&lt;</span><span class="n">abbrev</span><span class="o">-</span><span class="n">term</span><span class="o">&gt;</span>
+
+<span class="c1"># for example</span>
+<span class="n">cco</span><span class="p">:</span><span class="n">ICE</span>
+</pre></div>
+</div>
+<p>Where, <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;</span></code> is the prefix the reference ontologies used to refer to that term. <code class="docutils literal notranslate"><span class="pre">&lt;abbrev-term&gt;</span></code> can either be the last part of the term URI, its label, or one of its alternate labels (<code class="docutils literal notranslate"><span class="pre">rdfs:label</span></code> or <code class="docutils literal notranslate"><span class="pre">skos:altLabel</span></code>).</p>
+<p>For example, CCO’s <code class="docutils literal notranslate"><span class="pre">Information</span> <span class="pre">Content</span> <span class="pre">Entity</span></code> has a URI of <code class="docutils literal notranslate"><span class="pre">https://www.commoncoreontologies.org/ont00000958</span></code> so you can write <code class="docutils literal notranslate"><span class="pre">cco:ont00000958</span></code> (with the last part of the term URI), <code class="docutils literal notranslate"><span class="pre">cco:Information</span> <span class="pre">Content</span> <span class="pre">Entity</span></code> (with the <code class="docutils literal notranslate"><span class="pre">rdfs:label</span></code> value), or <code class="docutils literal notranslate"><span class="pre">cco:ICE</span></code> (with a known <code class="docutils literal notranslate"><span class="pre">skos:altLabel</span></code> value).</p>
+<p>Your terms do not have to be the exact copy of the IRI or the label of the term you want to match. <code class="docutils literal notranslate"><span class="pre">CEMENTO</span></code> automatically adds the aliases of the referenced terms to its search-pool in addition to conducting <em>fuzzy-search</em> to get matches. Hence, you can use symbols like spaces, underscores, or dashes if you wish. A word of caution with camel case or pascal case though. They are usually standard but they are harder to match. Use them with discretion.</p>
+<p>Beware, shorter terms are also harder to match, and only aliases inside the reference ontologies will be used. For example, <code class="docutils literal notranslate"><span class="pre">cco:ICE</span></code> will match to “Information Content Entity” in the CCO ontology. In contrast <code class="docutils literal notranslate"><span class="pre">cco:Information</span> <span class="pre">CE</span></code> will not match because it is not a known <code class="docutils literal notranslate"><span class="pre">skos:altLabel</span></code> or <code class="docutils literal notranslate"><span class="pre">rdfs:label</span></code> of  the term.</p>
+<p>Terms that are replaced will have the <code class="docutils literal notranslate"><span class="pre">skos:exactMatch</span></code>  relationship to the term they reference. Since the term is replaced, this will be a self-referential triple added just for annotation.</p>
+</section>
+<section id="default-reference-ontologies">
+<h3>Default Reference Ontologies<a class="headerlink" href="#default-reference-ontologies" title="Link to this heading">#</a></h3>
+<p>By default, the program compiles with the versions of the reference ontologies it needs to do term matching. Specifically, it comes bundled with the following ontologies.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/CommonCoreOntology/CommonCoreOntologies">Common Core Ontologies</a></p></li>
+<li><p><a class="reference external" href="https://www.w3.org/2002/07/owl#">OWL Schema</a></p></li>
+<li><p><a class="reference external" href="https://www.w3.org/1999/02/22-rdf-syntax-ns#">RDF Schema</a></p></li>
+<li><p><a class="reference external" href="https://www.w3.org/2000/01/rdf-schema#">RDFS Schema</a></p></li>
+</ul>
+<p>These ontology files are used by CEMENTO for referencing terms and predicates. The package has built-in copies of the reference files in the <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> format. As you can imagine, the default reference ontology is CCO, which is the preferred mid-level ontology by the SDLE center. The next section details how you can add your own reference ontologies.</p>
+</section>
+</section>
+<section id="adding-or-replacing-reference-ontologies">
+<h2>Adding or Replacing Reference Ontologies<a class="headerlink" href="#adding-or-replacing-reference-ontologies" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">cemento</span> <span class="pre">ttl_drawio</span></code> command has an argument called <code class="docutils literal notranslate"><span class="pre">--onto-ref-folder-path</span></code> which you can point to a folder containing <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files that contain the terms you want to reference. For example, you can download a <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> file from the official CCO repo page and place it here to reference all CCO terms. Under the hood, this referencing is additive, which means you can add as many <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> as you want to reference. By default, cemento will already come bundled with this folder, but it will currently only reference CCO.</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><strong>CAUTION:</strong> Repeated references are overwritten in the order the files are read by python (usually alphabetical order). If your reference files conflict with one another, please be advised and resolve those conflicts first by deleting the terms or modifying them in the <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files.</div>
+</div>
+</div></blockquote>
+<section id="replacing-default-ontologies">
+<h3>Replacing Default Ontologies<a class="headerlink" href="#replacing-default-ontologies" title="Link to this heading">#</a></h3>
+<p>The schemas for RDF, XML, and RDFS contain the terms that all ontologies ought to understand by default. Thus, a lot of assumptions were made surrounding their standard use during the development of the package. You can, however, also specify a folder of choice through the <code class="docutils literal notranslate"><span class="pre">--defaults-folder-path</span></code> option for <code class="docutils literal notranslate"><span class="pre">cemento</span> <span class="pre">ttl_drawio</span></code>. Replace it at your own risk.</p>
+</section>
+</section>
+</section>
+
 
                 </article>
               
@@ -327,6 +409,24 @@
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="installation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Installation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scripting.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Scripting</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -345,9 +445,18 @@
     <i class="fa-solid fa-list"></i> On this page
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="simple visible nav section-nav flex-column">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#command-line-interface">Command Line Interface</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#term-matching">Term Matching</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#acceptable-format-for-term-matching">Acceptable Format for Term Matching</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#default-reference-ontologies">Default Reference Ontologies</a></li>
 </ul>
-
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-or-replacing-reference-ontologies">Adding or Replacing Reference Ontologies</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#replacing-default-ontologies">Replacing Default Ontologies</a></li>
+</ul>
+</li>
+</ul>
   </nav></div>
 
   <div class="sidebar-secondary-item">

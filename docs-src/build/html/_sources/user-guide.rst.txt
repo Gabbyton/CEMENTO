@@ -1,25 +1,18 @@
+**********
 User Guide
-==========
+**********
 
-Installation
-------------
+These instructions will provide you detailed instructions on how to use the CEMENTO package. It will go through installation and important considerations into CLI use and basic conversion. A section is also dedicated to scripting for folks looking to integrate CEMENTO into their python-based software. A section on basic drawing also goes through and ins-and-outs of creating ontology diagrams. The links are provided in order for an absolute beginner, but feel free to skip to a relevant section:
 
+Guide Sections
+=============
+.. toctree::
+   :maxdepth: 2
 
-Scripting
-----------
-
-Converting draw.io to ttl
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. automodule:: cemento.rdf.drawio_to_turtle
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-.. automodule:: cemento.rdf.turtle_to_drawio
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   user-guide-pages/installation
+   user-guide-pages/cli-guide
+   user-guide-pages/scripting
+   user-guide-pages/drawing-basics
 
 In this page add:
 - how to install with a conda environment
