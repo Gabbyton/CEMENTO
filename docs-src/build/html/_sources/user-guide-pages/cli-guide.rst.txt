@@ -31,7 +31,7 @@ It is that simple. In case you do need help, the CLI already comes with useful h
 Term Matching
 =============
 
-When converting from draw.io to ``.ttl``, your draw.io diagrams can have classes, instances, or predicates that can correspond with those in a reference ontology like CCO or PMDCO. To avoid redundancy, ``CEMENTO`` automatically matches them for you. This section describes how it does so, but only from the perspective of CLI use. If you want to learn more about diagram drawing, please refer to the Drawing Basics Section (pending).
+When converting from draw.io to ``.ttl``, your draw.io diagrams can have classes, instances, or predicates that can correspond with those in a reference ontology like CCO or PMDCO. To avoid redundancy, ``CEMENTO`` automatically matches them for you. This section describes how it does so, but only from the perspective of CLI use. If you want to learn more about diagram drawing, please refer to the :doc:`Drawing Basics Section </user-guide-pages/drawing-basics>`.
 
 Acceptable Format for Term Matching
 -----------------------------------

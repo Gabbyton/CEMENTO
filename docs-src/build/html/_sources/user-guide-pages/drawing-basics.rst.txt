@@ -4,6 +4,17 @@ Drawing Basics
 
 The ``CEMENTO`` package can take any single-page draw.io file and process it. However, parsing it *properly* to get the right RDF triples is a different matter. This guide goes through some things for you to keep in mind so your diagrams actually correspond with your ``.ttl`` outputs.
 
+Drawing with draw.io
+====================
+
+If you have not used draw.io before, please refer to their comprehensive tutorials `here <https://drawio-app.com/tutorials/>`_. Where you draw your draw.io doesn't really affect the package performance as long as ``CEMENTO`` has access to the output ``.drawio`` file. Once you are familiar with the basics of ``.drawio``, there are a few additional things to note:
+
+* You can use any **simple** shape for your classes, literals and instances. **HOWEVER**, any shape you put (including textboxes) will be considered a class, literal or instance.
+* You draw predicates with arrows. Please make sure that your arrows actually connect to the shape and not just look as if it does.
+* Your arrows must be drawn from source to target. **We have not tested using 'reverse' or changing the start or end arrows to change arrow direction**.
+* Predicate labels must be done on the arrow itself. Putting a box on top of an arrow will not work. Only one label per arrow.
+* Literals must come with double-quotes regardless of data type. Avoid using nested double-quotes.
+
 A Walkthrough
 =============
 
@@ -14,7 +25,7 @@ The following diagram goes through an example supplied with the repository calle
     :width: 100%
     :aspectratio: 1.77
 
-Having trouble? Download the figure above as an :download:`svg image <https://raw.githubusercontent.com/Gabbyton/CEMENTO/refs/heads/master/figures/happy-example-explainer.drawio.svg>` or :download:`drawio diagram <https://raw.githubusercontent.com/Gabbyton/CEMENTO/refs/heads/master/figures/do-not-input-this-happy-example-explainer.drawio>`.
+Having trouble? Download the figure above as an :download:`svg image <https://raw.githubusercontent.com/Gabbyton/CEMENTO/refs/heads/master/figures/happy-example-explainer.drawio.svg>` or :download:`draw.io diagram <https://raw.githubusercontent.com/Gabbyton/CEMENTO/refs/heads/master/figures/do-not-input-this-happy-example-explainer.drawio>`.
 
 In Case You Missed It
 =====================
