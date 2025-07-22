@@ -13,13 +13,3 @@ Guide Sections
    user-guide-pages/cli-guide
    user-guide-pages/scripting
    user-guide-pages/drawing-basics
-
-In this page add:
-- how to install with a conda environment
-- installation prerequisites (Python version etc.)
-- how to download the source code
-- instructions on CLI with details at the same degree as README
-- instructions on scripting directly taken from README
-- information about the files in README (adding references, changing defaults)
-- information about flags, considerations when making diagrams
-- drawing guide with interactive image visual
