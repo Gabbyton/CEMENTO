@@ -37,7 +37,7 @@ CEMENTO stands for the Centralized Entity Mapping & Extraction Nexus for Triples
         Quick Start
         ^^^^^^^^^^^
 
-        You just want to convert files? Check out our quick start guide get your started converting ontology diagrams and ``.ttl`` files.
+        You just want to convert files? Check out our quick start guide and get yourself converting ontology diagrams and ``.ttl`` files immediately.
 
         +++
 
