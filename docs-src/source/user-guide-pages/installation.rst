@@ -32,6 +32,8 @@ Feel free to use non-native environment managers like `conda <https://anaconda.o
 
 **NOTE:** The ``pip install`` will download the latest available version of the package. If you found our package on ``pypi``, beware of major version changes. This documentation only covers versions above ``v8.4``. Any versions below use an OOP-based interface which these docs don't cover.
 
+.. _install-from-repo:
+
 Installing from the Repository
 ==============================
 

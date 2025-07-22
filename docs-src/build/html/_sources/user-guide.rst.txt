@@ -23,8 +23,3 @@ In this page add:
 - information about the files in README (adding references, changing defaults)
 - information about flags, considerations when making diagrams
 - drawing guide with interactive image visual
-
-.. iframe:: https://viewer.diagrams.net?#Uhttps%3A%2F%2Fraw.githubusercontent.com%2FGabbyton%2FCEMENTO%2Frefs%2Fheads%2Fmaster%2Ffigures%2Fdo-not-input-this-happy-example-explainer.drawio
-    :height: auto
-    :width: 100%
-    :aspectratio: 1.77

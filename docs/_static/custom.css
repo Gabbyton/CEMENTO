@@ -19,3 +19,7 @@ img.sd-card-img-top {
     margin-right: auto;
     padding: 10px;
 }
+
+.iframe-container {
+    border: 1px solid black;
+}

@@ -26,6 +26,8 @@ It is that simple. In case you do need help, the CLI already comes with useful h
     (.venv) $ cemento drawio_ttl --help
     (.venv) $ cemento ttl_drawio --help
 
+.. _term-matching:
+
 Term Matching
 =============
 
@@ -53,6 +55,8 @@ Beware, shorter terms are also harder to match, and only aliases inside the refe
 
 Terms that are replaced will have the ``skos:exactMatch``  relationship to the term they reference. Since the term is replaced, this will be a self-referential triple added just for annotation.
 
+.. _def-ref-ontos:
+
 Default Reference Ontologies
 ----------------------------
 
@@ -66,13 +70,51 @@ By default, the program compiles with the versions of the reference ontologies i
 These ontology files are used by CEMENTO for referencing terms and predicates. The package has built-in copies of the reference files in the ``.ttl`` format. As you can imagine, the default reference ontology is CCO, which is the preferred mid-level ontology by the SDLE center. The next section details how you can add your own reference ontologies.
 
 Adding or Replacing Reference Ontologies
-=======================================
+=========================================
 
 The ``cemento ttl_drawio`` command has an argument called ``--onto-ref-folder-path`` which you can point to a folder containing ``.ttl`` files that contain the terms you want to reference. For example, you can download a ``.ttl`` file from the official CCO repo page and place it here to reference all CCO terms. Under the hood, this referencing is additive, which means you can add as many ``.ttl`` as you want to reference. By default, cemento will already come bundled with this folder, but it will currently only reference CCO.
 
     | **CAUTION:** Repeated references are overwritten in the order the files are read by python (usually alphabetical order). If your reference files conflict with one another, please be advised and resolve those conflicts first by deleting the terms or modifying them in the ``.ttl`` files.
 
 Replacing Default Ontologies
----------------------------
+-----------------------------
 
 The schemas for RDF, XML, and RDFS contain the terms that all ontologies ought to understand by default. Thus, a lot of assumptions were made surrounding their standard use during the development of the package. You can, however, also specify a folder of choice through the ``--defaults-folder-path`` option for ``cemento ttl_drawio``. Replace it at your own risk.
+
+.. _custom-terms-prefixes:
+
+Custom Terms and Prefixes
+=========================
+
+Creating new terms is just as easy as adding them. However, using custom namespaces is a different matter. Any term that doesn't come with a prefix gets assigned our default namespace `mds <https://cwrusdle.bitbucket.io/>`_.
+
+In order to use custom prefixes, you need to create a ``prefix.json`` file that looks like the following:
+
+    | **NOTE:** This exact file is available when you :ref:`pull the repository <install-from-repo>` and can be found in ``examples/prefixes.json``.
+
+.. code-block:: json
+
+    {
+        "cco": "https://www.commoncoreontologies.org/",
+        "mds": "https://cwrusdle.bitbucket.io/mds/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "ncit": "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#",
+        "skos": "http://www.w3.org/2004/02/skos/core#",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "obo": "http://purl.obolibrary.org/obo/",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "qudt": "http://qudt.org/schema/qudt/",
+        "pmdco": "https://w3id.org/pmd/co/",
+        "pmd": "https://w3id.org/pmd/co/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "unit": "http://qudt.org/vocab/unit/",
+        "afe": "http://purl.allotrope.org/ontologies/equipment#",
+        "afm": "http://purl.allotrope.org/ontologies/material#",
+        "afq": "http://purl.allotrope.org/ontologies/quality#",
+        "afr": "http://purl.allotrope.org/ontologies/result#"
+    }
+
+This file is just a python dictionary enclosed as a ``json`` object. Add yours by following the format (copy-paste a line, for example) and inserting it at the bottom of this file. Make sure your prefix is reasonably unique (i.e. don't copy one that is already in this file).
+
+After you are happy with your file, go ahead and set the ``--prefix_file_path`` when running cemento ``cemento drawio_ttl`` and **point it to the path to your file**. It should now read your custom prefixes and add the right namespace for your terms.

@@ -115,4 +115,4 @@ As you can imagine, these combinations can help navigate the function you probab
 The API guide
 --------------
 
-We invite you to read through our :doc:`API guide </modules>` to get an in-depth understanding of what each of the functions do. This codebase is more than 2000 lines, and is still in active development. We cannot guarantee that all functions will have documentation, but we will slowly add as many of them as possible starting with the major functions for conversion.
+We invite you to read through our :doc:`API guide </modules>` to get an in-depth understanding of what each of the functions do. This codebase is more than 2,000 lines, and is still in active development. We cannot guarantee that all functions will have documentation, but we will slowly add as many of them as possible starting with the major functions for conversion.
