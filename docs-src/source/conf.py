@@ -44,6 +44,15 @@ html_css_files = ["custom.css"]
 # Options for pydata theme
 
 html_theme_options = {
+    "logo": {
+        # In a left-to-right context, screen readers will read the alt text
+        # first, then the text, so this example will be read as "P-G-G-P-Y
+        # (short pause) Home A pretty good geometry package"
+        "alt_text": "CEMENTO - Home",
+        "text": "CEMENTO",
+        "image_light": "_static/logo-light.svg",
+        "image_dark": "_static/logo-dark.svg",
+    },
     "icon_links": [
         {
             # Label for this link
@@ -64,6 +73,10 @@ html_theme_options = {
             "icon": "fa-brands fa-python fa-lg",
             # The type of image to be used (see below for details)
             "type": "fontawesome",
-        }
-   ]
+        },
+    ],
+    "secondary_sidebar_items": ["page-toc"],
+    "footer_start": ["sphinx-version", "icon-attrib"],
+    "footer_center": ["copyright"],
+    "footer_end": ["theme-version"],
 }
