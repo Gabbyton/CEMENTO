@@ -51,7 +51,17 @@ html_theme_options = {
             # URL where the link will redirect
             "url": "https://github.com/Gabbyton/CEMENTO",  # required
             # Icon class (if "type": "fontawesome"), or path to local image (if "type": "local")
-            "icon": "fa-brands fa-square-github",
+            "icon": "fa-brands fa-github fa-lg",
+            # The type of image to be used (see below for details)
+            "type": "fontawesome",
+        },
+        {
+            # Label for this link
+            "name": "PyPI",
+            # URL where the link will redirect
+            "url": "https://pypi.org/project/cemento/",  # required
+            # Icon class (if "type": "fontawesome"), or path to local image (if "type": "local")
+            "icon": "fa-brands fa-python fa-lg",
             # The type of image to be used (see below for details)
             "type": "fontawesome",
         }
