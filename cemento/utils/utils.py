@@ -3,6 +3,7 @@ from collections import defaultdict
 from collections.abc import Callable
 
 from networkx import DiGraph
+from cemento.utils.constants import NullTermError
 
 
 def fst(x: tuple[any, any]) -> any:
@@ -35,6 +36,9 @@ def get_abbrev_term(
     prefix = default_prefix
     abbrev_term = term
     strict_camel_case = False
+
+    if term is None or not term:
+        raise NullTermError("There is a null term. Maybe you forgot to label something?")
 
     term = remove_term_names(term)
     if ":" in term:

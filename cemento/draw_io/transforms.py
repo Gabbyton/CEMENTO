@@ -26,7 +26,7 @@ from cemento.draw_io.io import get_template_files
 from cemento.draw_io.preprocessing import clean_term, remove_predicate_quotes
 from cemento.term_matching.constants import RANK_PROPS
 from cemento.term_matching.transforms import substitute_term
-from cemento.utils.utils import filter_graph, fst, snd, trd, aggregate_defaultdict
+from cemento.utils.utils import aggregate_defaultdict, filter_graph, fst, snd, trd
 
 
 def parse_elements(file_path: str | Path) -> dict[str, dict[str, any]]:
@@ -182,9 +182,7 @@ def parse_containers(
         and container_id in containers
     )
     container_children = reduce(
-        aggregate_defaultdict,
-        container_child_pairs,
-        defaultdict(list)
+        aggregate_defaultdict, container_child_pairs, defaultdict(list)
     )
     to_remove = []
     new_edge_data = dict()
@@ -226,7 +224,6 @@ def parse_containers(
         nx.set_edge_attributes(graph, set_edge_data)
 
     graph.remove_nodes_from(to_remove)
-    print(graph.edges(data=True))
     return graph
 
 
@@ -247,7 +244,6 @@ def get_non_ranked_strat_edges(graph: DiGraph) -> Iterable[tuple[any, any]]:
         for subj, obj, data in graph.edges(data=True)
         if not data["is_rank"] and data["is_strat"]
     }
-
 
 def flip_edges(
     graph: DiGraph, filter_func: Callable[[any, any, dict[str, any]], bool] = None

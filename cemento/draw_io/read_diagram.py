@@ -2,11 +2,12 @@ from pathlib import Path
 
 from networkx import DiGraph
 
-from cemento.draw_io.constants import DiagramKey
+from cemento.draw_io.constants import BadDiagramError, DiagramKey
+from cemento.draw_io.io import write_error_diagram
+from cemento.draw_io.preprocessing import find_errors_diagram_content
 from cemento.draw_io.transforms import (
     extract_elements,
     generate_graph,
-    parse_containers,
     parse_elements,
     relabel_graph_nodes_with_node_attr,
 )
@@ -33,6 +34,17 @@ def read_drawio(
         )
     elif any([onto_ref_folder, prefixes_folder, defaults_folder]):
         raise ValueError("Either all the folders are set or none at all!")
+
+    errors = find_errors_diagram_content(elements, term_ids, rel_ids, serious_only=True)
+    if errors:
+        checked_diagram_path = write_error_diagram(input_path, errors)
+        print(
+            "The inputted file came down with the following problems. Please fix them appropriately.", end="2 * \n"
+        )
+        for elem_id, error in errors:
+            print(elem_id, error)
+        raise BadDiagramError(checked_diagram_path)
+
     graph = generate_graph(
         elements,
         term_ids,
@@ -41,5 +53,4 @@ def read_drawio(
         inverted_rank_arrow=inverted_rank_arrow,
     )
     graph = relabel_graph_nodes_with_node_attr(graph, new_attr_label=relabel_key.value)
-    graph = parse_containers(graph, strat_terms=strat_props)
     return graph

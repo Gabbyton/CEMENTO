@@ -42,6 +42,7 @@ from cemento.term_matching.transforms import (
     get_term_search_keys,
     get_term_types,
 )
+from cemento.utils.constants import NullTermError
 from cemento.utils.io import get_default_prefixes_file
 from cemento.utils.utils import fst, get_abbrev_term, snd
 
@@ -100,6 +101,10 @@ def convert_graph_to_ttl(
             raise ValueError(
                 f"The prefix {offending_key} was used but it is not part of the default namespace. Consider creating a prefixes.json file and add set the prefixes_path argument."
             ) from KeyError
+    except NullTermError:
+        raise NullTermError(
+            "A null term has been detected. Please make sure all your arrows and shapes are labelled properly."
+        ) from NullTermError
     search_keys = {
         term: search_key
         for term, search_key in map(
