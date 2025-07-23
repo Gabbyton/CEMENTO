@@ -1,4 +1,5 @@
 import re
+from collections import defaultdict
 from collections.abc import Callable
 
 from networkx import DiGraph
@@ -19,6 +20,13 @@ def trd(x: tuple[any, any, any]) -> any:
 def remove_term_names(term: str) -> str:
     match = re.search(r"^([^(]*)", term)
     return match.group(1).strip() if match else term
+
+
+def aggregate_defaultdict(acc: defaultdict[list], item: tuple[any, any]) -> defaultdict[list]:
+    key, value = item
+    # TODO: implement immutable copy here
+    acc[key].append(value)
+    return acc
 
 
 def get_abbrev_term(

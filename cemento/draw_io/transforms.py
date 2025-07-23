@@ -1,7 +1,7 @@
 from collections import defaultdict
 from collections.abc import Callable, Iterable
 from dataclasses import asdict
-from functools import partial
+from functools import partial, reduce
 from itertools import accumulate
 from pathlib import Path
 
@@ -26,7 +26,7 @@ from cemento.draw_io.io import get_template_files
 from cemento.draw_io.preprocessing import clean_term, remove_predicate_quotes
 from cemento.term_matching.constants import RANK_PROPS
 from cemento.term_matching.transforms import substitute_term
-from cemento.utils.utils import filter_graph, fst, snd, trd
+from cemento.utils.utils import filter_graph, fst, snd, trd, aggregate_defaultdict
 
 
 def parse_elements(file_path: str | Path) -> dict[str, dict[str, any]]:
@@ -174,18 +174,19 @@ def parse_containers(
     term_ids = {
         value: key for key, value in nx.get_node_attributes(graph, "term_id").items()
     }
-    print(term_ids)
+    container_child_pairs = (
+        (container_id, term)
+        for term, data in graph.nodes(data=True)
+        if "parent" in data
+        and (container_id := data["parent"]) is not None
+        and container_id in containers
+    )
+    container_children = reduce(
+        aggregate_defaultdict,
+        container_child_pairs,
+        defaultdict(list)
+    )
     to_remove = []
-    container_children = defaultdict(list)
-    for term, data in graph.nodes(data=True):
-        if (
-            "parent" in data
-            and (container_id := data["parent"]) is not None
-            and container_id in containers
-        ):
-            container_children[container_id].append(term)
-    print(container_children)
-
     new_edge_data = dict()
     new_edge_objects = dict()
     for container_id in containers:
@@ -193,6 +194,8 @@ def parse_containers(
         pred_term, obj_term = (
             term.strip() for term in container_term.split(pred_symbol)
         )
+        if not strat_terms:
+            strat_terms = RANK_PROPS
         pred_term, is_strat = substitute_term(pred_term, strat_terms, score_cutoff=95)
         pred_term, is_rank = substitute_term(pred_term, {"rdfs:subClassOf", "rdf:type"})
         new_edge_data[container_id] = {
