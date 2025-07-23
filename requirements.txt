@@ -12,4 +12,3 @@ pydata-sphinx-theme
 sphinx-design
 sphinx-iframes
 sphinxcontrib-shtest
-sphinx-sitemap

@@ -28,7 +28,6 @@ extensions = [
     "sphinx_design",
     "sphinx_iframes",
     "sphinxcontrib.shtest",
-    "sphinx_sitemap",
 ]
 
 templates_path = ["_templates"]
