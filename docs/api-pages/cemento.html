@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>cemento package &#8212; CEMENTO 0.8.4 documentation</title>
+    <title>cemento package &#8212; CEMENTO 0.8.5 documentation</title>
   
   
   
@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=b41f4c93"></script>
+    <script src="../_static/documentation_options.js?v=1067c88a"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
@@ -434,6 +434,11 @@
 <li class="toctree-l1"><a class="reference internal" href="cemento.draw_io.html">cemento.draw_io package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cemento.draw_io.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cemento.draw_io.html#module-cemento.draw_io.constants">cemento.draw_io.constants module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.BadDiagramError"><code class="docutils literal notranslate"><span class="pre">BadDiagramError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.BlankEdgeLabelError"><code class="docutils literal notranslate"><span class="pre">BlankEdgeLabelError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.BlankLabelError"><code class="docutils literal notranslate"><span class="pre">BlankLabelError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.BlankTermLabelError"><code class="docutils literal notranslate"><span class="pre">BlankTermLabelError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.CircularEdgeError"><code class="docutils literal notranslate"><span class="pre">CircularEdgeError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.Connector"><code class="docutils literal notranslate"><span class="pre">Connector</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.Connector.compute_dynamic_position"><code class="docutils literal notranslate"><span class="pre">Connector.compute_dynamic_position()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.Connector.connector_id"><code class="docutils literal notranslate"><span class="pre">Connector.connector_id</span></code></a></li>
@@ -477,11 +482,16 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.DiagramObject"><code class="docutils literal notranslate"><span class="pre">DiagramObject</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.DisconnectedEdgeError"><code class="docutils literal notranslate"><span class="pre">DisconnectedEdgeError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.DisconnectedTermError"><code class="docutils literal notranslate"><span class="pre">DisconnectedTermError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.FloatingEdgeError"><code class="docutils literal notranslate"><span class="pre">FloatingEdgeError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.GhostConnector"><code class="docutils literal notranslate"><span class="pre">GhostConnector</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.GhostConnector.is_curved"><code class="docutils literal notranslate"><span class="pre">GhostConnector.is_curved</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.GhostConnector.is_dashed"><code class="docutils literal notranslate"><span class="pre">GhostConnector.is_dashed</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.MissingChildEdgeError"><code class="docutils literal notranslate"><span class="pre">MissingChildEdgeError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.MissingParentEdgeError"><code class="docutils literal notranslate"><span class="pre">MissingParentEdgeError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.NxEdge"><code class="docutils literal notranslate"><span class="pre">NxEdge</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.NxEdge.obj"><code class="docutils literal notranslate"><span class="pre">NxEdge.obj</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.NxEdge.pred"><code class="docutils literal notranslate"><span class="pre">NxEdge.pred</span></code></a></li>
@@ -500,16 +510,21 @@
 <li class="toctree-l4"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.Shape.y_pos"><code class="docutils literal notranslate"><span class="pre">Shape.y_pos</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.WrongFileFormatError"><code class="docutils literal notranslate"><span class="pre">WrongFileFormatError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.constants.get_timestamp_str"><code class="docutils literal notranslate"><span class="pre">get_timestamp_str()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cemento.draw_io.html#module-cemento.draw_io.io">cemento.draw_io.io module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.io.get_diagram_headers"><code class="docutils literal notranslate"><span class="pre">get_diagram_headers()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.io.get_template_files"><code class="docutils literal notranslate"><span class="pre">get_template_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.io.write_error_diagram"><code class="docutils literal notranslate"><span class="pre">write_error_diagram()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cemento.draw_io.html#module-cemento.draw_io.preprocessing">cemento.draw_io.preprocessing module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.preprocessing.clean_term"><code class="docutils literal notranslate"><span class="pre">clean_term()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.preprocessing.find_edge_errors_diagram_content"><code class="docutils literal notranslate"><span class="pre">find_edge_errors_diagram_content()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.preprocessing.find_errors_diagram_content"><code class="docutils literal notranslate"><span class="pre">find_errors_diagram_content()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.preprocessing.find_shape_errors_diagram_content"><code class="docutils literal notranslate"><span class="pre">find_shape_errors_diagram_content()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.preprocessing.remove_html_quote"><code class="docutils literal notranslate"><span class="pre">remove_html_quote()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.preprocessing.remove_literal_connector_id"><code class="docutils literal notranslate"><span class="pre">remove_literal_connector_id()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.preprocessing.remove_literal_id"><code class="docutils literal notranslate"><span class="pre">remove_literal_id()</span></code></a></li>
@@ -526,6 +541,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cemento.draw_io.html#module-cemento.draw_io.transforms">cemento.draw_io.transforms module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.transforms.add_node_to_digraph"><code class="docutils literal notranslate"><span class="pre">add_node_to_digraph()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.transforms.compute_draw_positions"><code class="docutils literal notranslate"><span class="pre">compute_draw_positions()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.transforms.compute_grid_allocations"><code class="docutils literal notranslate"><span class="pre">compute_grid_allocations()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.transforms.extract_elements"><code class="docutils literal notranslate"><span class="pre">extract_elements()</span></code></a></li>
@@ -549,6 +565,7 @@
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.transforms.get_shapes_from_trees"><code class="docutils literal notranslate"><span class="pre">get_shapes_from_trees()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.transforms.get_subgraphs"><code class="docutils literal notranslate"><span class="pre">get_subgraphs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.transforms.get_tree_size"><code class="docutils literal notranslate"><span class="pre">get_tree_size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.transforms.parse_containers"><code class="docutils literal notranslate"><span class="pre">parse_containers()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.transforms.parse_elements"><code class="docutils literal notranslate"><span class="pre">parse_elements()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.transforms.relabel_graph_nodes_with_node_attr"><code class="docutils literal notranslate"><span class="pre">relabel_graph_nodes_with_node_attr()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.draw_io.html#cemento.draw_io.transforms.split_multiple_inheritances"><code class="docutils literal notranslate"><span class="pre">split_multiple_inheritances()</span></code></a></li>
@@ -642,6 +659,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cemento.utils.html#module-cemento.utils.utils">cemento.utils.utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cemento.utils.html#cemento.utils.utils.aggregate_defaultdict"><code class="docutils literal notranslate"><span class="pre">aggregate_defaultdict()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.utils.html#cemento.utils.utils.filter_graph"><code class="docutils literal notranslate"><span class="pre">filter_graph()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.utils.html#cemento.utils.utils.fst"><code class="docutils literal notranslate"><span class="pre">fst()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.utils.html#cemento.utils.utils.get_abbrev_term"><code class="docutils literal notranslate"><span class="pre">get_abbrev_term()</span></code></a></li>

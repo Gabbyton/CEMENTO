@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; CEMENTO 0.8.4 documentation</title>
+    <title>Index &#8212; CEMENTO 0.8.5 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="_static/documentation_options.js?v=b41f4c93"></script>
+    <script src="_static/documentation_options.js?v=1067c88a"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/design-tabs.js?v=f930bc37"></script>
@@ -372,6 +372,7 @@
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
+ | <a href="#W"><strong>W</strong></a>
  | <a href="#X"><strong>X</strong></a>
  | <a href="#Y"><strong>Y</strong></a>
  
@@ -383,14 +384,18 @@
 </li>
       <li><a href="api-pages/cemento.rdf.html#cemento.rdf.transforms.add_labels">add_labels() (in module cemento.rdf.transforms)</a>
 </li>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.transforms.add_node_to_digraph">add_node_to_digraph() (in module cemento.draw_io.transforms)</a>
+</li>
       <li><a href="api-pages/cemento.rdf.html#cemento.rdf.transforms.add_rdf_triples">add_rdf_triples() (in module cemento.rdf.transforms)</a>
 </li>
       <li><a href="api-pages/cemento.rdf.html#cemento.rdf.transforms.add_triples_to_digraph">add_triples_to_digraph() (in module cemento.rdf.transforms)</a>
 </li>
-      <li><a href="api-pages/cemento.rdf.html#cemento.rdf.transforms.assign_edge_attr">assign_edge_attr() (in module cemento.rdf.transforms)</a>
+      <li><a href="api-pages/cemento.utils.html#cemento.utils.utils.aggregate_defaultdict">aggregate_defaultdict() (in module cemento.utils.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-pages/cemento.rdf.html#cemento.rdf.transforms.assign_edge_attr">assign_edge_attr() (in module cemento.rdf.transforms)</a>
+</li>
       <li><a href="api-pages/cemento.rdf.html#cemento.rdf.transforms.assign_edge_binary_attr">assign_edge_binary_attr() (in module cemento.rdf.transforms)</a>
 </li>
       <li><a href="api-pages/cemento.rdf.html#cemento.rdf.transforms.assign_literal_ids">assign_literal_ids() (in module cemento.rdf.transforms)</a>
@@ -409,7 +414,17 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.BadDiagramError">BadDiagramError</a>
+</li>
       <li><a href="api-pages/cemento.rdf.html#cemento.rdf.transforms.bind_prefixes">bind_prefixes() (in module cemento.rdf.transforms)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.BlankEdgeLabelError">BlankEdgeLabelError</a>
+</li>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.BlankLabelError">BlankLabelError</a>
+</li>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.BlankTermLabelError">BlankTermLabelError</a>
 </li>
   </ul></td>
 </tr></table>
@@ -601,6 +616,8 @@
         <li><a href="api-pages/cemento.utils.html#module-cemento.utils.utils">module</a>
 </li>
       </ul></li>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.CircularEdgeError">CircularEdgeError</a>
+</li>
       <li><a href="api-pages/cemento.rdf.html#cemento.rdf.preprocessing.clean_literal_string">clean_literal_string() (in module cemento.rdf.preprocessing)</a>
 </li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.preprocessing.clean_term">clean_term() (in module cemento.draw_io.preprocessing)</a>
@@ -647,11 +664,15 @@
 </li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.DiagramInfo">DiagramInfo (class in cemento.draw_io.constants)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.DiagramKey">DiagramKey (class in cemento.draw_io.constants)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.DiagramObject">DiagramObject (class in cemento.draw_io.constants)</a>
+</li>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.DisconnectedEdgeError">DisconnectedEdgeError</a>
+</li>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.DisconnectedTermError">DisconnectedTermError</a>
 </li>
       <li><a href="api-pages/cemento.cli.html#cemento.cli.download.download_default_reference_ontos">download_default_reference_ontos() (in module cemento.cli.download)</a>
 </li>
@@ -681,11 +702,19 @@
 </li>
       <li><a href="api-pages/cemento.utils.html#cemento.utils.utils.filter_graph">filter_graph() (in module cemento.utils.utils)</a>
 </li>
-      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.transforms.flip_edges">flip_edges() (in module cemento.draw_io.transforms)</a>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.preprocessing.find_edge_errors_diagram_content">find_edge_errors_diagram_content() (in module cemento.draw_io.preprocessing)</a>
+</li>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.preprocessing.find_errors_diagram_content">find_errors_diagram_content() (in module cemento.draw_io.preprocessing)</a>
+</li>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.preprocessing.find_shape_errors_diagram_content">find_shape_errors_diagram_content() (in module cemento.draw_io.preprocessing)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.transforms.flip_edges">flip_edges() (in module cemento.draw_io.transforms)</a>
+</li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.transforms.flip_edges_of_graphs">flip_edges_of_graphs() (in module cemento.draw_io.transforms)</a>
+</li>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.FloatingEdgeError">FloatingEdgeError</a>
 </li>
       <li><a href="api-pages/cemento.rdf.html#cemento.rdf.preprocessing.format_literal">format_literal() (in module cemento.rdf.preprocessing)</a>
 </li>
@@ -829,6 +858,10 @@
 </li>
       <li><a href="api-pages/cemento.cli.html#cemento.cli.download.make_data_dirs">make_data_dirs() (in module cemento.cli.download)</a>
 </li>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.MissingChildEdgeError">MissingChildEdgeError</a>
+</li>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.MissingParentEdgeError">MissingParentEdgeError</a>
+</li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.DiagramInfo.modify_date">modify_date (cemento.draw_io.constants.DiagramInfo attribute)</a>
 </li>
       <li>
@@ -917,6 +950,8 @@
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.DiagramInfo.page_height">page_height (cemento.draw_io.constants.DiagramInfo attribute)</a>
 </li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.DiagramInfo.page_width">page_width (cemento.draw_io.constants.DiagramInfo attribute)</a>
+</li>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.transforms.parse_containers">parse_containers() (in module cemento.draw_io.transforms)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -1045,6 +1080,18 @@
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.transforms.translate_coords">translate_coords() (in module cemento.draw_io.transforms)</a>
 </li>
       <li><a href="api-pages/cemento.utils.html#cemento.utils.utils.trd">trd() (in module cemento.utils.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.io.write_error_diagram">write_error_diagram() (in module cemento.draw_io.io)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.WrongFileFormatError">WrongFileFormatError</a>
 </li>
   </ul></td>
 </tr></table>
