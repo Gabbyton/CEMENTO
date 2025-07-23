@@ -1,3 +1,4 @@
+from collections import defaultdict
 from collections.abc import Callable, Iterable
 from dataclasses import asdict
 from functools import partial
@@ -119,6 +120,11 @@ def generate_graph(
             term_id=term_id,
             label=clean_term(term),
             is_literal=('"' in term or "&quot;" in term),
+            parent=(
+                term_info["parent"]
+                if "parent" in (term_info := elements[term_id])
+                else None
+            ),
         )
 
     # add all relationships
@@ -150,6 +156,74 @@ def generate_graph(
             is_predicate=True,
         )
 
+    return graph
+
+
+def parse_containers(
+    graph: DiGraph,
+    strat_terms: set[str] = None,
+    pred_symbol: str = "->",
+    root_id: str = "1",
+) -> DiGraph:
+    containers = (
+        data["parent"]
+        for term, data in graph.nodes(data=True)
+        if "parent" in data and data["parent"] is not None
+    )
+    containers = set(filter(lambda x: x != root_id, containers))
+    term_ids = {
+        value: key for key, value in nx.get_node_attributes(graph, "term_id").items()
+    }
+    print(term_ids)
+    to_remove = []
+    container_children = defaultdict(list)
+    for term, data in graph.nodes(data=True):
+        if (
+            "parent" in data
+            and (container_id := data["parent"]) is not None
+            and container_id in containers
+        ):
+            container_children[container_id].append(term)
+    print(container_children)
+
+    new_edge_data = dict()
+    new_edge_objects = dict()
+    for container_id in containers:
+        container_term = term_ids[container_id]
+        pred_term, obj_term = (
+            term.strip() for term in container_term.split(pred_symbol)
+        )
+        pred_term, is_strat = substitute_term(pred_term, strat_terms, score_cutoff=95)
+        pred_term, is_rank = substitute_term(pred_term, {"rdfs:subClassOf", "rdf:type"})
+        new_edge_data[container_id] = {
+            "label": pred_term,
+            "pred_id": f"{container_id}-1",
+            "is_strat": is_strat,
+            "is_rank": is_rank,
+            "is_predicate": True,
+        }
+
+        new_edge_objects[container_id] = obj_term
+        graph.add_node(
+            obj_term,
+            term_id=f"{container_id}-2",
+            label=clean_term(obj_term),
+            is_literal=('"' in obj_term or "&quot;" in obj_term),
+            parent=container_id,
+        )
+        to_remove.append(container_term)
+
+    for container_id, children in container_children.items():
+        container_edge_data = new_edge_data[container_id]
+        container_obj = new_edge_objects[container_id]
+        set_edge_data = dict()
+        for child in children:
+            graph.add_edge(child, container_obj)
+            set_edge_data[(child, container_obj)] = container_edge_data
+        nx.set_edge_attributes(graph, set_edge_data)
+
+    graph.remove_nodes_from(to_remove)
+    print(graph.edges(data=True))
     return graph
 
 

@@ -6,6 +6,7 @@ from cemento.draw_io.constants import DiagramKey
 from cemento.draw_io.transforms import (
     extract_elements,
     generate_graph,
+    parse_containers,
     parse_elements,
     relabel_graph_nodes_with_node_attr,
 )
@@ -40,4 +41,5 @@ def read_drawio(
         inverted_rank_arrow=inverted_rank_arrow,
     )
     graph = relabel_graph_nodes_with_node_attr(graph, new_attr_label=relabel_key.value)
+    graph = parse_containers(graph, strat_terms=strat_props)
     return graph
