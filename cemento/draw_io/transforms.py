@@ -159,12 +159,19 @@ def generate_graph(
     return graph
 
 
+def add_node_to_digraph(graph: DiGraph, node: tuple[any, dict[str, any]]) -> DiGraph:
+    new_graph = graph.copy()
+    new_graph.add_node(node)
+    return new_graph
+
+# TODO: add property definition to allow parsing container predicates as annotation types
 def parse_containers(
     graph: DiGraph,
     strat_terms: set[str] = None,
     pred_symbol: str = "->",
     root_id: str = "1",
 ) -> DiGraph:
+    new_graph = graph.copy()
     containers = (
         data["parent"]
         for term, data in graph.nodes(data=True)
@@ -174,6 +181,8 @@ def parse_containers(
     term_ids = {
         value: key for key, value in nx.get_node_attributes(graph, "term_id").items()
     }
+    container_terms = [term_ids[container_id] for container_id in containers]
+
     container_child_pairs = (
         (container_id, term)
         for term, data in graph.nodes(data=True)
@@ -184,47 +193,80 @@ def parse_containers(
     container_children = reduce(
         aggregate_defaultdict, container_child_pairs, defaultdict(list)
     )
-    to_remove = []
-    new_edge_data = dict()
-    new_edge_objects = dict()
-    for container_id in containers:
-        container_term = term_ids[container_id]
-        pred_term, obj_term = (
-            term.strip() for term in container_term.split(pred_symbol)
+    pred_terms, obj_terms = zip(
+        *map(partial(str.split, sep=pred_symbol), container_terms), strict=True
+    )
+    sub_strat_pred_terms, is_strats = list(
+        zip(
+            *map(
+                partial(substitute_term, search_terms=strat_terms, score_cutoff=95),
+                pred_terms,
+            ),
+            strict=True,
         )
-        if not strat_terms:
-            strat_terms = RANK_PROPS
-        pred_term, is_strat = substitute_term(pred_term, strat_terms, score_cutoff=95)
-        pred_term, is_rank = substitute_term(pred_term, {"rdfs:subClassOf", "rdf:type"})
-        new_edge_data[container_id] = {
+    )
+    pred_terms = (
+        substitute_term
+        for substitute_term, _ in zip(sub_strat_pred_terms, pred_terms, strict=True)
+    )
+    pred_terms = list(pred_terms)
+    sub_rank_pred_terms, is_ranks = list(
+        zip(
+            *map(
+                partial(substitute_term, search_terms={"rdfs:subClassOf", "rdf:type"}),
+                pred_terms,
+            ),
+            strict=True,
+        )
+    )
+    pred_terms = (
+        substitute_term
+        for substitute_term, _ in zip(sub_rank_pred_terms, pred_terms, strict=True)
+    )
+    new_edge_data = {
+        container_id: {
             "label": pred_term,
             "pred_id": f"{container_id}-1",
             "is_strat": is_strat,
             "is_rank": is_rank,
             "is_predicate": True,
         }
-
-        new_edge_objects[container_id] = obj_term
-        graph.add_node(
-            obj_term,
-            term_id=f"{container_id}-2",
-            label=clean_term(obj_term),
-            is_literal=('"' in obj_term or "&quot;" in obj_term),
-            parent=container_id,
+        for container_id, pred_term, is_strat, is_rank in zip(
+            containers,
+            pred_terms,
+            is_strats,
+            is_ranks,
+            strict=True,
         )
-        to_remove.append(container_term)
+    }
+    obj_terms = list(obj_terms)
+    new_edge_objects = {
+        container_id: obj_term
+        for container_id, obj_term in zip(containers, obj_terms, strict=True)
+    }
+    obj_term_data = (
+        {
+            "term_id": f"{container_id}-2",
+            "label": clean_term(obj_term),
+            "is_literal": ('"' in obj_term or "&quot;" in obj_term),
+            "parent": container_id,
+        }
+        for container_id, obj_term in zip(containers, obj_terms, strict=True)
+    )
+    obj_term_nodes = (
+        (obj_term, obj_term_data)
+        for obj_term, obj_term_data in zip(obj_terms, obj_term_data, strict=True)
+    )
+    new_graph.add_nodes_from(obj_term_nodes)
 
-    for container_id, children in container_children.items():
-        container_edge_data = new_edge_data[container_id]
-        container_obj = new_edge_objects[container_id]
-        set_edge_data = dict()
-        for child in children:
-            graph.add_edge(child, container_obj)
-            set_edge_data[(child, container_obj)] = container_edge_data
-        nx.set_edge_attributes(graph, set_edge_data)
-
-    graph.remove_nodes_from(to_remove)
-    return graph
+    new_graph_triples = (
+        (child, new_edge_objects[container_id], new_edge_data[container_id])
+        for container_id, children in container_children.items()
+        for child in children
+    )
+    new_graph.add_edges_from(new_graph_triples)
+    new_graph.remove_nodes_from(container_terms)
+    return new_graph
 
 
 def relabel_graph_nodes_with_node_attr(
@@ -244,6 +286,7 @@ def get_non_ranked_strat_edges(graph: DiGraph) -> Iterable[tuple[any, any]]:
         for subj, obj, data in graph.edges(data=True)
         if not data["is_rank"] and data["is_strat"]
     }
+
 
 def flip_edges(
     graph: DiGraph, filter_func: Callable[[any, any, dict[str, any]], bool] = None
