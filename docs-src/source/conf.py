@@ -28,6 +28,7 @@ extensions = [
     "sphinx_design",
     "sphinx_iframes",
     "sphinxcontrib.shtest",
+    "sphinx_sitemap",
 ]
 
 templates_path = ["_templates"]
@@ -80,3 +81,7 @@ html_theme_options = {
     "footer_center": ["copyright"],
     "footer_end": ["theme-version"],
 }
+
+# sitemap options
+
+html_baseurl = "https://gabbyton.github.io/CEMENTO/"
