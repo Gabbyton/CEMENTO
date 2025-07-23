@@ -1,0 +1,2 @@
+class NullTermError(ValueError):
+    pass
