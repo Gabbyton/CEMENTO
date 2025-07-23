@@ -1,6 +1,7 @@
+from collections import defaultdict
 from collections.abc import Callable, Iterable
 from dataclasses import asdict
-from functools import partial
+from functools import partial, reduce
 from itertools import accumulate
 from pathlib import Path
 
@@ -25,7 +26,7 @@ from cemento.draw_io.io import get_template_files
 from cemento.draw_io.preprocessing import clean_term, remove_predicate_quotes
 from cemento.term_matching.constants import RANK_PROPS
 from cemento.term_matching.transforms import substitute_term
-from cemento.utils.utils import filter_graph, fst, snd, trd
+from cemento.utils.utils import aggregate_defaultdict, filter_graph, fst, snd, trd
 
 
 def parse_elements(file_path: str | Path) -> dict[str, dict[str, any]]:
@@ -119,6 +120,11 @@ def generate_graph(
             term_id=term_id,
             label=clean_term(term),
             is_literal=('"' in term or "&quot;" in term),
+            parent=(
+                term_info["parent"]
+                if "parent" in (term_info := elements[term_id])
+                else None
+            ),
         )
 
     # add all relationships
@@ -151,6 +157,116 @@ def generate_graph(
         )
 
     return graph
+
+
+def add_node_to_digraph(graph: DiGraph, node: tuple[any, dict[str, any]]) -> DiGraph:
+    new_graph = graph.copy()
+    new_graph.add_node(node)
+    return new_graph
+
+# TODO: add property definition to allow parsing container predicates as annotation types
+def parse_containers(
+    graph: DiGraph,
+    strat_terms: set[str] = None,
+    pred_symbol: str = "->",
+    root_id: str = "1",
+) -> DiGraph:
+    new_graph = graph.copy()
+    containers = (
+        data["parent"]
+        for term, data in graph.nodes(data=True)
+        if "parent" in data and data["parent"] is not None
+    )
+    containers = set(filter(lambda x: x != root_id, containers))
+    term_ids = {
+        value: key for key, value in nx.get_node_attributes(graph, "term_id").items()
+    }
+    container_terms = [term_ids[container_id] for container_id in containers]
+
+    container_child_pairs = (
+        (container_id, term)
+        for term, data in graph.nodes(data=True)
+        if "parent" in data
+        and (container_id := data["parent"]) is not None
+        and container_id in containers
+    )
+    container_children = reduce(
+        aggregate_defaultdict, container_child_pairs, defaultdict(list)
+    )
+    pred_terms, obj_terms = zip(
+        *map(partial(str.split, sep=pred_symbol), container_terms), strict=True
+    )
+    sub_strat_pred_terms, is_strats = list(
+        zip(
+            *map(
+                partial(substitute_term, search_terms=strat_terms, score_cutoff=95),
+                pred_terms,
+            ),
+            strict=True,
+        )
+    )
+    pred_terms = (
+        substitute_term
+        for substitute_term, _ in zip(sub_strat_pred_terms, pred_terms, strict=True)
+    )
+    pred_terms = list(pred_terms)
+    sub_rank_pred_terms, is_ranks = list(
+        zip(
+            *map(
+                partial(substitute_term, search_terms={"rdfs:subClassOf", "rdf:type"}),
+                pred_terms,
+            ),
+            strict=True,
+        )
+    )
+    pred_terms = (
+        substitute_term
+        for substitute_term, _ in zip(sub_rank_pred_terms, pred_terms, strict=True)
+    )
+    new_edge_data = {
+        container_id: {
+            "label": pred_term,
+            "pred_id": f"{container_id}-1",
+            "is_strat": is_strat,
+            "is_rank": is_rank,
+            "is_predicate": True,
+        }
+        for container_id, pred_term, is_strat, is_rank in zip(
+            containers,
+            pred_terms,
+            is_strats,
+            is_ranks,
+            strict=True,
+        )
+    }
+    obj_terms = list(obj_terms)
+    new_edge_objects = {
+        container_id: obj_term
+        for container_id, obj_term in zip(containers, obj_terms, strict=True)
+    }
+    obj_term_data = (
+        {
+            "term_id": f"{container_id}-2",
+            "label": clean_term(obj_term),
+            "is_literal": ('"' in obj_term or "&quot;" in obj_term),
+            "parent": container_id,
+        }
+        for container_id, obj_term in zip(containers, obj_terms, strict=True)
+    )
+    obj_term_nodes = (
+        (obj_term, obj_term_data)
+        for obj_term, obj_term_data in zip(obj_terms, obj_term_data, strict=True)
+    )
+    new_graph.add_nodes_from(obj_term_nodes)
+
+    new_graph_triples = (
+        (child, new_edge_objects[container_id], new_edge_data[container_id])
+        for container_id, children in container_children.items()
+        for child in children
+    )
+    new_graph.add_edges_from(new_graph_triples)
+    new_graph.remove_nodes_from(container_terms)
+    return new_graph
 
 
 def relabel_graph_nodes_with_node_attr(
