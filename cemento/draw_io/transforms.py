@@ -13,11 +13,11 @@ from cemento.draw_io.constants import (
     FILL_COLOR,
     SHAPE_HEIGHT,
     SHAPE_WIDTH,
+    STROKE_COLOR,
     Connector,
     DiagramInfo,
     DiagramKey,
     DiagramObject,
-    GhostConnector,
     NxEdge,
     NxStringEdge,
     Shape,
@@ -99,6 +99,10 @@ def extract_elements(
             rel_val = data["value"]
             rel_id = element
             rel_ids.add(rel_id)
+    # remove root IDs that get added due to draw.io bugs
+    reserved_root_ids = {"0", "1"}
+    term_ids -= reserved_root_ids
+    rel_ids -= reserved_root_ids
     return term_ids, rel_ids
 
 
@@ -129,8 +133,14 @@ def generate_graph(
 
     # add all relationships
     for rel_id in relationship_ids:
-        subj_id = elements[rel_id]["source"]
-        obj_id = elements[rel_id]["target"]
+        try:
+            subj_id = elements[rel_id]["source"]
+            obj_id = elements[rel_id]["target"]
+        except KeyError as e:
+            raise ValueError(
+                f"cannot access {e.args[0]} from the attributes of a relationship in the elements dictionary. Please take a look at relationship with id {rel_id}"
+            ) from KeyError
+
         pred = clean_term(elements[rel_id]["value"])
 
         if strat_terms:
@@ -588,7 +598,7 @@ def get_severed_link_connectors(
         shape_ids,
         diagram_uid,
         entity_idx_start,
-        connector_type=GhostConnector,
+        connector_type=Connector,
     )
 
 
@@ -611,7 +621,7 @@ def get_predicate_connectors(
         shape_ids,
         diagram_uid,
         entity_idx_start,
-        connector_type=GhostConnector,
+        connector_type=Connector,
     )
 
 
@@ -650,6 +660,7 @@ def generate_shapes(
     offset_y: int = 0,
     idx_start: int = 0,
     shape_color: str = FILL_COLOR,
+    stroke_color: str = STROKE_COLOR,
     shape_height: int = SHAPE_HEIGHT,
     shape_width: int = SHAPE_WIDTH,
 ) -> list[Shape]:
@@ -667,6 +678,7 @@ def generate_shapes(
             shape_id=entity_id,
             shape_content=node_content,
             fill_color=shape_color,
+            stroke_color=stroke_color,
             x_pos=shape_pos_x,
             y_pos=shape_pos_y,
             shape_width=shape_width,

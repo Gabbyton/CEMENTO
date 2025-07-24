@@ -91,12 +91,12 @@ def find_edge_errors_diagram_content(
         target_id = edge_attr.get("target", None)
         connected_terms = {
             (
-                clean_term(source_term["value"])
+                f"{clean_term(source_term['value'])} ({source_id}) located in ({source_term['x']}, {source_term['y']})"
                 if source_id and "value" in (source_term := elements[source_id])
                 else None
             ),
             (
-                clean_term(target_term["value"])
+                f"{clean_term(target_term['value'])} ({target_id}) located in ({target_term['x']}, {target_term['y']})"
                 if target_id and "value" in (target_term := elements[target_id])
                 else None
             ),
@@ -117,7 +117,14 @@ def find_edge_errors_diagram_content(
             continue
 
         if "source" not in edge_attr or not edge_attr["source"]:
-            errors.append((edge_id, MissingParentEdgeError(edge_id, edge_content)))
+            errors.append(
+                (
+                    edge_id,
+                    MissingParentEdgeError(
+                        edge_id, edge_content, next(iter(connected_terms))
+                    ),
+                )
+            )
             continue
 
         if "target" not in edge_attr or not edge_attr["target"]:
@@ -132,11 +139,30 @@ def find_edge_errors_diagram_content(
             errors.append((edge_id, CircularEdgeError(edge_id, edge_content)))
 
     if serious_only:
+        # hide errors related to lines that don't even get parsed
+        lines_only_ids = {
+            edge_id
+            for edge_id, edge_attr in edges.items()
+            if ("value" not in edge_attr or not edge_attr["value"])
+            and ("source" not in edge_attr or not edge_attr["source"])
+            and ("target" not in edge_attr or not edge_attr["target"])
+            and (
+                "endArrow" not in edge_attr
+                or edge_attr["endArrow"] == "none"
+                or not edge_attr["endArrow"]
+            )
+            and (
+                "startArrow" not in edge_attr
+                or edge_attr["startArrow"] == "none"
+                or not edge_attr["startArrow"]
+            )
+        }
         # hide the errors related to circular edges (false positive bug with draw.io)
         circular_edge_errors = filter(
             lambda error: isinstance(snd(error), CircularEdgeError), errors
         )
         non_affected_ids = {id for id, error in circular_edge_errors}
+        non_affected_ids |= lines_only_ids
         errors = list(filter(lambda error: fst(error) not in non_affected_ids, errors))
 
     return errors

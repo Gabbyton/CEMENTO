@@ -14,6 +14,7 @@ class DiagramKey(Enum):
 SHAPE_WIDTH = 200
 SHAPE_HEIGHT = 80
 FILL_COLOR = "#f2f3f4"
+STROKE_COLOR = "#000000"
 x_padding = 10
 y_padding = 20
 
@@ -119,11 +120,27 @@ class Shape:
     shape_id: str
     shape_content: str
     fill_color: str
+    stroke_color: str
     x_pos: float
     y_pos: float
     shape_width: int
     shape_height: int
     template_key: str = "shape"
+
+
+@dataclass
+class LiteralShape(Shape):
+    template_key: str = "instance"
+
+
+@dataclass
+class ClassShape(Shape):
+    template_key: str = "class"
+
+
+@dataclass
+class InstanceShape(Shape):
+    template_key: str = "instance"
 
 
 class NxEdge(NamedTuple):
@@ -155,7 +172,7 @@ class BadDiagramError(Exception):
 
 class DisconnectedTermError(Exception):
     def __init__(self, term_id, term_content):
-        if not term_content.strip():
+        if term_content is None or not term_content.strip():
             self.message = f"Term with id {term_id} is not connected to any other term."
         else:
             self.message = f"Term with content: {term_content}, is not connected to any other term."
@@ -168,46 +185,48 @@ class DisconnectedEdgeError(Exception):
 
 
 class MissingParentEdgeError(DisconnectedEdgeError):
-    def __init__(self, edge_id, edge_content):
-        if not edge_content.strip():
+    def __init__(self, edge_id, edge_content, child_content):
+        if edge_content is None or not edge_content.strip():
             self.message = (
-                f"Edge with id {edge_id} does not have a source (parent) connected."
+                f"Edge with id: {edge_id} does not have a source (parent) connected."
             )
+        elif child_content:
+            self.message = f"Edge with id: {edge_id}, and content: {edge_content} and with child: {child_content}, does not have a source (parent) connected."
         else:
-            self.message = f"Edge with content: {edge_content}, does not have a source (parent) connected."
+            self.message = f"Edge with id: {edge_id}, and content: {edge_content}, does not have a source (parent) connected."
         super().__init__(self.message)
 
 
 class MissingChildEdgeError(DisconnectedEdgeError):
-    def __init__(self, edge_id, edge_content):
-        if not edge_content.strip():
+    def __init__(self, edge_id, edge_content, parent_content):
+        if edge_content is None or not edge_content.strip():
             self.message = (
-                f"Edge with id {edge_id} does not have a target (child) connected."
+                f"Edge with id: {edge_id} does not have a source (parent) connected."
             )
+        elif parent_content:
+            self.message = f"Edge with id: {edge_id}, and content: {edge_content} and with parent: {parent_content}, does not have a source (parent) connected."
         else:
-            self.message = f"Edge with content: {edge_content}, does not have a target (child) connected."
+            self.message = f"Edge with id: {edge_id}, and content: {edge_content}, does not have a source (parent) connected."
         super().__init__(self.message)
 
 
 class FloatingEdgeError(DisconnectedEdgeError):
     def __init__(self, edge_id, edge_content):
-        if not edge_content:
+        if edge_content is None or not edge_content:
             self.message = f"Edge with id {edge_id} does not have anything connected."
         else:
-            self.message = (
-                f"Edge with content: {edge_content}, does not have anything connected."
-            )
+            self.message = f"Edge with id: {edge_id}, and content: {edge_content}, does not have anything connected."
         super().__init__(self.message)
 
 
 class CircularEdgeError(DisconnectedEdgeError):
     def __init__(self, edge_id, edge_content):
-        if not edge_content:
+        if edge_content is None or not edge_content.strip():
             self.message = (
                 f"Edge with id {edge_id} is only connected to itself. Please ignore."
             )
         else:
-            self.message = f"Edge with content: {edge_content}, is only connected to itself. Please ignore."
+            self.message = f"Edge with id {edge_id}, and content: {edge_content}, is only connected to itself. Please ignore."
         super().__init__(self.message)
 
 
@@ -227,5 +246,5 @@ class BlankEdgeLabelError(BlankLabelError):
         if not connected_terms:
             self.message = f"Edge with id {edge_id} does not have a label."
         else:
-            self.message = f"Edge connected to {' and '.join(connected_terms)}, does not have a label."
+            self.message = f"Edge with id: {edge_id}, connected to {' and '.join(connected_terms)}, does not have a label."
         super().__init__(self.message)

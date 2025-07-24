@@ -11,6 +11,7 @@ def get_diagram_terms_iter_with_pred(graph: DiGraph) -> Iterable[str, bool]:
         (term, term == data["label"])
         for subj, obj, data in graph.edges(data=True)
         for term in (subj, data["label"], obj)
+        if term
     )
 
 
@@ -19,6 +20,7 @@ def get_diagram_terms_iter(graph: DiGraph) -> Iterable[str]:
         term
         for subj, obj, data in graph.edges(data=True)
         for term in (subj, data["label"], obj)
+        if term
     )
 
 

@@ -159,6 +159,12 @@ def convert_graph_to_ttl(
     output_graph = nx.DiGraph()
     for subj, obj, data in graph.edges(data=True):
         pred = data["label"]
+        # do final null check on triples to add
+        if not all((term for term in (subj, obj, pred))):
+            print(
+                f"[WARNING] the triple ({subj}, {pred}, {obj}) had null values that passed through diagram checks. Not adding to the graph..."
+            )
+            continue
         subj, obj, pred = tuple(constructed_terms[key] for key in (subj, obj, pred))
         output_graph.add_edge(subj, obj, label=pred)
 
