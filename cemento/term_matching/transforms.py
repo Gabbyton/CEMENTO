@@ -225,8 +225,19 @@ def get_prefixes(
     return prefixes, inv_prefixes
 
 
-def get_search_terms(inv_prefixes: dict[URIRef, str], onto_ref_folder: str | Path):
+def get_search_terms(
+    inv_prefixes: dict[URIRef, str],
+    onto_ref_folder: str | Path = None,
+    defaults_folder: str | Path = None,
+):
     search_terms = get_search_terms_from_defaults(get_default_namespace_prefixes())
+
+    if defaults_folder:
+        defaults_file_search_terms = map(
+            partial(get_search_terms_from_graph, inv_prefixes=inv_prefixes),
+            get_ttl_file_iter(defaults_folder),
+        )
+        search_terms |= merge_dictionaries(defaults_file_search_terms)
 
     if onto_ref_folder:
         file_search_terms = map(

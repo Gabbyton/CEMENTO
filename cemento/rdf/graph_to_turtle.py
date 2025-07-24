@@ -51,11 +51,12 @@ def convert_graph_to_ttl(
     graph: DiGraph,
     output_path: str | Path,
     onto_ref_folder: str | Path = None,
+    defaults_folder: str | Path = None,
     prefixes_path: str | Path = None,
     log_substitution_path: str | Path = None,
 ) -> None:
     prefixes, inv_prefixes = get_prefixes(prefixes_path, onto_ref_folder)
-    search_terms = get_search_terms(inv_prefixes, onto_ref_folder)
+    search_terms = get_search_terms(inv_prefixes, onto_ref_folder, defaults_folder)
 
     aliases = {
         term: aliases
