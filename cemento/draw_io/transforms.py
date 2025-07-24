@@ -99,6 +99,10 @@ def extract_elements(
             rel_val = data["value"]
             rel_id = element
             rel_ids.add(rel_id)
+    # remove root IDs that get added due to draw.io bugs
+    reserved_root_ids = {"0", "1"}
+    term_ids -= reserved_root_ids
+    rel_ids -= reserved_root_ids
     return term_ids, rel_ids
 
 
@@ -129,8 +133,14 @@ def generate_graph(
 
     # add all relationships
     for rel_id in relationship_ids:
-        subj_id = elements[rel_id]["source"]
-        obj_id = elements[rel_id]["target"]
+        try:
+            subj_id = elements[rel_id]["source"]
+            obj_id = elements[rel_id]["target"]
+        except KeyError as e:
+            raise ValueError(
+                f"cannot access {e.args[0]} from the attributes of a relationship in the elements dictionary. Please take a look at relationship with id {rel_id}"
+            ) from KeyError
+
         pred = clean_term(elements[rel_id]["value"])
 
         if strat_terms:

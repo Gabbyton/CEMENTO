@@ -75,7 +75,9 @@ def write_error_diagram(
         new_style = ";".join(new_style)
         element.set("style", new_style)
 
-    new_file_path = file_path.parent / f"{file_path.stem}-error_check{file_path.suffix}"
+    new_file_path = file_path
+    if "error_check" not in file_path.stem:
+        new_file_path = file_path.parent / f"{file_path.stem}-error_check{file_path.suffix}"
     tree.write(new_file_path)
 
     return new_file_path
