@@ -1,6 +1,7 @@
 import re
 from collections.abc import Callable, Iterable
 from functools import reduce
+from itertools import groupby
 from uuid import uuid4
 
 import networkx as nx
@@ -16,7 +17,7 @@ from cemento.rdf.preprocessing import (
 )
 from cemento.term_matching.constants import RANK_PROPS
 from cemento.term_matching.transforms import substitute_term_multikey
-from cemento.utils.utils import filter_graph, snd
+from cemento.utils.utils import filter_graph, fst, snd
 
 
 def construct_term_uri(
@@ -161,6 +162,31 @@ def add_domains_ranges(
     return add_rdf_triples(
         rdf_graph, domain_collection_triples + range_collection_triples
     )
+
+
+def remove_generic_property(
+    rdf_graph: Graph, default_property: URIRef = RDF.Property
+) -> Graph:
+    # TODO: implement immutable copy of rdf_graph here
+    generic_pred_subjects = list(rdf_graph.subjects(None, default_property))
+    subject_property_type_defs = rdf_graph.triples_choices(
+        (generic_pred_subjects, RDF.type, None)
+    )
+    sorted_property_defs = sorted(subject_property_type_defs, key=lambda x: fst(x))
+    subject_property_defs_ct = (
+        (subj, len(list(objs)))
+        for subj, objs in groupby(sorted_property_defs, key=lambda x: x[0])
+    )
+    rdf_graph = reduce(
+        lambda rdf_graph, subject_info: (
+            rdf_graph.remove((fst(subject_info), RDF.type, default_property))
+            if snd(subject_info) > 1
+            else rdf_graph
+        ),
+        subject_property_defs_ct,
+        rdf_graph,
+    )
+    return rdf_graph
 
 
 def get_graph_relabel_mapping(
