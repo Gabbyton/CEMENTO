@@ -51,10 +51,10 @@ def register(subparsers):
         metavar="log_file_path",
     )
     parser.add_argument(
-        "-ce",
-        "--check-errors",
+        "-dce",
+        "--dont-check-errors",
         help="Set whether to check for diagram errors and to generate a diagram with errors indicated.",
-        action="store_true",
+        action="store_false",
     )
     parser.set_defaults(_handler=run)
 
@@ -67,6 +67,6 @@ def run(args):
         args.onto_ref_folder_path,
         args.defaults_folder_path,
         args.prefix_file_path,
-        check_errors=args.check_errors,
+        check_errors=args.dont_check_errors,
         log_substitution_path=args.log_substitution_path,
     )
