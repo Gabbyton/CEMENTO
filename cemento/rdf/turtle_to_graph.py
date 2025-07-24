@@ -1,4 +1,5 @@
 from functools import reduce
+from itertools import chain
 from pathlib import Path
 
 import networkx as nx
@@ -17,10 +18,10 @@ from cemento.rdf.transforms import (
     get_literal_values_with_id,
     rename_edges,
 )
-from cemento.term_matching.constants import get_default_namespace_prefixes
 from cemento.term_matching.io import read_ttl
 from cemento.term_matching.transforms import (
     get_aliases,
+    get_default_terms,
     get_prefixes,
     get_strat_predicates,
 )
@@ -43,13 +44,7 @@ def convert_ttl_to_graph(
     file_strat_preds = set()
     ref_strat_preds = set()
     prefixes, inv_prefixes = get_prefixes(prefixes_path, onto_ref_folder)
-    default_namespace_prefixes = get_default_namespace_prefixes()
-    default_terms = {
-        term
-        for ns in default_namespace_prefixes.values()
-        for term in dir(ns)
-        if isinstance(term, URIRef)
-    }
+    default_terms = get_default_terms(defaults_folder)
 
     if not classes_only:
         ref_strat_preds = set(
@@ -62,8 +57,6 @@ def convert_ttl_to_graph(
     with read_ttl(input_path) as rdf_graph:
         prefixes.update({key: value for key, value in rdf_graph.namespaces()})
         inv_prefixes.update({str(value): key for key, value in rdf_graph.namespaces()})
-        # print(prefixes)
-        # print(inv_prefixes)
         print("retrieving terms...")
 
         file_uri_refs = set(
@@ -75,19 +68,18 @@ def convert_ttl_to_graph(
         all_classes = set(
             filter(
                 lambda x: x in file_uri_refs,
-                rdf_graph.transitive_subjects(RDF.type, OWL.Class),
+                chain(
+                    chain(*rdf_graph.subject_objects(RDFS.subClassOf)),
+                    rdf_graph.objects(None, RDF.type),
+                ),
             )
         )
-        all_instances = reduce(
-            lambda acc, display_class: acc
-            | set(
-                filter(
-                    lambda x: isinstance(x, URIRef),
-                    rdf_graph.transitive_subjects(RDF.type, display_class),
-                )
-            ),
-            all_classes,
-            set(),
+        all_classes -= default_terms
+        all_instances = set(
+            filter(
+                lambda x: x in file_uri_refs and x not in all_classes,
+                rdf_graph.subjects(RDF.type),
+            )
         )
 
         if not classes_only:
@@ -159,9 +151,16 @@ def convert_ttl_to_graph(
         graph = assign_literal_status(graph, all_literals)
         graph = assign_rank_status(graph)
         graph = assign_pred_status(graph)
+        nx.set_node_attributes(
+            graph, {node: {"is_class": node in all_classes} for node in graph.nodes()}
+        )
+        nx.set_node_attributes(
+            graph,
+            {node: {"is_instance": node in all_instances} for node in graph.nodes()},
+        )
 
         print("renaming terms...")
-        all_terms = all_classes | all_instances | all_predicates | default_terms
+        all_terms = all_classes | all_instances | all_predicates
         aliases = get_aliases(rdf_graph)
         rename_terms = get_graph_relabel_mapping(
             all_terms, all_classes, all_instances, aliases, inv_prefixes

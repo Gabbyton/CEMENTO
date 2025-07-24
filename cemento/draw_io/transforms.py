@@ -17,7 +17,6 @@ from cemento.draw_io.constants import (
     DiagramInfo,
     DiagramKey,
     DiagramObject,
-    GhostConnector,
     NxEdge,
     NxStringEdge,
     Shape,
@@ -588,7 +587,7 @@ def get_severed_link_connectors(
         shape_ids,
         diagram_uid,
         entity_idx_start,
-        connector_type=GhostConnector,
+        connector_type=Connector,
     )
 
 
@@ -611,7 +610,7 @@ def get_predicate_connectors(
         shape_ids,
         diagram_uid,
         entity_idx_start,
-        connector_type=GhostConnector,
+        connector_type=Connector,
     )
 
 

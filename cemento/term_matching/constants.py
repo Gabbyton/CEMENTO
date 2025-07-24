@@ -1,4 +1,4 @@
-from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS
+from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS, Namespace, URIRef
 
 default_namespaces = [RDF, RDFS, OWL, DCTERMS, SKOS]
 default_namespace_prefixes = ["rdf", "rdfs", "owl", "dcterms", "skos"]
@@ -19,7 +19,7 @@ FALLBACK_STRAT_TYPES = {
 }
 
 
-def get_default_namespace_prefixes():
+def get_default_namespace_prefixes() -> tuple[str, URIRef | Namespace]:
     return {
         prefix: ns
         for prefix, ns in zip(
