@@ -18,17 +18,22 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
-## [Unreleased]
+## [0.8.6] - 2025-07-24
 
-- added error check option on CLI
-- added term content in diagram error message
-- changed domain-range `.ttl` output to single element if only one
-- added defaults folder file contents to search terms
-- added feature to remove redundant statements about default namespace terms
-- added ability to define object properties
-- added support for multipage inputs
-- added feature to replace default object-property assignment to custom properties to swap with definitions if available
-- changed to check errors by default
+# Added
+
+- error check option on CLI
+- term content in diagram error message
+- defaults folder file contents to search terms
+- feature to remove redundant statements about default namespace terms
+- ability to define object properties
+- support for multipage inputs
+- feature to replace default object-property assignment to custom properties to swap with definitions if available
+
+## Changed
+
+- domain-range `.ttl` output to single element if only one
+- to check errors by default
 
 ## [0.8.5] - 2025-07-23
 
