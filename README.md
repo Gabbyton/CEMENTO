@@ -16,6 +16,8 @@ To summarize, the package offers the following features:
 6. Support for URI prefixes (via binding) and literal annotations (language annotations like `@en` and datatype annotations like `^^xsd:string`)
 7. Domain and range collection as a union for custom object properties.
 8. Providing a log for substitutions made and suppresing substitutions by adding a key (\*).
+9. Support for Property definitions. Properties that do not have definitions will default as an Object Property type.
+10. Support for multiple pages in a draw.io file, for when you want to organize terms your way.
 
 ## Installation
 
@@ -79,7 +81,9 @@ DEFAULTS_FOLDER = "" # path to the folder containing default terms. It should co
 PREFIXES_PATH = "prefixes.json" # this path points to a prefixes file with custom prefix assignments (optional)
 
 if __name__ == "__main__":
-    convert_drawio_to_ttl(INPUT_PATH, OUTPUT_PATH, ONTO_PATH, PREFIXES_PATH)
+    convert_drawio_to_ttl(
+        INPUT_PATH, OUTPUT_PATH, ONTO_PATH, DEFAULTS_FOLDER, PREFIXES_PATH
+    )
 ```
 
 ### Converting `.ttl` files to draw.io files
@@ -153,8 +157,6 @@ The following diagram goes through an example supplied with the repository calle
 
 This package was designed with end-to-end conversion in mind. The package is still in active development, and future features may include, but are not limited to the following:
 
-- **Object Property definitions.** A future version of this package will be able to support object property definitions.
-- **Multi-page diagrams.** The package parses terms with the same name as being the same entity. The package will be able to support multiple pages for when you want to organize terms your way.
 - **An interactive mode.** Users will be able to visualize syntax errors, improper term connections (leveraging domains and ranges), and substitutions and make edits in iterations before finalizing a draw.io or `.ttl` output.
 - **Comprehensive domain-range inference.** The package will not only be able to collect unions of terms, but infer them based on superclass term definitions.
 - **Integrated reasoner.** Packages like `owlready2` have reasoners like `HermiT` and `Pellet` that will be integrated to diagram-to-triple conversion. This is for when some implicit connections that you would want to make are a little bit tedious to draw but are equally as important.

@@ -12,7 +12,7 @@ Prerequisites
 #. **A plain-text file editor.** Same as the above, this tool can be a simple notepad or complex IDE that you can use to check `.ttl` files. If your computer does not recognize the format, please make sure to set it to open on your file editor of choice.
 
 Installing via ``pypi``
-===================
+=======================
 
 To install this particular package, use pip to install the latest version:
 

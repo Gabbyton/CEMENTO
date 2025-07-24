@@ -55,7 +55,7 @@ Similar to the above, run the following command:
     (.venv) $ cemento ttl_drawio happy-example.ttl sample.drawio
 
 Help message
------------
+-------------
 
 If you get lost, there is always:
 
@@ -66,11 +66,11 @@ If you get lost, there is always:
     (.venv) $ cemento ttl_drawio --help
 
 Check output
----------
+-------------
 
 Congratulations! If you made it to this point, you've managed to convert your files from draw.io to ``.ttl`` and back. Compare the results you get with those in ``happy-example.drawio`` and ``happy-example.ttl`` respectively. Note that the diagram will not be the exact same look, but the connections and terms should all be the same.
 
 What now?
---------
+-----------
 
 You can now start converting YOUR diagrams from draw.io to turtle format and vice versa! To read more about other cool features, start with the :doc:`User Guide </user-guide>`.

@@ -415,7 +415,7 @@
                   
   <section id="drawing-basics">
 <h1>Drawing Basics<a class="headerlink" href="#drawing-basics" title="Link to this heading">#</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">CEMENTO</span></code> package can take any single-page draw.io file and process it. However, parsing it <em>properly</em> to get the right RDF triples is a different matter. This guide goes through some things for you to keep in mind so your diagrams actually correspond with your <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> outputs.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">CEMENTO</span></code> package can take any single or multi-page draw.io file and process it. However, parsing it <em>properly</em> to get the right RDF triples is a different matter. This guide goes through some things for you to keep in mind so your diagrams actually correspond with your <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> outputs.</p>
 <section id="drawing-with-draw-io">
 <h2>Drawing with draw.io<a class="headerlink" href="#drawing-with-draw-io" title="Link to this heading">#</a></h2>
 <p>If you have not used draw.io before, please refer to their comprehensive tutorials <a class="reference external" href="https://drawio-app.com/tutorials/">here</a>. Where you draw your draw.io doesn’t really affect the package performance as long as <code class="docutils literal notranslate"><span class="pre">CEMENTO</span></code> has access to the output <code class="docutils literal notranslate"><span class="pre">.drawio</span></code> file. Once you are familiar with the basics of <code class="docutils literal notranslate"><span class="pre">.drawio</span></code>, there are a few additional things to note:</p>
@@ -442,6 +442,11 @@
 <ul>
 <li><dl class="simple">
 <dt><strong>Term matching.</strong></dt><dd><p>Any term and predicate you create will be matched with a term. Just make sure to use the right prefix. More details <a class="reference internal" href="cli-guide.html#term-matching"><span class="std std-ref">here</span></a>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Shorthand aliasing.</strong></dt><dd><p>You can add labels and alt-labels to your term by simply adding them parenthetically. For example: <code class="docutils literal notranslate"><span class="pre">mds:MyCustomTerm</span> <span class="pre">(my</span> <span class="pre">label,</span> <span class="pre">my</span> <span class="pre">alt</span> <span class="pre">label)</span></code>. The first term in the comma-separated series is always the label. Any subsequent terms are alt-labels (No language support yet).</p>
 </dd>
 </dl>
 </li>

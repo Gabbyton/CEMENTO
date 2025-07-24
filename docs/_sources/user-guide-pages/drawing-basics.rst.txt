@@ -2,7 +2,7 @@
 Drawing Basics
 **************
 
-The ``CEMENTO`` package can take any single-page draw.io file and process it. However, parsing it *properly* to get the right RDF triples is a different matter. This guide goes through some things for you to keep in mind so your diagrams actually correspond with your ``.ttl`` outputs.
+The ``CEMENTO`` package can take any single or multi-page draw.io file and process it. However, parsing it *properly* to get the right RDF triples is a different matter. This guide goes through some things for you to keep in mind so your diagrams actually correspond with your ``.ttl`` outputs.
 
 Drawing with draw.io
 ====================
@@ -34,6 +34,9 @@ The diagram above goes through all that you need to know to start making diagram
 
 * **Term matching.**
     Any term and predicate you create will be matched with a term. Just make sure to use the right prefix. More details :ref:`here <term-matching>`.
+
+* **Shorthand aliasing.**
+    You can add labels and alt-labels to your term by simply adding them parenthetically. For example: ``mds:MyCustomTerm (my label, my alt label)``. The first term in the comma-separated series is always the label. Any subsequent terms are alt-labels (No language support yet).
 
 * **Match suppression.**
     If you don't want a term substituted or matched, just add an asterisk to the name (\*).

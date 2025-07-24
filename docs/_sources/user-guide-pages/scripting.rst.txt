@@ -20,7 +20,7 @@ Using the actual function is as easy as importing and calling it in a python scr
     PREFIXES_PATH = "prefixes.json" # this path points to a prefixes file with custom prefix assignments (optional)
 
     if __name__ == "__main__":
-        convert_drawio_to_ttl(INPUT_PATH, OUTPUT_PATH, ONTO_PATH, PREFIXES_PATH)
+        convert_drawio_to_ttl(INPUT_PATH, OUTPUT_PATH, ONTO_PATH, DEFAULTS_FOLDER, PREFIXES_PATH)
 
 Converting ``.ttl`` files to draw.io files
 ==========================================
@@ -36,7 +36,7 @@ This case is very similiar to the previous one. The ``.ttl`` was assumed to cont
 
     if __name__ == "__main__":
         # the horizontal tree parameter controls whether you want the default vertical tree (False) or an inverted horizontal tree (True)
-        convert_ttl_to_drawio(INPUT_PATH, OUTPUT_PATH, horizontal_tree=False, set_unique_literals=True)
+        convert_ttl_to_drawio(INPUT_PATH, OUTPUT_PATH, horizontal_tree=False, check_ttl_validity=True, set_unique_literals=True)
 
 Converting draw.io to a ``networkx`` DiGraph
 ============================================

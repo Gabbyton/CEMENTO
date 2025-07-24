@@ -34,6 +34,8 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 
 - domain-range `.ttl` output to single element if only one
 - to check errors by default
+- updated examples for the new version
+- updated figure with the new features
 
 ## [0.8.5] - 2025-07-23
 
