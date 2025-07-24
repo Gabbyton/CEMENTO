@@ -195,8 +195,8 @@ def convert_graph_to_ttl(
         for key, value in map(
             lambda term: (
                 term,
-                # Assume a custom property is just a property if term type undetermined
-                term_types[term] if term in term_types else RDF.Property,
+                # Assume a custom property is just an Object Property if term type undetermined
+                term_types[term] if term in term_types else OWL.ObjectProperty,
             ),
             filter(term_not_in_default_namespace_filter, predicate_terms),
         )
@@ -274,8 +274,8 @@ def convert_graph_to_ttl(
         predicate_term = data["label"]
         rdf_graph.add((domain_term, predicate_term, range_term))
 
-    # replace predicate types if a more particular type than rdf:Property (any property really) or subclass is defined
-    rdf_graph = remove_generic_property(rdf_graph, default_property=RDF.Property)
+    # replace predicate types if another type than owl:ObjectProperty is defined
+    rdf_graph = remove_generic_property(rdf_graph, default_property=OWL.ObjectProperty)
 
     # remove terms that are already in the default namespace if they are subjects
     default_terms = list(filterfalse(term_not_in_default_namespace_filter, all_terms))
