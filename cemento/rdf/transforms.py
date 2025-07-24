@@ -114,11 +114,11 @@ def get_term_range(term: URIRef, graph: DiGraph) -> Iterable[URIRef]:
 
 def get_domains_ranges(
     predicate: Iterable[URIRef], graph: DiGraph
-) -> tuple[URIRef, Iterable[URIRef], Iterable[URIRef]]:
+) -> tuple[URIRef, set[URIRef], set[URIRef]]:
     return (
         predicate,
-        get_term_domain(predicate, graph),
-        get_term_range(predicate, graph),
+        set(get_term_domain(predicate, graph)),
+        set(get_term_range(predicate, graph)),
     )
 
 
@@ -147,12 +147,17 @@ def add_domains_ranges(
 ) -> Graph:
     predicate_term, domains, ranges = term_domains_ranges
     # TODO: assume union for now but fix later
-    domain_collection_triples = get_term_collection_triples(
-        rdf_graph, predicate_term, domains, OWL.unionOf, RDFS.domain
-    )
-    range_collection_triples = get_term_collection_triples(
-        rdf_graph, predicate_term, ranges, OWL.unionOf, RDFS.range
-    )
+    domain_collection_triples = [(predicate_term, RDFS.domain, next(iter(domains)))]
+    if len(domains) > 1:
+        domain_collection_triples = get_term_collection_triples(
+            rdf_graph, predicate_term, domains, OWL.unionOf, RDFS.domain
+        )
+
+    range_collection_triples = [(predicate_term, RDFS.range, next(iter(ranges)))]
+    if len(ranges) > 1:
+        range_collection_triples = get_term_collection_triples(
+            rdf_graph, predicate_term, ranges, OWL.unionOf, RDFS.range
+        )
     return add_rdf_triples(
         rdf_graph, domain_collection_triples + range_collection_triples
     )
