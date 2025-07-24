@@ -5,7 +5,7 @@ Scripting
 The package is composed of four main modules that can be imported into a python script. The following sections can show how to use the package for the its most common (and simplest) use-cases:
 
 Converting draw.io to ``.ttl`` files
-================================
+=====================================
 
 Using the actual function is as easy as importing and calling it in a python script. The function takes the exact same arguments that you can set in ``cemento drawio_ttl``. In this case, the script needs to set those arguments explicitly.
 
@@ -23,7 +23,7 @@ Using the actual function is as easy as importing and calling it in a python scr
         convert_drawio_to_ttl(INPUT_PATH, OUTPUT_PATH, ONTO_PATH, PREFIXES_PATH)
 
 Converting ``.ttl`` files to draw.io files
-======================================
+==========================================
 
 This case is very similiar to the previous one. The ``.ttl`` was assumed to contain the necessary information so you only need to set the ``INPUT_PATH`` and ``OUTPUT_PATH``. The option and ``set_unique_literals`` determines whether tot treat literals with the same name as different things. ``horizontal_tree``, on the other hand, sets whether to draw tree diagrams horizontally or vertically.
 
@@ -39,7 +39,7 @@ This case is very similiar to the previous one. The ``.ttl`` was assumed to cont
         convert_ttl_to_drawio(INPUT_PATH, OUTPUT_PATH, horizontal_tree=False, set_unique_literals=True)
 
 Converting draw.io to a ``networkx`` DiGraph
-========================================
+============================================
 
 We used a directed networkx graph (DiGraph) as an intermediary data structure that provides a much richer interface for graph manipulation than the default ``rdflib`` Graph. If you are interested in using this data structure, you are free to use the functions shown below:
 
