@@ -172,7 +172,7 @@ class BadDiagramError(Exception):
 
 class DisconnectedTermError(Exception):
     def __init__(self, term_id, term_content):
-        if not term_content.strip():
+        if term_content is None or not term_content.strip():
             self.message = f"Term with id {term_id} is not connected to any other term."
         else:
             self.message = f"Term with content: {term_content}, is not connected to any other term."
@@ -186,7 +186,7 @@ class DisconnectedEdgeError(Exception):
 
 class MissingParentEdgeError(DisconnectedEdgeError):
     def __init__(self, edge_id, edge_content):
-        if not edge_content.strip():
+        if edge_content is None or not edge_content.strip():
             self.message = (
                 f"Edge with id {edge_id} does not have a source (parent) connected."
             )
@@ -197,7 +197,7 @@ class MissingParentEdgeError(DisconnectedEdgeError):
 
 class MissingChildEdgeError(DisconnectedEdgeError):
     def __init__(self, edge_id, edge_content):
-        if not edge_content.strip():
+        if edge_content is None or not edge_content.strip():
             self.message = (
                 f"Edge with id {edge_id} does not have a target (child) connected."
             )
@@ -208,7 +208,7 @@ class MissingChildEdgeError(DisconnectedEdgeError):
 
 class FloatingEdgeError(DisconnectedEdgeError):
     def __init__(self, edge_id, edge_content):
-        if not edge_content:
+        if edge_content is None or not edge_content:
             self.message = f"Edge with id {edge_id} does not have anything connected."
         else:
             self.message = (
@@ -219,7 +219,7 @@ class FloatingEdgeError(DisconnectedEdgeError):
 
 class CircularEdgeError(DisconnectedEdgeError):
     def __init__(self, edge_id, edge_content):
-        if not edge_content:
+        if edge_content is None or not edge_content.strip():
             self.message = (
                 f"Edge with id {edge_id} is only connected to itself. Please ignore."
             )
