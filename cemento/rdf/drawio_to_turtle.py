@@ -10,9 +10,16 @@ def convert_drawio_to_ttl(
     onto_ref_folder: str | Path,
     defaults_folder: str | Path,
     prefixes_path: str | Path,
+    check_errors: bool = False,
     log_substitution_path: str | Path = None,
 ) -> None:
-    graph = read_drawio(input_path, onto_ref_folder, prefixes_path, defaults_folder)
+    graph = read_drawio(
+        input_path,
+        onto_ref_folder,
+        prefixes_path,
+        defaults_folder,
+        check_errors=check_errors,
+    )
     convert_graph_to_ttl(
         graph,
         output_path,
