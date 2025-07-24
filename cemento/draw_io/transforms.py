@@ -32,11 +32,11 @@ from cemento.utils.utils import aggregate_defaultdict, filter_graph, fst, snd, t
 def parse_elements(file_path: str | Path) -> dict[str, dict[str, any]]:
     # parse elements
     tree = ET.parse(file_path)
-    root = tree.getroot()
-    root = next(tree.iter("root"))
 
     elements = dict()
-    all_cells = [child for child in root.findall("mxCell")]  # only add base level cells
+    all_cells = [
+        child for root in tree.iter("root") for child in root.findall("mxCell")
+    ]
 
     for cell in all_cells:
         cell_attrs = dict()
@@ -163,6 +163,7 @@ def add_node_to_digraph(graph: DiGraph, node: tuple[any, dict[str, any]]) -> DiG
     new_graph = graph.copy()
     new_graph.add_node(node)
     return new_graph
+
 
 # TODO: add property definition to allow parsing container predicates as annotation types
 def parse_containers(
