@@ -30,7 +30,6 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - added feature to replace default object-property assignment to custom properties to swap with definitions if available
 - changed to check errors by default
 
-
 ## [0.8.5] - 2025-07-23
 
 ## Added
@@ -61,7 +60,6 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - exact match functionality not outputting all desired properties (label and SKOS exact match)
 - non-bunny-eared data type string output
 - prefixes not being imported from file
-
 
 ## [0.8.4] - 2025-07-20
 
