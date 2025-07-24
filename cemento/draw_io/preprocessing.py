@@ -77,7 +77,7 @@ def remove_quotes(input_str: str) -> str:
 
 
 def find_edge_errors_diagram_content(
-    elements, serious_only: bool = False
+    elements: dict[str, dict[str, any]], serious_only: bool = False
 ) -> list[tuple[str, BaseException]]:
     edges = {
         key: value
@@ -87,9 +87,19 @@ def find_edge_errors_diagram_content(
     errors = []
     for edge_id, edge_attr in edges.items():
 
+        source_id = edge_attr.get("source", None)
+        target_id = edge_attr.get("target", None)
         connected_terms = {
-            edge_attr.get("source", None),
-            edge_attr.get("target", None),
+            (
+                clean_term(source_term["value"])
+                if source_id and "value" in (source_term := elements[source_id])
+                else None
+            ),
+            (
+                clean_term(target_term["value"])
+                if target_id and "value" in (target_term := elements[target_id])
+                else None
+            ),
         } - {None, ""}
 
         edge_content = edge_attr.get("value", None)
@@ -132,7 +142,9 @@ def find_edge_errors_diagram_content(
     return errors
 
 
-def find_shape_errors_diagram_content(elements, term_ids, rel_ids):
+def find_shape_errors_diagram_content(
+    elements: dict[str, dict[str, any]], term_ids: set[str], rel_ids: set[str]
+):
     connected_terms = {
         term
         for rel_id in rel_ids

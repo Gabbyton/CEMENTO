@@ -37,19 +37,20 @@ def read_drawio(
         raise ValueError("Either all the folders are set or none at all!")
 
     if check_errors:
+        print("Checking for diagram errors...")
         errors = find_errors_diagram_content(
             elements, term_ids, rel_ids, serious_only=True
         )
         if errors:
             checked_diagram_path = write_error_diagram(input_path, errors)
             print(
-                "The inputted file came down with the following problems. Please fix them appropriately.",
-                end="2 * \n",
+                "The inputted file came down with the following problems. Please fix them appropriately."
             )
             for elem_id, error in errors:
                 print(elem_id, error)
             raise BadDiagramError(checked_diagram_path)
 
+    print("generating graph...")
     graph = generate_graph(
         elements,
         term_ids,

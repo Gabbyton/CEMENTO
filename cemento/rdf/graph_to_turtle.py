@@ -30,6 +30,7 @@ from cemento.rdf.transforms import (
     get_literal_lang_annotation,
     get_term_value,
     get_xsd_terms,
+    remove_generic_property,
     substitute_term_multikey,
 )
 from cemento.term_matching.constants import get_default_namespace_prefixes
@@ -51,11 +52,12 @@ def convert_graph_to_ttl(
     graph: DiGraph,
     output_path: str | Path,
     onto_ref_folder: str | Path = None,
+    defaults_folder: str | Path = None,
     prefixes_path: str | Path = None,
     log_substitution_path: str | Path = None,
 ) -> None:
     prefixes, inv_prefixes = get_prefixes(prefixes_path, onto_ref_folder)
-    search_terms = get_search_terms(inv_prefixes, onto_ref_folder)
+    search_terms = get_search_terms(inv_prefixes, onto_ref_folder, defaults_folder)
 
     aliases = {
         term: aliases
@@ -193,13 +195,12 @@ def convert_graph_to_ttl(
         for key, value in map(
             lambda term: (
                 term,
+                # Assume a custom property is just an Object Property if term type undetermined
                 term_types[term] if term in term_types else OWL.ObjectProperty,
             ),
             filter(term_not_in_default_namespace_filter, predicate_terms),
         )
     }
-    # Assume a custom property is just a property
-    # TODO: Add default schema files for rdf, rdfs and owl to get default namespace terms
     rdf_graph = add_rdf_triples(
         rdf_graph,
         (
@@ -272,5 +273,18 @@ def convert_graph_to_ttl(
     for domain_term, range_term, data in output_graph.edges(data=True):
         predicate_term = data["label"]
         rdf_graph.add((domain_term, predicate_term, range_term))
+
+    # replace predicate types if another type than owl:ObjectProperty is defined
+    rdf_graph = remove_generic_property(rdf_graph, default_property=OWL.ObjectProperty)
+
+    # remove terms that are already in the default namespace if they are subjects
+    default_terms = list(filterfalse(term_not_in_default_namespace_filter, all_terms))
+    redundant_default_triples = rdf_graph.triples_choices((default_terms, None, None))
+    rdf_graph = reduce(
+        lambda rdf_graph, triple: rdf_graph.remove(triple),
+        redundant_default_triples,
+        rdf_graph,
+    )
+
     # serialize the output as a turtle file
     rdf_graph.serialize(destination=output_path, format="turtle")

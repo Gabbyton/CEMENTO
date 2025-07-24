@@ -1,6 +1,7 @@
 import re
 from collections.abc import Callable, Iterable
 from functools import reduce
+from itertools import groupby
 from uuid import uuid4
 
 import networkx as nx
@@ -16,7 +17,7 @@ from cemento.rdf.preprocessing import (
 )
 from cemento.term_matching.constants import RANK_PROPS
 from cemento.term_matching.transforms import substitute_term_multikey
-from cemento.utils.utils import filter_graph, snd
+from cemento.utils.utils import filter_graph, fst, snd
 
 
 def construct_term_uri(
@@ -114,11 +115,11 @@ def get_term_range(term: URIRef, graph: DiGraph) -> Iterable[URIRef]:
 
 def get_domains_ranges(
     predicate: Iterable[URIRef], graph: DiGraph
-) -> tuple[URIRef, Iterable[URIRef], Iterable[URIRef]]:
+) -> tuple[URIRef, set[URIRef], set[URIRef]]:
     return (
         predicate,
-        get_term_domain(predicate, graph),
-        get_term_range(predicate, graph),
+        set(get_term_domain(predicate, graph)),
+        set(get_term_range(predicate, graph)),
     )
 
 
@@ -147,15 +148,45 @@ def add_domains_ranges(
 ) -> Graph:
     predicate_term, domains, ranges = term_domains_ranges
     # TODO: assume union for now but fix later
-    domain_collection_triples = get_term_collection_triples(
-        rdf_graph, predicate_term, domains, OWL.unionOf, RDFS.domain
-    )
-    range_collection_triples = get_term_collection_triples(
-        rdf_graph, predicate_term, ranges, OWL.unionOf, RDFS.range
-    )
+    domain_collection_triples = [(predicate_term, RDFS.domain, next(iter(domains)))]
+    if len(domains) > 1:
+        domain_collection_triples = get_term_collection_triples(
+            rdf_graph, predicate_term, domains, OWL.unionOf, RDFS.domain
+        )
+
+    range_collection_triples = [(predicate_term, RDFS.range, next(iter(ranges)))]
+    if len(ranges) > 1:
+        range_collection_triples = get_term_collection_triples(
+            rdf_graph, predicate_term, ranges, OWL.unionOf, RDFS.range
+        )
     return add_rdf_triples(
         rdf_graph, domain_collection_triples + range_collection_triples
     )
+
+
+def remove_generic_property(
+    rdf_graph: Graph, default_property: URIRef = RDF.Property
+) -> Graph:
+    # TODO: implement immutable copy of rdf_graph here
+    generic_pred_subjects = list(rdf_graph.subjects(None, default_property))
+    subject_property_type_defs = rdf_graph.triples_choices(
+        (generic_pred_subjects, RDF.type, None)
+    )
+    sorted_property_defs = sorted(subject_property_type_defs, key=lambda x: fst(x))
+    subject_property_defs_ct = (
+        (subj, len(list(objs)))
+        for subj, objs in groupby(sorted_property_defs, key=lambda x: x[0])
+    )
+    rdf_graph = reduce(
+        lambda rdf_graph, subject_info: (
+            rdf_graph.remove((fst(subject_info), RDF.type, default_property))
+            if snd(subject_info) > 1
+            else rdf_graph
+        ),
+        subject_property_defs_ct,
+        rdf_graph,
+    )
+    return rdf_graph
 
 
 def get_graph_relabel_mapping(
