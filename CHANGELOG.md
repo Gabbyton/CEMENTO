@@ -20,7 +20,7 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 
 ## [0.8.6] - 2025-07-24
 
-# Added
+### Added
 
 - error check option on CLI
 - term content in diagram error message
@@ -30,14 +30,14 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - support for multipage inputs
 - feature to replace default object-property assignment to custom properties to swap with definitions if available
 
-## Changed
+### Changed
 
 - domain-range `.ttl` output to single element if only one
 - to check errors by default
 
 ## [0.8.5] - 2025-07-23
 
-## Added
+### Added
 
 - package documentation on github pages
 - parse containers function
@@ -48,19 +48,19 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - term types for all predicates
 - restored error check feature on diagram, including error classes
 
-## Changed
+### Changed
 
 - hand-made XSD reference to XSD namespace inside `rdflib`
 - no unique literals option to store true flag, setting no unique literals as the default behavior
 - `file_path` argument in `conver_drawio_ttl` function to `input_path`
 
-## Removed
+### Removed
 
 - hand-made XSD reference
 - do not check option
 - not literal IDs
 
-## Fixed
+### Fixed
 
 - exact match functionality not outputting all desired properties (label and SKOS exact match)
 - non-bunny-eared data type string output

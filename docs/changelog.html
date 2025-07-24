@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>User Guide &#8212; CEMENTO 0.8.6 documentation</title>
+    <title>Changelog &#8212; CEMENTO 0.8.6 documentation</title>
   
   
   
@@ -46,12 +46,11 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script src="_static/h5p-resizer.js?v=a3e8b8ed"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'user-guide';</script>
-    <link rel="canonical" href="https://gabbyton.github.io/CEMENTO/user-guide.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'changelog';</script>
+    <link rel="canonical" href="https://gabbyton.github.io/CEMENTO/changelog.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation" href="user-guide-pages/installation.html" />
-    <link rel="prev" title="Quickstart" href="quickstart.html" />
+    <link rel="prev" title="cemento.utils package" href="api-pages/cemento.utils.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -145,8 +144,8 @@
 </li>
 
 
-<li class="nav-item current active">
-  <a class="nav-link nav-internal" href="#">
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="user-guide.html">
     User Guide
   </a>
 </li>
@@ -159,8 +158,8 @@
 </li>
 
 
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="changelog.html">
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
     Changelog
   </a>
 </li>
@@ -273,8 +272,8 @@
 </li>
 
 
-<li class="nav-item current active">
-  <a class="nav-link nav-internal" href="#">
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="user-guide.html">
     User Guide
   </a>
 </li>
@@ -287,8 +286,8 @@
 </li>
 
 
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="changelog.html">
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
     Changelog
   </a>
 </li>
@@ -348,13 +347,7 @@
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="user-guide-pages/installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="user-guide-pages/cli-guide.html">CLI Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="user-guide-pages/scripting.html">Scripting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="user-guide-pages/drawing-basics.html">Drawing Basics</a></li>
-</ul>
-</div>
+  <div class="bd-toc-item navbar-nav"></div>
 </nav></div>
     </div>
   
@@ -393,7 +386,7 @@
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">User Guide</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Changelog</span></li>
   </ul>
 </nav>
 </div>
@@ -410,41 +403,132 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="user-guide">
-<h1>User Guide<a class="headerlink" href="#user-guide" title="Link to this heading">#</a></h1>
-<p>These instructions will provide you detailed instructions on how to use the CEMENTO package. It will go through installation and important considerations into CLI use and basic conversion. A section is also dedicated to scripting for folks looking to integrate CEMENTO into their python-based software. A section on basic drawing also goes through and ins-and-outs of creating ontology diagrams. The links are provided in order for an absolute beginner, but feel free to skip to a relevant section:</p>
-<section id="guide-sections">
-<h2>Guide Sections<a class="headerlink" href="#guide-sections" title="Link to this heading">#</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="user-guide-pages/installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="user-guide-pages/installation.html#prerequisites">Prerequisites</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user-guide-pages/installation.html#installing-via-pypi">Installing via <code class="docutils literal notranslate"><span class="pre">pypi</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="user-guide-pages/installation.html#installing-from-the-repository">Installing from the Repository</a></li>
+  <section id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">#</a></h1>
+<p>All notable changes to this project will be documented in this file.</p>
+<p>The format is based on <a class="reference external" href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>,
+and this project adheres to <a class="reference external" href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+<section id="guide">
+<h2>[Guide]<a class="headerlink" href="#guide" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Added</strong> for new features.</p></li>
+<li><p><strong>Changed</strong> for changes in existing functionality.</p></li>
+<li><p><strong>Deprecated</strong> for soon-to-be removed features.</p></li>
+<li><p><strong>Removed</strong> for now removed features.</p></li>
+<li><p><strong>Fixed</strong> for any bug fixes.</p></li>
+<li><p><strong>Security</strong> in case of vulnerabilities.</p></li>
 </ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="user-guide-pages/cli-guide.html">CLI Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="user-guide-pages/cli-guide.html#command-line-interface">Command Line Interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user-guide-pages/cli-guide.html#term-matching">Term Matching</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user-guide-pages/cli-guide.html#adding-or-replacing-reference-ontologies">Adding or Replacing Reference Ontologies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user-guide-pages/cli-guide.html#custom-terms-and-prefixes">Custom Terms and Prefixes</a></li>
+<p><em>[Unreleased]</em> section for tracking changes prior to binning to versions.</p>
+<p><em>[X.X.X] - YYYY-MM-YY</em> for version-date header</p>
+</section>
+<section id="id1">
+<h2>[0.8.6] - 2025-07-24<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<section id="added">
+<h3>Added<a class="headerlink" href="#added" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>error check option on CLI</p></li>
+<li><p>term content in diagram error message</p></li>
+<li><p>defaults folder file contents to search terms</p></li>
+<li><p>feature to remove redundant statements about default namespace terms</p></li>
+<li><p>ability to define object properties</p></li>
+<li><p>support for multipage inputs</p></li>
+<li><p>feature to replace default object-property assignment to custom properties to swap with definitions if available</p></li>
 </ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="user-guide-pages/scripting.html">Scripting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="user-guide-pages/scripting.html#converting-draw-io-to-ttl-files">Converting draw.io to <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user-guide-pages/scripting.html#converting-ttl-files-to-draw-io-files">Converting <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files to draw.io files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user-guide-pages/scripting.html#converting-draw-io-to-a-networkx-digraph">Converting draw.io to a <code class="docutils literal notranslate"><span class="pre">networkx</span></code> DiGraph</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user-guide-pages/scripting.html#using-other-modules">Using Other Modules</a></li>
+</section>
+<section id="changed">
+<h3>Changed<a class="headerlink" href="#changed" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>domain-range <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> output to single element if only one</p></li>
+<li><p>to check errors by default</p></li>
 </ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="user-guide-pages/drawing-basics.html">Drawing Basics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="user-guide-pages/drawing-basics.html#drawing-with-draw-io">Drawing with draw.io</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user-guide-pages/drawing-basics.html#a-walkthrough">A Walkthrough</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user-guide-pages/drawing-basics.html#in-case-you-missed-it">In Case You Missed It</a></li>
+</section>
+</section>
+<section id="id2">
+<h2>[0.8.5] - 2025-07-23<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<section id="id3">
+<h3>Added<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>package documentation on github pages</p></li>
+<li><p>parse containers function</p></li>
+<li><p>googe site verification</p></li>
+<li><p>site logo and icon attribution</p></li>
+<li><p>sitemap</p></li>
+<li><p>reference ontology retrieval</p></li>
+<li><p>term types for all predicates</p></li>
+<li><p>restored error check feature on diagram, including error classes</p></li>
 </ul>
-</li>
+</section>
+<section id="id4">
+<h3>Changed<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>hand-made XSD reference to XSD namespace inside <code class="docutils literal notranslate"><span class="pre">rdflib</span></code></p></li>
+<li><p>no unique literals option to store true flag, setting no unique literals as the default behavior</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">file_path</span></code> argument in <code class="docutils literal notranslate"><span class="pre">conver_drawio_ttl</span></code> function to <code class="docutils literal notranslate"><span class="pre">input_path</span></code></p></li>
 </ul>
-</div>
+</section>
+<section id="removed">
+<h3>Removed<a class="headerlink" href="#removed" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>hand-made XSD reference</p></li>
+<li><p>do not check option</p></li>
+<li><p>not literal IDs</p></li>
+</ul>
+</section>
+<section id="fixed">
+<h3>Fixed<a class="headerlink" href="#fixed" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>exact match functionality not outputting all desired properties (label and SKOS exact match)</p></li>
+<li><p>non-bunny-eared data type string output</p></li>
+<li><p>prefixes not being imported from file</p></li>
+</ul>
+</section>
+</section>
+<section id="id5">
+<h2>[0.8.4] - 2025-07-20<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p><strong>NOTE:</strong> The changes listed here are a catch-all between this version and all prior releases. We haven’t kept a good changelog until today, so we apologize for the broad statements to keep this document section brief.</p>
+<section id="id6">
+<h3>Added<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>application CLI</p></li>
+<li><p>support for converting directly to <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files from draw.io and vice versa</p></li>
+<li><p>support for literals and literal annotations (language and datatype)</p></li>
+<li><p>term matching via reference ontologies</p></li>
+<li><p>ability to add reference ontologies</p></li>
+<li><p>unique literal ID generation option</p></li>
+<li><p>support for annotation types</p></li>
+<li><p>classes-only option for drawing layouts</p></li>
+<li><p>ability to write prefixes</p></li>
+<li><p>tree-splitting for dealing with multiple inheritance</p></li>
+<li><p>stratified term category (includes definitions, annotations, etc.) for prioritizing in the layout</p></li>
+<li><p>match suppression with star keys</p></li>
+<li><p>alias support with parenthetic notation</p></li>
+<li><p>README instructions on CLI and scripting for new package implementation</p></li>
+</ul>
+</section>
+<section id="id7">
+<h3>Changed<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>programmming paradigm, from an clunky OOP-based approach to a hybrid functional approach</p></li>
+<li><p>File structure, adopting file conventions in functional programming</p></li>
+<li><p>all prior functionality implementations except those expressly mentioned in the remove section</p></li>
+<li><p>choosing more general category of terms to draw in the tree layout (stratified) versus just rank terms (subclass and type)</p></li>
+<li><p>shape definitions from native classes to dataclasses</p></li>
+<li><p>rendering shapes directly from dataclasses instead of through manual prop generation</p></li>
+<li><p>computing arrow directions dynamically based on shape angle instead of static case-based matching</p></li>
+<li><p>example scripts</p></li>
+</ul>
+</section>
+<section id="id8">
+<h3>Removed<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>All functions built under the OOP-based software</p></li>
+<li><p>shape-extent-based area diagram reading</p></li>
+<li><p>circle-based (organic) layouts</p></li>
+<li><p>straight-arrow and curve template files</p></li>
+<li><p>error detection in diagram reads</p></li>
+<li><p>defer-layout option</p></li>
+</ul>
+</section>
 </section>
 </section>
 
@@ -459,22 +543,13 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="quickstart.html"
+       href="api-pages/cemento.utils.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Quickstart</p>
+        <p class="prev-next-title">cemento.utils package</p>
       </div>
-    </a>
-    <a class="right-next"
-       href="user-guide-pages/installation.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Installation</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -495,7 +570,25 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#guide-sections">Guide Sections</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#guide">[Guide]</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">[0.8.6] - 2025-07-24</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#added">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#changed">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">[0.8.5] - 2025-07-23</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Changed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removed">Removed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fixed">Fixed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">[0.8.4] - 2025-07-20</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Changed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Removed</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

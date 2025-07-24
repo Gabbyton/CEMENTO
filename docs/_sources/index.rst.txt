@@ -21,6 +21,7 @@ CEMENTO
    quickstart
    user-guide
    modules
+   changelog
 
 **Version:** |release|
 

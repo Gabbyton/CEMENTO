@@ -28,6 +28,7 @@ extensions = [
     "sphinx_design",
     "sphinx_iframes",
     "sphinxcontrib.shtest",
+    "myst_parser",
 ]
 
 templates_path = ["_templates"]
@@ -84,3 +85,10 @@ html_theme_options = {
 # sitemap options
 
 html_baseurl = "https://gabbyton.github.io/CEMENTO/"
+
+# myst_parser options
+
+source_suffix = {
+    ".rst": None,
+    ".md": None,
+}
