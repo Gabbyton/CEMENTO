@@ -14,6 +14,7 @@ class DiagramKey(Enum):
 SHAPE_WIDTH = 200
 SHAPE_HEIGHT = 80
 FILL_COLOR = "#f2f3f4"
+STROKE_COLOR = "#000000"
 x_padding = 10
 y_padding = 20
 
@@ -119,6 +120,7 @@ class Shape:
     shape_id: str
     shape_content: str
     fill_color: str
+    stroke_color: str
     x_pos: float
     y_pos: float
     shape_width: int

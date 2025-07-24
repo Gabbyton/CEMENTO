@@ -13,6 +13,7 @@ from cemento.draw_io.constants import (
     FILL_COLOR,
     SHAPE_HEIGHT,
     SHAPE_WIDTH,
+    STROKE_COLOR,
     Connector,
     DiagramInfo,
     DiagramKey,
@@ -649,6 +650,7 @@ def generate_shapes(
     offset_y: int = 0,
     idx_start: int = 0,
     shape_color: str = FILL_COLOR,
+    stroke_color: str = STROKE_COLOR,
     shape_height: int = SHAPE_HEIGHT,
     shape_width: int = SHAPE_WIDTH,
 ) -> list[Shape]:
@@ -666,6 +668,7 @@ def generate_shapes(
             shape_id=entity_id,
             shape_content=node_content,
             fill_color=shape_color,
+            stroke_color=stroke_color,
             x_pos=shape_pos_x,
             y_pos=shape_pos_y,
             shape_width=shape_width,
