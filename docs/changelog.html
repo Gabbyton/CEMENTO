@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Changelog &#8212; CEMENTO 0.8.6 documentation</title>
+    <title>Changelog &#8212; CEMENTO 0.8.7 documentation</title>
   
   
   
@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="_static/documentation_options.js?v=279f42e0"></script>
+    <script src="_static/documentation_options.js?v=83e7c6f9"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/design-tabs.js?v=f930bc37"></script>
@@ -422,9 +422,42 @@ and this project adheres to <a class="reference external" href="https://semver.o
 <p><em>[X.X.X] - YYYY-MM-YY</em> for version-date header</p>
 </section>
 <section id="id1">
-<h2>[0.8.6] - 2025-07-24<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<h2>[0.8.7] - 2025-07-24<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <section id="added">
 <h3>Added<a class="headerlink" href="#added" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>added new template files for class, instance, and literal</p></li>
+<li><p>more detailed key error message for generate_graph</p></li>
+<li><p>null safety checks after diagram error detection in diagram term iter</p></li>
+<li><p>parent location and id when outputting diagram term errors</p></li>
+<li><p>checks to ignore horizontal lines for diagram error checking</p></li>
+</ul>
+</section>
+<section id="changed">
+<h3>Changed<a class="headerlink" href="#changed" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>error check to make changes in place if the user is already working n a file with “error_check” on the file name</p></li>
+<li><p>default terms in drawio_to_ttl to use all default terms in rdflib and in default file folders</p></li>
+<li><p>print out triples that passed diagram checks but caught in null check in convert_graph_to_ttl</p></li>
+<li><p>replaced all ghost connectors with straight orthogonal connectors</p></li>
+</ul>
+</section>
+<section id="fixed">
+<h3>Fixed<a class="headerlink" href="#fixed" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>fixed class and instance designation in graph_to_tll</p></li>
+<li><p>fixed error message input parsing</p></li>
+</ul>
+</section>
+<section id="removed">
+<h3>Removed<a class="headerlink" href="#removed" title="Link to this heading">#</a></h3>
+<p>removed root IDs from extracted terms and relationships in extract_elements</p>
+</section>
+</section>
+<section id="id2">
+<h2>[0.8.6] - 2025-07-24<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<section id="id3">
+<h3>Added<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>error check option on CLI</p></li>
 <li><p>term content in diagram error message</p></li>
@@ -435,18 +468,20 @@ and this project adheres to <a class="reference external" href="https://semver.o
 <li><p>feature to replace default object-property assignment to custom properties to swap with definitions if available</p></li>
 </ul>
 </section>
-<section id="changed">
-<h3>Changed<a class="headerlink" href="#changed" title="Link to this heading">#</a></h3>
+<section id="id4">
+<h3>Changed<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>domain-range <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> output to single element if only one</p></li>
 <li><p>to check errors by default</p></li>
+<li><p>updated examples for the new version</p></li>
+<li><p>updated figure with the new features</p></li>
 </ul>
 </section>
 </section>
-<section id="id2">
-<h2>[0.8.5] - 2025-07-23<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
-<section id="id3">
-<h3>Added<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<section id="id5">
+<h2>[0.8.5] - 2025-07-23<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<section id="id6">
+<h3>Added<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>package documentation on github pages</p></li>
 <li><p>parse containers function</p></li>
@@ -458,24 +493,24 @@ and this project adheres to <a class="reference external" href="https://semver.o
 <li><p>restored error check feature on diagram, including error classes</p></li>
 </ul>
 </section>
-<section id="id4">
-<h3>Changed<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<section id="id7">
+<h3>Changed<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>hand-made XSD reference to XSD namespace inside <code class="docutils literal notranslate"><span class="pre">rdflib</span></code></p></li>
 <li><p>no unique literals option to store true flag, setting no unique literals as the default behavior</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">file_path</span></code> argument in <code class="docutils literal notranslate"><span class="pre">conver_drawio_ttl</span></code> function to <code class="docutils literal notranslate"><span class="pre">input_path</span></code></p></li>
 </ul>
 </section>
-<section id="removed">
-<h3>Removed<a class="headerlink" href="#removed" title="Link to this heading">#</a></h3>
+<section id="id8">
+<h3>Removed<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>hand-made XSD reference</p></li>
 <li><p>do not check option</p></li>
 <li><p>not literal IDs</p></li>
 </ul>
 </section>
-<section id="fixed">
-<h3>Fixed<a class="headerlink" href="#fixed" title="Link to this heading">#</a></h3>
+<section id="id9">
+<h3>Fixed<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>exact match functionality not outputting all desired properties (label and SKOS exact match)</p></li>
 <li><p>non-bunny-eared data type string output</p></li>
@@ -483,11 +518,11 @@ and this project adheres to <a class="reference external" href="https://semver.o
 </ul>
 </section>
 </section>
-<section id="id5">
-<h2>[0.8.4] - 2025-07-20<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<section id="id10">
+<h2>[0.8.4] - 2025-07-20<a class="headerlink" href="#id10" title="Link to this heading">#</a></h2>
 <p><strong>NOTE:</strong> The changes listed here are a catch-all between this version and all prior releases. We haven’t kept a good changelog until today, so we apologize for the broad statements to keep this document section brief.</p>
-<section id="id6">
-<h3>Added<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<section id="id11">
+<h3>Added<a class="headerlink" href="#id11" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>application CLI</p></li>
 <li><p>support for converting directly to <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files from draw.io and vice versa</p></li>
@@ -505,8 +540,8 @@ and this project adheres to <a class="reference external" href="https://semver.o
 <li><p>README instructions on CLI and scripting for new package implementation</p></li>
 </ul>
 </section>
-<section id="id7">
-<h3>Changed<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
+<section id="id12">
+<h3>Changed<a class="headerlink" href="#id12" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>programmming paradigm, from an clunky OOP-based approach to a hybrid functional approach</p></li>
 <li><p>File structure, adopting file conventions in functional programming</p></li>
@@ -518,8 +553,8 @@ and this project adheres to <a class="reference external" href="https://semver.o
 <li><p>example scripts</p></li>
 </ul>
 </section>
-<section id="id8">
-<h3>Removed<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<section id="id13">
+<h3>Removed<a class="headerlink" href="#id13" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>All functions built under the OOP-based software</p></li>
 <li><p>shape-extent-based area diagram reading</p></li>
@@ -571,22 +606,29 @@ and this project adheres to <a class="reference external" href="https://semver.o
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#guide">[Guide]</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">[0.8.6] - 2025-07-24</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">[0.8.7] - 2025-07-24</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#added">Added</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#changed">Changed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fixed">Fixed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removed">Removed</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">[0.8.5] - 2025-07-23</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">[0.8.6] - 2025-07-24</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Added</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Changed</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removed">Removed</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fixed">Fixed</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">[0.8.4] - 2025-07-20</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">[0.8.5] - 2025-07-23</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Added</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Changed</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Removed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Fixed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">[0.8.4] - 2025-07-20</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Changed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Removed</a></li>
 </ul>
 </li>
 </ul>
