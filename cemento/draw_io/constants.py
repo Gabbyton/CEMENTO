@@ -126,6 +126,21 @@ class Shape:
     template_key: str = "shape"
 
 
+@dataclass
+class LiteralShape(Shape):
+    template_key: str = "instance"
+
+
+@dataclass
+class ClassShape(Shape):
+    template_key: str = "class"
+
+
+@dataclass
+class InstanceShape(Shape):
+    template_key: str = "instance"
+
+
 class NxEdge(NamedTuple):
     subj: any
     obj: any
