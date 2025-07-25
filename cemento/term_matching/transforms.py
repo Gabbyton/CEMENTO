@@ -225,6 +225,27 @@ def get_prefixes(
     return prefixes, inv_prefixes
 
 
+def get_default_terms(defaults_folder: str | Path = None):
+    default_namespace_prefixes = get_default_namespace_prefixes()
+    default_terms_from_lib = {
+        term
+        for ns in default_namespace_prefixes.values()
+        for term in dir(ns)
+        if isinstance(term, URIRef)
+    }
+    if defaults_folder:
+        default_terms_from_file = reduce(
+            lambda acc, rdf_graph: acc | set(rdf_graph.all_nodes()),
+            get_ttl_file_iter(defaults_folder),
+            set(),
+        )
+        default_terms_from_lib |= default_terms_from_file
+    default_terms_from_lib = set(
+        filter(lambda x: isinstance(x, URIRef), default_terms_from_lib)
+    )
+    return default_terms_from_lib
+
+
 def get_search_terms(
     inv_prefixes: dict[URIRef, str],
     onto_ref_folder: str | Path = None,

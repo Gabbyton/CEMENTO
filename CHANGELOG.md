@@ -18,6 +18,21 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
+## [Unreleased]
+
+Added new template files for class, instance, and literal
+replaced all ghost connectors with straight orthogonal connectors
+changed error check to make changes in place if the user is already working on a file with "error_check" on the file name
+changed default terms in drawio_to_ttl to use all default terms in rdflib and in default file folders
+fixed class and instance designation in graph_to_tll
+fixed error message input parsing
+added null safety checks after diagram error detection in diagram term iter
+added parent location and id when outputting diagram term errors
+added checks to ignore horizontal lines for diagram error checking
+removed root IDs from extracted terms and relationships in extract_elements
+Added more detailed key error message for generate_graph
+Print out triples that passed diagram checks but caught in null check in convert_graph_to_ttl
+
 ## [0.8.6] - 2025-07-24
 
 ### Added
