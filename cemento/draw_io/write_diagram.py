@@ -70,14 +70,14 @@ def draw_tree(
         ),
         ranked_subtrees,
     )
-
+    # TODO: labels not printing correctly on terms, but alt-labels do
     # flip the graph back once the positions have been computed
-    graph = graph.reverse(copy=True)
 
     ranked_subtrees = list(ranked_subtrees)
-
+    # flip the rank terms after position calculation
     ranked_subtrees = flip_edges_of_graphs(
-        ranked_subtrees, lambda subj, obj, data: (obj, subj) in not_rank_is_strat
+        ranked_subtrees,
+        lambda subj, obj, data: data["is_rank"] if "is_rank" in data else False,
     )
 
     diagram_uid = str(uuid4()).split("-")[-1]

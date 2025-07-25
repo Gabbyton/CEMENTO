@@ -18,6 +18,13 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
+[Unreleased]
+
+fixed term location not printing on diagram error causing error
+fixed reversed arrow configuration on `connector.xml` template
+adjusted write_diagram graph flipping for repaired orientations
+updated default arrow position calculation on `Connector` dataclass to reflect repaired orientations
+
 ## [0.8.8] - 2025-07-25
 
 ### Added
