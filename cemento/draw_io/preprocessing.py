@@ -128,7 +128,14 @@ def find_edge_errors_diagram_content(
             continue
 
         if "target" not in edge_attr or not edge_attr["target"]:
-            errors.append((edge_id, MissingChildEdgeError(edge_id, edge_content)))
+            errors.append(
+                (
+                    edge_id,
+                    MissingChildEdgeError(
+                        edge_id, edge_content, next(iter(connected_terms))
+                    ),
+                )
+            )
             continue
 
         if (
