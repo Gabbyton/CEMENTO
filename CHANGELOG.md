@@ -18,17 +18,25 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
+## [0.8.8] - 2025-07-25
+
+### Added
+
+- Shape type implementation for generating shapes
+- New enum `ShapeType` for determining shape type
+
 ## [0.8.7] - 2025-07-24
 
 ### Added
+
 - added new template files for class, instance, and literal
 - more detailed key error message for `generate_graph`
 - null safety checks after diagram error detection in `diagram_terms_iter`
 - connected term location and ID when outputting diagram errors
 - checks to ignore horizontal lines for diagram error checking
 
-
 ### Changed
+
 - error check to make changes are made in-place if the user is already working n a file with "error_check" on the file name
 - default terms in `drawio_to_ttl` to use all default terms in rdflib and in default file folders
 - print out triples that passed diagram checks but caught in null check in `convert_graph_to_ttl`
