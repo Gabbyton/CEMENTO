@@ -14,6 +14,22 @@ def convert_ttl_to_drawio(
     prefixes_path: str | Path = None,
     set_unique_literals: bool = True,
 ) -> None:
+    """
+    Convert RDF triples in the turtle format as an ontology diagram in a draw.io file.
+
+    Args:
+        input_path (str | Path): The path to the turtle input file.
+        output_path (str | Path): The desired file path for saving an ontology diagram as a draw.io file.
+        horizontal_tree (bool, optional): Whether to make the tree horizontal or stay with the default vertical layout. Defaults to **False**.
+        classes_only (bool, optional): Whether to just display classes and instances (taxonomy tree). Defaults to **False**.
+        onto_ref_folder (str | Path, optional): The path to the folder containing the reference ontologies. Defaults to **None**.
+        defaults_folder (str | Path, optional): The path to the folder containing the turtle files of the default namespaces. Defaults to **None**.
+        prefixes_path (str | Path, optional): The path to the json file containing prefixes. Defaults to **None**.
+        log_substitution_path (str | Path, optional): The path to a csv file containing substitution results from term matching. Defaults to **None**.
+
+    Returns:
+        None
+    """
     graph = convert_ttl_to_graph(
         input_path,
         classes_only=classes_only,
