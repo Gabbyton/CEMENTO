@@ -63,9 +63,9 @@ class Connector(DiagramObject):
     rel_x_pos: float = 0
     rel_y_pos: float = 0
     start_pos_x: float = 0.5
-    start_pos_y: float = 1
+    start_pos_y: float = 0
     end_pos_x: float = 0.5
-    end_pos_y: float = 0
+    end_pos_y: float = 1
     is_dashed: bool = 0
     is_curved: bool = 0
     template_key: str = "connector"

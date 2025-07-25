@@ -91,12 +91,12 @@ def find_edge_errors_diagram_content(
         target_id = edge_attr.get("target", None)
         connected_terms = {
             (
-                f"{clean_term(source_term['value'])} ({source_id}) located in ({source_term['x']}, {source_term['y']})"
+                f"{clean_term(source_term['value'])} ({source_id}) located in ({'Unknown' if 'x' not in source_term else source_term['x']}, {'Unknown' if 'y' not in source_term else source_term['y']})"
                 if source_id and "value" in (source_term := elements[source_id])
                 else None
             ),
             (
-                f"{clean_term(target_term['value'])} ({target_id}) located in ({target_term['x']}, {target_term['y']})"
+                f"{clean_term(target_term['value'])} ({target_id}) located in ({'Unknown' if 'x' not in target_term else target_term['x']}, {'Unknown' if 'y' not in target_term else target_term['y']})"
                 if target_id and "value" in (target_term := elements[target_id])
                 else None
             ),
@@ -128,7 +128,14 @@ def find_edge_errors_diagram_content(
             continue
 
         if "target" not in edge_attr or not edge_attr["target"]:
-            errors.append((edge_id, MissingChildEdgeError(edge_id, edge_content)))
+            errors.append(
+                (
+                    edge_id,
+                    MissingChildEdgeError(
+                        edge_id, edge_content, next(iter(connected_terms))
+                    ),
+                )
+            )
             continue
 
         if (
