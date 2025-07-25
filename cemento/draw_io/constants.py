@@ -10,6 +10,13 @@ class DiagramKey(Enum):
     LABEL = "label"
 
 
+class ShapeType(Enum):
+    LITERAL = "literal"
+    CLASS = "class"
+    INSTANCE = "instance"
+    UKNOWN = "shape"
+
+
 # TODO: move to config.ini and parse with a function in preprocessing
 SHAPE_WIDTH = 200
 SHAPE_HEIGHT = 80
@@ -130,7 +137,7 @@ class Shape:
 
 @dataclass
 class LiteralShape(Shape):
-    template_key: str = "instance"
+    template_key: str = "literal"
 
 
 @dataclass

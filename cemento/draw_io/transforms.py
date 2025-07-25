@@ -2,7 +2,7 @@ from collections import defaultdict
 from collections.abc import Callable, Iterable
 from dataclasses import asdict
 from functools import partial, reduce
-from itertools import accumulate
+from itertools import accumulate, starmap
 from pathlib import Path
 
 import networkx as nx
@@ -14,13 +14,17 @@ from cemento.draw_io.constants import (
     SHAPE_HEIGHT,
     SHAPE_WIDTH,
     STROKE_COLOR,
+    ClassShape,
     Connector,
     DiagramInfo,
     DiagramKey,
     DiagramObject,
+    InstanceShape,
+    LiteralShape,
     NxEdge,
     NxStringEdge,
     Shape,
+    ShapeType,
 )
 from cemento.draw_io.io import get_template_files
 from cemento.draw_io.preprocessing import clean_term, remove_predicate_quotes
@@ -653,6 +657,17 @@ def get_rank_connectors_from_trees(
     ]
 
 
+def get_shape_designation(node: any, node_attr: dict[str, any]) -> ShapeType:
+    shape_type = ShapeType.UKNOWN
+    if "is_class" in node_attr and node_attr["is_class"]:
+        shape_type = ShapeType.CLASS
+    elif "is_instance" in node_attr and node_attr["is_instance"]:
+        shape_type = ShapeType.INSTANCE
+    if "is_literal" in node_attr and node_attr["is_literal"]:
+        shape_type = ShapeType.LITERAL
+    return shape_type
+
+
 def generate_shapes(
     graph: DiGraph,
     diagram_uid: str,
@@ -664,17 +679,28 @@ def generate_shapes(
     shape_height: int = SHAPE_HEIGHT,
     shape_width: int = SHAPE_WIDTH,
 ) -> list[Shape]:
-    nodes = [node for node in graph.nodes]
+    nodes = [(node, data) for node, data in graph.nodes(data=True)]
     entity_ids = (f"{diagram_uid}-{idx + idx_start}" for idx in range(len(nodes)))
-    shape_pos_x = (graph.nodes[node]["draw_x"] + offset_x for node in nodes)
-    shape_pos_y = (graph.nodes[node]["draw_y"] + offset_y for node in nodes)
+    shape_pos_x = (data["draw_x"] + offset_x for node, data in nodes)
+    shape_pos_y = (data["draw_y"] + offset_y for node, data in nodes)
     shape_positions = map(
         lambda x: translate_coords(x[0], x[1]),
         zip(shape_pos_x, shape_pos_y, strict=True),
     )
-    node_contents = (node for node in nodes)
+    node_contents = (node for node, data in nodes)
+    shape_templates = {
+        ShapeType.CLASS: ClassShape,
+        ShapeType.INSTANCE: InstanceShape,
+        ShapeType.LITERAL: LiteralShape,
+        ShapeType.UKNOWN: Shape,
+    }
+    node_shape_designations = starmap(get_shape_designation, nodes)
+    shape_template_designations = map(
+        lambda x: shape_templates[x], node_shape_designations
+    )
+
     shapes = [
-        Shape(
+        ShapeTemplate(
             shape_id=entity_id,
             shape_content=node_content,
             fill_color=shape_color,
@@ -684,8 +710,12 @@ def generate_shapes(
             shape_width=shape_width,
             shape_height=shape_height,
         )
-        for (entity_id, node_content, (shape_pos_x, shape_pos_y)) in zip(
-            entity_ids, node_contents, shape_positions, strict=True
+        for (entity_id, node_content, (shape_pos_x, shape_pos_y), ShapeTemplate) in zip(
+            entity_ids,
+            node_contents,
+            shape_positions,
+            shape_template_designations,
+            strict=True,
         )
     ]
     return shapes
