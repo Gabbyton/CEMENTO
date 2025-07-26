@@ -22,8 +22,10 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 
 ### Changed
 
-- adjusted write_diagram graph flipping for repaired orientations
+- adjusted `write_diagram` graph flipping for repaired orientations
 - updated default arrow position calculation on `Connector` dataclass to reflect repaired orientations
+- repository location. The CEMENTO repository is now "owned" by the CWRU-SDLE organization
+- base URL for documentation. It is now in [https://cwru-sdle.github.io/CEMENTO/](https://cwru-sdle.github.io/CEMENTO/)
 
 ### Fixed
 
