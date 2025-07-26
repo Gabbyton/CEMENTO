@@ -22,20 +22,26 @@ CEMENTO
    user-guide
    modules
    changelog
+   about
 
 **Version:** |release|
 
 **Useful links**:
-`Source Repository <https://github.com/Gabbyton/CEMENTO>`_ |
-`Issue Tracker <https://github.com/Gabbyton/CEMENTO/issues>`_ |
+`Source Repository <https://github.com/cwru-sdle/CEMENTO>`_ |
+`Issue Tracker <https://github.com/cwru-sdle/CEMENTO/issues>`_ |
 `MDS-Onto Website <https://cwrusdle.bitbucket.io>`_ |
 `PyPI Page <https://pypi.org/project/cemento/>`_
 
 
 
-CEMENTO is a component python package of the larger **SDLE FAIR application suite** of tools for creating scientific ontologies more efficiently. This package provides functional interfaces for converting draw.io diagrams of ontologies into RDF triples in the turtle (``.ttl``) format and vice versa. This package is able to provide term matching between reference ontology files and terms used in draw.io diagrams allowing for faster ontology deployment while maintaining robust cross-references.
+``CEMENTO`` converts your draw.io ontology diagrams into turtle files, and vice versa. ``CEMENTO`` can also:
 
-CEMENTO stands for the Centralized Entity Mapping & Extraction Nexus for Triples and Ontologies -- a mouthful for an acronym, but an important metaphor for the package building the road to ontologies for materials data.
+- Match and substitute for terms in ontologies YOU provide.
+- Create coherent tree-based layouts for visualizing ontology class and instance relationships (even with multiple inheritance).
+- Support URI prefixes (via binding), literal annotations and property definitions.
+- Collect domain and range instances as used in your ontology *(class inference coming soon)*.
+- Point you to your diagram errors by highlighting faulty entities. Your errors show all at once.
+- Support for multiple pages in a draw.io file, for when you want to organize terms your way.
 
 .. grid:: 2
    

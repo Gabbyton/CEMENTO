@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx_iframe.css?v=96c28b52" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=ebb204fd" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=b475f847" />
   
   <!-- So that users can add custom icons -->
   <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -48,7 +48,8 @@
     <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script src="_static/h5p-resizer.js?v=a3e8b8ed"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
-    <link rel="canonical" href="https://gabbyton.github.io/CEMENTO/index.html" />
+    <link rel="canonical" href="https://cwru-sdle.github.io/CEMENTO/index.html" />
+    <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Quickstart" href="quickstart.html" />
@@ -162,6 +163,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="changelog.html">
     Changelog
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="about.html">
+    About
   </a>
 </li>
 
@@ -295,6 +303,13 @@
   </a>
 </li>
 
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="about.html">
+    About
+  </a>
+</li>
+
   </ul>
 </nav></div>
           
@@ -381,12 +396,19 @@
 </div>
 <p><strong>Version:</strong> 0.8.9</p>
 <p><strong>Useful links</strong>:
-<a class="reference external" href="https://github.com/Gabbyton/CEMENTO">Source Repository</a> |
-<a class="reference external" href="https://github.com/Gabbyton/CEMENTO/issues">Issue Tracker</a> |
+<a class="reference external" href="https://github.com/cwru-sdle/CEMENTO">Source Repository</a> |
+<a class="reference external" href="https://github.com/cwru-sdle/CEMENTO/issues">Issue Tracker</a> |
 <a class="reference external" href="https://cwrusdle.bitbucket.io">MDS-Onto Website</a> |
 <a class="reference external" href="https://pypi.org/project/cemento/">PyPI Page</a></p>
-<p>CEMENTO is a component python package of the larger <strong>SDLE FAIR application suite</strong> of tools for creating scientific ontologies more efficiently. This package provides functional interfaces for converting draw.io diagrams of ontologies into RDF triples in the turtle (<code class="docutils literal notranslate"><span class="pre">.ttl</span></code>) format and vice versa. This package is able to provide term matching between reference ontology files and terms used in draw.io diagrams allowing for faster ontology deployment while maintaining robust cross-references.</p>
-<p>CEMENTO stands for the Centralized Entity Mapping &amp; Extraction Nexus for Triples and Ontologies – a mouthful for an acronym, but an important metaphor for the package building the road to ontologies for materials data.</p>
+<p><code class="docutils literal notranslate"><span class="pre">CEMENTO</span></code> converts your draw.io ontology diagrams into turtle files, and vice versa. <code class="docutils literal notranslate"><span class="pre">CEMENTO</span></code> can also:</p>
+<ul class="simple">
+<li><p>Match and substitute for terms in ontologies YOU provide.</p></li>
+<li><p>Create coherent tree-based layouts for visualizing ontology class and instance relationships (even with multiple inheritance).</p></li>
+<li><p>Support URI prefixes (via binding), literal annotations and property definitions.</p></li>
+<li><p>Collect domain and range instances as used in your ontology <em>(class inference coming soon)</em>.</p></li>
+<li><p>Point you to your diagram errors by highlighting faulty entities. Your errors show all at once.</p></li>
+<li><p>Support for multiple pages in a draw.io file, for when you want to organize terms your way.</p></li>
+</ul>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
 <div class="sd-col sd-d-flex-row docutils">
@@ -525,7 +547,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, Gabriel Obsequio Ponon.
+      © Copyright 2025, CWRU SDLE-MDS3 Center of Excellence.
       <br/>
     
   </p>

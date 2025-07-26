@@ -12,7 +12,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parents[2] / "cemento"))
 
 project = "CEMENTO"
-copyright = "2025, Gabriel Obsequio Ponon"
+copyright = "2025, CWRU SDLE-MDS3 Center of Excellence"
 author = "Gabriel Obsequio Ponon"
 release = "0.8.9"
 
@@ -84,7 +84,7 @@ html_theme_options = {
 
 # sitemap options
 
-html_baseurl = "https://gabbyton.github.io/CEMENTO/"
+html_baseurl = "https://cwru-sdle.github.io/CEMENTO/"
 
 # myst_parser options
 
