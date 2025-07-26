@@ -20,6 +20,8 @@ To install this particular package, use pip to install the latest version:
 
     (.venv) $ pip install cemento
 
+.. _use-venv:
+
 We recommend a python environment to prevent dependency conflicts:
 
 .. code-block:: console

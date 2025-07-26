@@ -2,14 +2,19 @@
 Quickstart
 ***********
 
+    | **NOTE:** It is recommended you install in a python environment. If you do not know how to set up a virtual environment, please refer to :ref:`this link <use-venv>` or check out `python's instructions <https://docs.python.org/3/library/venv.html#creating-virtual-environments>`_.
+
 Before converting
-================
+==================
 
 Install cemento with pip.
+
+:bdg-danger:`warning` The ``CEMENTO`` package only supports python versions ``>=3.10``.
 
 .. code-block:: console
 
     (.venv) $ pip install cemento
+
 
 Run the following to see if it's properly installed:
 
@@ -34,8 +39,8 @@ Clone the official repo to get the example. Prefer the master branch:
 
 There should be two files ``happy-example.drawio`` and ``happy-example.ttl``
 
-Converting from draw.io to .ttl
--------------------------------
+Converting from draw.io to ``.ttl``
+-----------------------------------
 
 Inside the ``examples`` folder, run the following command:
 
@@ -45,8 +50,8 @@ Inside the ``examples`` folder, run the following command:
 
 | **NOTE:** Paths can be absolute or relative.
 
-Converting from .ttl to draw.io
--------------------------------
+Converting from ``.ttl`` to draw.io
+------------------------------------
 
 Similar to the above, run the following command:
 

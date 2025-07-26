@@ -421,9 +421,15 @@
                   
   <section id="quickstart">
 <h1>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">#</a></h1>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><strong>NOTE:</strong> It is recommended you install in a python environment. If you do not know how to set up a virtual environment, please refer to <a class="reference internal" href="user-guide-pages/installation.html#use-venv"><span class="std std-ref">this link</span></a> or check out <a class="reference external" href="https://docs.python.org/3/library/venv.html#creating-virtual-environments">python’s instructions</a>.</div>
+</div>
+</div></blockquote>
 <section id="before-converting">
 <h2>Before converting<a class="headerlink" href="#before-converting" title="Link to this heading">#</a></h2>
 <p>Install cemento with pip.</p>
+<p><span class="sd-sphinx-override sd-badge sd-bg-danger sd-bg-text-danger">warning</span> The <code class="docutils literal notranslate"><span class="pre">CEMENTO</span></code> package only supports python versions <code class="docutils literal notranslate"><span class="pre">&gt;=3.10</span></code>.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>cemento
 </pre></div>
 </div>
@@ -444,7 +450,7 @@
 <p>There should be two files <code class="docutils literal notranslate"><span class="pre">happy-example.drawio</span></code> and <code class="docutils literal notranslate"><span class="pre">happy-example.ttl</span></code></p>
 </section>
 <section id="converting-from-draw-io-to-ttl">
-<h3>Converting from draw.io to .ttl<a class="headerlink" href="#converting-from-draw-io-to-ttl" title="Link to this heading">#</a></h3>
+<h3>Converting from draw.io to <code class="docutils literal notranslate"><span class="pre">.ttl</span></code><a class="headerlink" href="#converting-from-draw-io-to-ttl" title="Link to this heading">#</a></h3>
 <p>Inside the <code class="docutils literal notranslate"><span class="pre">examples</span></code> folder, run the following command:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>drawio_ttl<span class="w"> </span>happy-example.drawio<span class="w"> </span>sample.ttl
 </pre></div>
@@ -454,7 +460,7 @@
 </div>
 </section>
 <section id="converting-from-ttl-to-draw-io">
-<h3>Converting from .ttl to draw.io<a class="headerlink" href="#converting-from-ttl-to-draw-io" title="Link to this heading">#</a></h3>
+<h3>Converting from <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> to draw.io<a class="headerlink" href="#converting-from-ttl-to-draw-io" title="Link to this heading">#</a></h3>
 <p>Similar to the above, run the following command:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>ttl_drawio<span class="w"> </span>happy-example.ttl<span class="w"> </span>sample.drawio
 </pre></div>
@@ -529,8 +535,8 @@
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#before-converting">Before converting</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-example">Download the Example</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-from-draw-io-to-ttl">Converting from draw.io to .ttl</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-from-ttl-to-draw-io">Converting from .ttl to draw.io</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-from-draw-io-to-ttl">Converting from draw.io to <code class="docutils literal notranslate"><span class="pre">.ttl</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-from-ttl-to-draw-io">Converting from <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> to draw.io</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#help-message">Help message</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#check-output">Check output</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-now">What now?</a></li>
