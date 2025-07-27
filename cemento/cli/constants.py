@@ -11,6 +11,6 @@ header = r"""
 | |___| |___| |  | | |___| |\  | | || |_| |
  \____|_____|_|  |_|_____|_| \_| |_| \___/ 
 
-Building the road to ontologies for materials data.
+v0.8.9. Building the road to ontologies for materials data.
 Copyright 2025 CWRU SDLE-MDS3
 """
