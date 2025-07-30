@@ -4,7 +4,10 @@ from networkx import DiGraph
 
 from cemento.draw_io.constants import BadDiagramError, DiagramKey
 from cemento.draw_io.io import write_error_diagram
-from cemento.draw_io.preprocessing import find_errors_diagram_content
+from cemento.draw_io.preprocessing import (
+    find_errors_diagram_content,
+    get_diagram_error_exemptions,
+)
 from cemento.draw_io.transforms import (
     extract_elements,
     generate_graph,
@@ -36,10 +39,16 @@ def read_drawio(
     elif any([onto_ref_folder, prefixes_folder, defaults_folder]):
         raise ValueError("Either all the folders are set or none at all!")
 
+    error_exemptions = get_diagram_error_exemptions(elements)
+
     if check_errors:
         print("Checking for diagram errors...")
         errors = find_errors_diagram_content(
-            elements, term_ids, rel_ids, serious_only=True
+            elements,
+            term_ids,
+            rel_ids,
+            serious_only=True,
+            error_exemptions=error_exemptions,
         )
         if errors:
             checked_diagram_path = write_error_diagram(input_path, errors)
@@ -56,6 +65,7 @@ def read_drawio(
         term_ids,
         rel_ids,
         strat_terms=strat_props,
+        exempted_elements=error_exemptions,
         inverted_rank_arrow=inverted_rank_arrow,
     )
     graph = relabel_graph_nodes_with_node_attr(graph, new_attr_label=relabel_key.value)

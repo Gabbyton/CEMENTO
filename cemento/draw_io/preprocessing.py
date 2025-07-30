@@ -76,15 +76,52 @@ def remove_quotes(input_str: str) -> str:
     return remove_html_quote(input_str.replace('"', "").strip())
 
 
+def is_line(element: dict[str, any]) -> bool:
+    return (
+        ("endArrow" not in element or element["endArrow"] == "none")
+        and ("startArrow" not in element or element["startArrow"] == "none")
+        and ("source" not in element or not element["source"])
+        and ("target" not in element or not element["target"])
+    )
+
+
+def get_diagram_error_exemptions(elements: dict[str, dict[str, any]]) -> set[str]:
+    edges = {
+        key: value
+        for key, value in elements.items()
+        if "edge" in value and value["edge"] == "1"
+    }
+    term_ids = elements.keys() - edges.keys()
+    terms = {key: value for key, value in elements.items() if key in term_ids}
+
+    lines = set(map(fst, filter(lambda edge: is_line(snd(edge)), edges.items())))
+
+    # TODO: move to constants file
+    reserved_term_annotations = {"t-box", "a-box"}
+
+    reserved_terms = {
+        term_id
+        for term_id, term_element in terms.items()
+        for reserved_term in reserved_term_annotations
+        if "value" in term_element
+        and reserved_term in clean_term(term_element["value"]).strip().lower()
+    }
+
+    return lines | reserved_terms
+
+
 def find_edge_errors_diagram_content(
-    elements: dict[str, dict[str, any]], serious_only: bool = False
+    elements: dict[str, dict[str, any]],
+    serious_only: bool = False,
 ) -> list[tuple[str, BaseException]]:
     edges = {
         key: value
         for key, value in elements.items()
         if "edge" in value and value["edge"] == "1"
     }
+
     errors = []
+
     for edge_id, edge_attr in edges.items():
 
         source_id = edge_attr.get("source", None)
@@ -146,30 +183,11 @@ def find_edge_errors_diagram_content(
             errors.append((edge_id, CircularEdgeError(edge_id, edge_content)))
 
     if serious_only:
-        # hide errors related to lines that don't even get parsed
-        lines_only_ids = {
-            edge_id
-            for edge_id, edge_attr in edges.items()
-            if ("value" not in edge_attr or not edge_attr["value"])
-            and ("source" not in edge_attr or not edge_attr["source"])
-            and ("target" not in edge_attr or not edge_attr["target"])
-            and (
-                "endArrow" not in edge_attr
-                or edge_attr["endArrow"] == "none"
-                or not edge_attr["endArrow"]
-            )
-            and (
-                "startArrow" not in edge_attr
-                or edge_attr["startArrow"] == "none"
-                or not edge_attr["startArrow"]
-            )
-        }
         # hide the errors related to circular edges (false positive bug with draw.io)
         circular_edge_errors = filter(
             lambda error: isinstance(snd(error), CircularEdgeError), errors
         )
         non_affected_ids = {id for id, error in circular_edge_errors}
-        non_affected_ids |= lines_only_ids
         errors = list(filter(lambda error: fst(error) not in non_affected_ids, errors))
 
     return errors
@@ -177,7 +195,7 @@ def find_edge_errors_diagram_content(
 
 def find_shape_errors_diagram_content(
     elements: dict[str, dict[str, any]], term_ids: set[str], rel_ids: set[str]
-):
+) -> list[tuple[str, BaseException]]:
     connected_terms = {
         term
         for rel_id in rel_ids
@@ -204,7 +222,13 @@ def find_errors_diagram_content(
     term_ids: set[str],
     rel_ids: set[str],
     serious_only: bool = False,
+    error_exemptions: set[str] = None,
 ) -> list[tuple[str, BaseException]]:
-    return find_shape_errors_diagram_content(
+    errors = find_shape_errors_diagram_content(
         elements, term_ids, rel_ids
     ) + find_edge_errors_diagram_content(elements, serious_only=serious_only)
+    if error_exemptions is not None:
+        errors = list(
+            filter(lambda error_info: fst(error_info) not in error_exemptions, errors)
+        )
+    return errors

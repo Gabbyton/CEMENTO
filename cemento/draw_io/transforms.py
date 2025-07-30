@@ -115,11 +115,22 @@ def generate_graph(
     term_ids: set[str],
     relationship_ids: set[str],
     strat_terms: set[str] = None,
+    exempted_elements: set[str] = None,
     inverted_rank_arrow: bool = False,
 ) -> DiGraph:
     # for identified connectors, extract relationship information
     graph = nx.DiGraph()
     # add all terms
+    term_ids = filter(
+        lambda element_id: exempted_elements is None
+        or element_id not in exempted_elements,
+        term_ids,
+    )
+    relationship_ids = filter(
+        lambda element_id: exempted_elements is None
+        or element_id not in exempted_elements,
+        relationship_ids,
+    )
     for term_id in term_ids:
         term = elements[term_id]["value"]
         # TODO: find more sophisticated method to detect literals, or mention method in the docs
