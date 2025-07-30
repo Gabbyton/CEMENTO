@@ -4,6 +4,7 @@ from uuid import uuid4
 
 from networkx import DiGraph
 
+from cemento.draw_io.constants import Connector, Shape
 from cemento.draw_io.preprocessing import (
     remove_literal_connector_id,
     remove_literal_shape_id,
@@ -29,6 +30,31 @@ from cemento.draw_io.transforms import (
     get_subgraphs,
     split_multiple_inheritances,
 )
+
+
+def draw_diagram(
+    shapes: list[Shape],
+    connectors: list[Connector],
+    diagram_output_path: str | Path,
+    diagram_uid: str = None,
+) -> None:
+    if diagram_uid is None:
+        diagram_uid = str(uuid4()).split("-")[-1]
+
+    shapes = list(map(replace_shape_html_quotes, shapes))
+    shapes = map(remove_literal_shape_id, shapes)
+
+    connectors = map(remove_literal_connector_id, connectors)
+
+    write_content = generate_diagram_content(
+        diagram_output_path.stem,
+        diagram_uid,
+        connectors,
+        shapes,
+    )
+
+    with open(diagram_output_path, "w") as write_file:
+        write_file.write(write_content)
 
 
 def draw_tree(
@@ -83,10 +109,11 @@ def draw_tree(
     shapes = get_shapes_from_trees(
         ranked_subtrees, diagram_uid, entity_idx_start, horizontal_tree=horizontal_tree
     )
-    shapes = list(map(replace_shape_html_quotes, shapes))
+
     entity_idx_start = len(shapes)
     new_shape_ids = get_shape_ids(shapes)
     shape_positions = get_shape_positions(shapes)
+
     connectors = get_rank_connectors_from_trees(
         ranked_subtrees,
         shape_positions,
@@ -114,27 +141,12 @@ def draw_tree(
 
     shape_positions_by_id = get_shape_positions_by_id(shapes)
 
-    for connector in chain(connectors, predicate_connectors, predicate_connectors):
+    for connector in chain(connectors, predicate_connectors, severed_link_connectors):
         connector.resolve_position(
             shape_positions_by_id[connector.source_id],
             shape_positions_by_id[connector.target_id],
             classes_only=classes_only,
             horizontal_tree=horizontal_tree,
         )
-
-    shapes = map(remove_literal_shape_id, shapes)
-    connectors = map(remove_literal_connector_id, connectors)
-    predicate_connectors = map(remove_literal_connector_id, predicate_connectors)
-    severed_link_connectors = map(remove_literal_connector_id, severed_link_connectors)
-
-    write_content = generate_diagram_content(
-        diagram_output_path.stem,
-        diagram_uid,
-        connectors,
-        predicate_connectors,
-        severed_link_connectors,
-        shapes,
-    )
-
-    with open(diagram_output_path, "w") as write_file:
-        write_file.write(write_content)
+    all_connectors = connectors + predicate_connectors + severed_link_connectors
+    draw_diagram(shapes, all_connectors, diagram_output_path, diagram_uid=diagram_uid)

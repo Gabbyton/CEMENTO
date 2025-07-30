@@ -21,9 +21,15 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 ## [0.8.10] - 2025-07-25
 
 ### Added
+
 - instance conformation for T-box and A-box separation for each tree
 
+### Changed
+
+- separated `draw_diagram` from `draw_tree` for future layout schemes
+
 ### Fixed
+
 - `get_aliases` "eating up" the label if more alt labels are provided
 
 ## [0.8.9] - 2025-07-25
