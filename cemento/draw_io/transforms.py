@@ -422,8 +422,36 @@ def get_tree_size(tree: DiGraph) -> tuple[int, int]:
     return (tree_size_x, tree_size_y)
 
 
+def get_tree_canvas_size(tree: DiGraph) -> tuple[float, float]:
+    tree_canvas_size_x = max(nx.get_node_attributes(tree, "draw_x").values())
+    tree_canvas_size_y = max(nx.get_node_attributes(tree, "draw_y").values())
+    return (tree_canvas_size_x, tree_canvas_size_y)
+
+
+def conform_instance_draw_positions(tree: DiGraph, box_offset=1.5) -> DiGraph:
+    if not all(["draw_y" in data for _, data in tree.nodes(data=True)]):
+        raise ValueError(
+            "The input tree has missing draw_y values. If this is a mistake, please make sure to compute draw positions before conforming."
+        )
+    new_tree = tree.copy()
+    max_draw_x, max_draw_y = get_tree_canvas_size(new_tree)
+    max_draw_y += box_offset
+
+    instance_nodes = (
+        node for node, data in new_tree.nodes(data=True) if data["is_instance"]
+    )
+    updated_instance_node_positions = {
+        node: {"draw_y": max_draw_y} for node in instance_nodes
+    }
+    nx.set_node_attributes(new_tree, updated_instance_node_positions)
+    return new_tree
+
+
 def compute_draw_positions(
-    tree: DiGraph, root_node: any, horizontal_tree: bool = False
+    tree: DiGraph,
+    root_node: any,
+    horizontal_tree: bool = False,
+    conform_instances: bool = True,
 ) -> DiGraph:
     tree = tree.copy()
     nodes_drawn = set()
@@ -463,19 +491,24 @@ def compute_draw_positions(
             tree.nodes[node]["draw_y"] = draw_x
             tree.nodes[node]["draw_x"] = draw_y
 
+    if conform_instances:
+        tree = conform_instance_draw_positions(tree)
     return tree
 
 
 def translate_coords(
     x_pos: float, y_pos: float, origin_x: float = 0, origin_y: float = 0
 ) -> tuple[int, int]:
+    # TODO: retrieve shape constants from config
     rect_width = 200
     rect_height = 80
+    scale_factor_x = 1.05
+    scale_factor_y = 1.25
     x_padding = 5
     y_padding = 20
 
-    grid_x = rect_width * 2 + x_padding
-    grid_y = rect_height * 2 + y_padding
+    grid_x = rect_width * scale_factor_x + x_padding
+    grid_y = rect_height * scale_factor_y + y_padding
 
     return ((x_pos + origin_x) * grid_x, (y_pos + origin_y) * grid_y)
 

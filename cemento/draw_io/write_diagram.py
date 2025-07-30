@@ -70,9 +70,6 @@ def draw_tree(
         ),
         ranked_subtrees,
     )
-    # TODO: labels not printing correctly on terms, but alt-labels do
-    # flip the graph back once the positions have been computed
-
     ranked_subtrees = list(ranked_subtrees)
     # flip the rank terms after position calculation
     ranked_subtrees = flip_edges_of_graphs(
