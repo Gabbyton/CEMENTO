@@ -2,7 +2,7 @@ import re
 from collections import defaultdict
 from collections.abc import Container, Iterable
 from functools import partial, reduce
-from itertools import chain, groupby
+from itertools import chain
 from pathlib import Path
 
 import tldextract
@@ -141,11 +141,11 @@ def get_aliases(rdf_graph: Graph) -> dict[URIRef, Literal]:
             rdf_graph.subject_objects(SKOS.altLabel),
         )
     )
-    sorted(label_tuples, key=lambda x: x[0])
-    return {
-        subj: [obj for _, obj in objs]
-        for subj, objs in groupby(label_tuples, key=lambda x: x[0])
-    }
+    # TODO: find a more functional approach that works. previous implementation with groupby 'ate' the first term
+    aliases = defaultdict(list)
+    for key, value in label_tuples:
+        aliases[key].append(value)
+    return aliases
 
 
 def get_term_types(rdf_graph: Graph) -> dict[URIRef, URIRef]:
