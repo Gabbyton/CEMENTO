@@ -102,6 +102,8 @@ def draw_tree(
         ranked_subtrees,
         lambda subj, obj, data: data["is_rank"] if "is_rank" in data else False,
     )
+    # flip the severed links after position computation
+    severed_links = ((obj, subj, data) for subj, obj, data in severed_links)
 
     diagram_uid = str(uuid4()).split("-")[-1]
     entity_idx_start = 0
@@ -131,7 +133,6 @@ def draw_tree(
     )
     entity_idx_start += len(connectors) * 2
     severed_link_connectors = get_severed_link_connectors(
-        graph,
         severed_links,
         shape_positions,
         new_shape_ids,

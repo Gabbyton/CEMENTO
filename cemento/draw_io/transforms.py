@@ -611,7 +611,6 @@ def get_rank_connectors(
 
 
 def get_severed_link_connectors(
-    graph: DiGraph,
     edges: list[tuple[any, any, dict[str, any]]],
     shape_positions: dict[str, tuple[float, float]],
     shape_ids: dict[str, str],
