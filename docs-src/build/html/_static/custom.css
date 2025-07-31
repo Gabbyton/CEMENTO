@@ -11,10 +11,14 @@
     width: 25% !important;
 }
 
-.sd-card-header {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+.sd-tab-content > pre {
+    white-space: pre-wrap !important;
+    word-wrap: break-word;
+}
+
+.sd-card-header > p {
+    width: 100%;
+    text-align: center;
 }
 
 img.sd-card-img-top {

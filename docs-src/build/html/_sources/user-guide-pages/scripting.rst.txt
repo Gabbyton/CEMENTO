@@ -87,6 +87,8 @@ To make unique literals (which don't come with IRIs), the package can append all
 
 You are free to remove them using ``remove_literal_id`` which is just one of the functions we wrote in ``cemento.draw_io.preprocessing``. You are also free to implement your own algorithm as well.
 
+.. _module-structure:
+
 Using Other Modules
 ===================
 

@@ -20,6 +20,10 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 
 ## [0.8.9] - 2025-07-25
 
+### Added
+- FAQs page for common issues and solutions
+- section for citations and license in about page
+
 ### Changed
 
 - adjusted `write_diagram` graph flipping for repaired orientations

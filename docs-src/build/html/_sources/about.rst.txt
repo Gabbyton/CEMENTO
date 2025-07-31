@@ -18,6 +18,53 @@ Package Contributors
 - Roger French
     - *MDS3 Center of Excellence, Case Western Reserve University*
 
+.. _cite-work:
+
+Cite this work!
+===============
+
+Please make sure to cite us when you use our software for your publications. We are a team of researchers building tools for fellow researchers and we appreciate the support. Cite as using:
+
+.. tab-set::
+
+    .. tab-item:: IEEE
+
+        .. parsed-literal::
+
+            G. O. Ponon, B. P. Rajamohan, H. Sharma, and R. H. French, *cemento: A package to view and write ontologies directly from draw.io diagram files.* (Jul. 27, 2025). Python. Accessed: Jul. 28, 2025. [OS Independent]. Available: \https://github.com/cwru-sdle/CEMENTO
+
+    .. tab-item:: Nature
+
+        .. parsed-literal::
+
+            \Ponon, G. O., Rajamohan, B. P., Sharma, H. & French, R. H. cemento: A package to view and write ontologies directly from draw.io diagram files. (2025).
+
+    .. tab-item:: APA 7th
+
+        .. parsed-literal::
+
+            Ponon, G. O., Rajamohan, B. P., Sharma, H., & French, R. H. (2025). *cemento: A package to view and write ontologies directly from draw.io diagram files.* (Version 0.8.9) [Python; OS Independent]. \https://github.com/cwru-sdle/CEMENTO
+
+    .. tab-item:: Chicago 18th
+
+        .. parsed-literal::
+
+            Ponon, Gabriel O., Balashanmuga Priyan Rajamohan, Hemant Sharma, and Roger H. French. Cemento: A Package to View and Write Ontologies Directly from Draw.Io Diagram Files. Python. Version 0.8.9. Released July 27, 2025. OS Independent. \https://github.com/cwru-sdle/CEMENTO.
+
+Here are the files if you prefer :download:`BibTex <https://raw.githubusercontent.com/Gabbyton/CEMENTO/refs/heads/master/figures/bib-citation.bib>` or :download:`Zotero RDF <https://raw.githubusercontent.com/Gabbyton/CEMENTO/refs/heads/master/figures/zotero-rdf-citation.bib>`.
+
+.. _project-license:
+
+Project License
+=================
+
+.. dropdown:: 3-Clause BSD License
+   :color: primary
+   :icon: key
+
+   .. include:: ../../LICENSE.md
+    :parser: myst_parser.sphinx_
+
 Acknowledgements
 ================
 
