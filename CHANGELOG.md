@@ -23,6 +23,7 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 ### Added
 
 - instance conformation for T-box and A-box separation for each tree
+- diagram error-check exemptions for boxes containing `T-Box` or `A-Box` and lines (no arrows, disconnected)
 
 ### Changed
 
