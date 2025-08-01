@@ -587,8 +587,8 @@ def translate_coords(
     # TODO: retrieve shape constants from config
     rect_width = 200
     rect_height = 80
-    scale_factor_x = 1.05
-    scale_factor_y = 1.25
+    scale_factor_x = 1.5
+    scale_factor_y = 1.5
     x_padding = 5
     y_padding = 20
 
