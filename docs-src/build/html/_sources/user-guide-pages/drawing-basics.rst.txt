@@ -14,6 +14,7 @@ If you have not used draw.io before, please refer to their comprehensive tutoria
 * Your arrows must be drawn from source to target. **We have not tested using 'reverse' or changing the start or end arrows to change arrow direction**.
 * Predicate labels must be done on the arrow itself. Putting a box on top of an arrow will not work. Only one label per arrow.
 * Literals must come with double-quotes regardless of data type. Avoid using nested double-quotes.
+* You can draw a shape with the text 'A-Box' or 'T-Box' and a line without a label for annotations. Everything else is treated as part of the ontology.
 
 A Walkthrough
 =============

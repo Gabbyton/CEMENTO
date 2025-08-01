@@ -42,9 +42,9 @@ Usage
 
     Make sure the CLI or script input path now points to the error check file. We do not overwrite your file by default in order to maintain your version of the file. If you do point to the error check file, we will write directly to that file instead to allow for iteratively fixing errors.
 
-.. dropdown:: The package is complaining about non-ontology elements I add in my diagram (e.g. legends, lines, T-box, A-box, etc.). Is this correct?
+.. dropdown:: The package is complaining about non-ontology elements I add in my diagram (e.g. legends, boxes, etc.). Is this correct?
 
-    Yes, For flexibility, ``CEMENTO`` treats any simple shape as a term, and any arrow as a triple definition. Please avoid annotation symbols in your final input. We are currently implementing exemptions and we will update users through our documentation on renewed annotation guidance.
+    Yes, For flexibility, ``CEMENTO`` treats any simple shape as a term, and any arrow as a triple definition. Please avoid annotation symbols in your final input. The only exemptions are lines without labels, and shapes containing "T-box" or "A-box".
 
 .. dropdown:: How do I add axioms and restrictions?
 
