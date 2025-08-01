@@ -185,6 +185,7 @@ def draw_tree(
                 f"{diagram_uid}-{entity_idx_start + idx + 1}",
                 offset_x=offset_x,
                 offset_y=offset_y,
+                horizontal_tree=horizontal_tree
             )
             for idx, (tree, (offset_x, offset_y)) in enumerate(
                 zip(ranked_subtrees, tree_offsets, strict=False)
