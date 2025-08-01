@@ -23,7 +23,7 @@ Package Contributors
 Cite this work!
 ===============
 
-Please make sure to cite us when you use our software for your publications. We are a team of researchers building tools for fellow researchers and we appreciate the support. Cite as using:
+Please make sure to cite us when you use our software for your publications. We are a team of researchers building tools for fellow researchers and we appreciate the support. Cite us through the following:
 
 .. tab-set::
 
