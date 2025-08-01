@@ -73,10 +73,6 @@ Inaccurate outputs
     
     This error is because you used the same exact instance name as your class name. We understand this may be common in tutorials (and most often, not standard practice), but unless you assign a custom prefix to your instance name, your class and your instance will resolve to the same IRI. Please consider renaming your terms to be distinct.
 
-.. dropdown:: I managed to convert my diagram to turtle, but the output file contains domains and ranges that assign to instances. Is this correct?
-
-    This is by design but this is not correct. We are currently developing algorithms for class inference based on the collected instances, so we only collect instances for now. This addition only occurs for custom object properties that were not matched by the package. You are free to edit the turtle with the classes you actually want to include. You are also free to just remove them. We will set up an option to turn this feature off in an upcoming release.
-
 Documentation page issues
 ===========================
 
