@@ -20,6 +20,7 @@ from cemento.draw_io.constants import (
     DiagramKey,
     DiagramObject,
     InstanceShape,
+    Line,
     LiteralShape,
     NxEdge,
     NxStringEdge,
@@ -439,6 +440,34 @@ def get_tree_canvas_size(tree: DiGraph) -> tuple[float, float]:
     return (tree_canvas_size_x, tree_canvas_size_y)
 
 
+def get_tree_horizontal_extents(tree: DiGraph) -> tuple[float, float]:
+    min_tree_x = min(nx.get_node_attributes(tree, "draw_x").values())
+    max_tree_x = max(nx.get_node_attributes(tree, "draw_x").values())
+    return (min_tree_x, max_tree_x)
+
+
+def get_tree_dividing_line(
+    tree: DiGraph,
+    line_id: str,
+    offset_x: float = 0,
+    offset_y: float = 0,
+    line_offset_y: float = 0.5,
+) -> Line:
+    line_start_x, line_end_x = get_tree_horizontal_extents(tree)
+    line_start_x, line_end_x = line_start_x + offset_x, line_end_x + offset_x + 1
+    _, tree_size_y = get_tree_canvas_size(tree)
+    line_y = tree_size_y - line_offset_y + offset_y
+    line_start_x, _ = translate_coords(line_start_x, 0)
+    line_end_x, line_y = translate_coords(line_end_x, line_y)
+    return Line(
+        line_id=line_id,
+        start_pos_x=line_start_x,
+        start_pos_y=line_y,
+        end_pos_x=line_end_x,
+        end_pos_y=line_y,
+    )
+
+
 def conform_instance_draw_positions(tree: DiGraph, box_offset=1.5) -> DiGraph:
     if not all(["draw_y" in data for _, data in tree.nodes(data=True)]):
         raise ValueError(
@@ -764,18 +793,11 @@ def generate_shapes(
     return shapes
 
 
-def get_shapes_from_trees(
+def get_tree_offsets(
     trees: list[DiGraph],
-    diagram_uid: str,
-    entity_idx_start: int = 0,
     horizontal_tree: bool = False,
-) -> list[Shape]:
+) -> Iterable[tuple[float, float]]:
     tree_sizes = map(get_tree_size, trees)
-    entity_index_starts = accumulate(
-        trees,
-        lambda acc, tree: acc + len(tree.nodes),
-        initial=entity_idx_start,
-    )
     offsets = accumulate(
         tree_sizes,
         lambda acc, x: (fst(acc) + fst(x), snd(acc) + snd(x)),
@@ -788,6 +810,24 @@ def get_shapes_from_trees(
         ),
         offsets,
     )
+    return offsets
+
+
+def get_shapes_from_trees(
+    trees: list[DiGraph],
+    diagram_uid: str,
+    entity_idx_start: int = 0,
+    tree_offsets: list[tuple[float, float]] = None,
+    horizontal_tree: bool = False,
+) -> list[Shape]:
+    if tree_offsets is None:
+        tree_offsets = get_tree_offsets(trees, horizontal_tree=horizontal_tree)
+
+    entity_index_starts = accumulate(
+        trees,
+        lambda acc, tree: acc + len(tree.nodes),
+        initial=entity_idx_start,
+    )
     shapes_list = [
         generate_shapes(
             subtree,
@@ -797,7 +837,7 @@ def get_shapes_from_trees(
             idx_start=entity_idx_start,
         )
         for (subtree, (offset_x, offset_y), entity_idx_start) in zip(
-            trees, offsets, entity_index_starts, strict=False
+            trees, tree_offsets, entity_index_starts, strict=False
         )
     ]
     return [shape for shapes in shapes_list for shape in shapes]

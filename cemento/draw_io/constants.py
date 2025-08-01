@@ -96,11 +96,11 @@ class Connector(DiagramObject):
         self,
         source_shape_pos: tuple[float, float],
         target_shape_pos: tuple[float, float],
-        classes_only: bool = False,
+        strat_only: bool = False,
         horizontal_tree: bool = False,
     ) -> None:
 
-        if not classes_only:
+        if not strat_only:
             self.start_pos_x, self.start_pos_y, self.end_pos_x, self.end_pos_y = (
                 Connector.compute_dynamic_position(*source_shape_pos, *target_shape_pos)
             )
@@ -148,6 +148,18 @@ class ClassShape(Shape):
 @dataclass
 class InstanceShape(Shape):
     template_key: str = "instance"
+
+
+@dataclass
+class Line(DiagramObject):
+    line_id: str
+    start_pos_x: float
+    start_pos_y: float
+    end_pos_x: float
+    end_pos_y: float
+    line_width: int = 50
+    line_height: int = 50
+    template_key: str = "line"
 
 
 class NxEdge(NamedTuple):

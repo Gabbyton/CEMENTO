@@ -4,7 +4,7 @@ from uuid import uuid4
 
 from networkx import DiGraph
 
-from cemento.draw_io.constants import Connector, Shape
+from cemento.draw_io.constants import Connector, DiagramObject, Shape
 from cemento.draw_io.preprocessing import (
     remove_literal_connector_id,
     remove_literal_shape_id,
@@ -28,6 +28,8 @@ from cemento.draw_io.transforms import (
     get_shape_positions_by_id,
     get_shapes_from_trees,
     get_subgraphs,
+    get_tree_dividing_line,
+    get_tree_offsets,
     split_multiple_inheritances,
 )
 
@@ -36,6 +38,7 @@ def draw_diagram(
     shapes: list[Shape],
     connectors: list[Connector],
     diagram_output_path: str | Path,
+    *extra_elements: list[DiagramObject],
     diagram_uid: str = None,
 ) -> None:
     if diagram_uid is None:
@@ -47,10 +50,7 @@ def draw_diagram(
     connectors = map(remove_literal_connector_id, connectors)
 
     write_content = generate_diagram_content(
-        diagram_output_path.stem,
-        diagram_uid,
-        connectors,
-        shapes,
+        diagram_output_path.stem, diagram_uid, connectors, shapes, *extra_elements
     )
 
     with open(diagram_output_path, "w") as write_file:
@@ -108,22 +108,29 @@ def draw_tree(
     diagram_uid = str(uuid4()).split("-")[-1]
     entity_idx_start = 0
 
+    tree_offsets = list(
+        get_tree_offsets(ranked_subtrees, horizontal_tree=horizontal_tree)
+    )
+
     shapes = get_shapes_from_trees(
-        ranked_subtrees, diagram_uid, entity_idx_start, horizontal_tree=horizontal_tree
+        ranked_subtrees,
+        diagram_uid,
+        entity_idx_start=entity_idx_start,
+        tree_offsets=tree_offsets,
     )
 
     entity_idx_start = len(shapes)
     new_shape_ids = get_shape_ids(shapes)
     shape_positions = get_shape_positions(shapes)
 
-    connectors = get_rank_connectors_from_trees(
+    rank_connectors = get_rank_connectors_from_trees(
         ranked_subtrees,
         shape_positions,
         new_shape_ids,
         diagram_uid,
         entity_idx_start=entity_idx_start + 1,
     )
-    entity_idx_start += len(connectors) * 2
+    entity_idx_start += len(rank_connectors) * 2
     predicate_connectors = get_predicate_connectors(
         graph,
         shape_positions,
@@ -131,7 +138,7 @@ def draw_tree(
         diagram_uid,
         entity_idx_start=entity_idx_start + 1,
     )
-    entity_idx_start += len(connectors) * 2
+    entity_idx_start += len(rank_connectors) * 2
     severed_link_connectors = get_severed_link_connectors(
         severed_links,
         shape_positions,
@@ -139,15 +146,39 @@ def draw_tree(
         diagram_uid,
         entity_idx_start=entity_idx_start + 1,
     )
+    entity_idx_start += len(severed_link_connectors) * 2
 
     shape_positions_by_id = get_shape_positions_by_id(shapes)
 
-    for connector in chain(connectors, predicate_connectors, severed_link_connectors):
+    for connector in chain(
+        rank_connectors, predicate_connectors, severed_link_connectors
+    ):
         connector.resolve_position(
             shape_positions_by_id[connector.source_id],
             shape_positions_by_id[connector.target_id],
-            classes_only=classes_only,
+            strat_only=classes_only or connector in rank_connectors,
             horizontal_tree=horizontal_tree,
         )
-    all_connectors = connectors + predicate_connectors + severed_link_connectors
-    draw_diagram(shapes, all_connectors, diagram_output_path, diagram_uid=diagram_uid)
+    all_connectors = rank_connectors + predicate_connectors + severed_link_connectors
+
+    print(len(ranked_subtrees))
+    print(tree_offsets)
+    divider_lines = [
+        get_tree_dividing_line(
+            tree,
+            f"{diagram_uid}-{entity_idx_start + idx + 1}",
+            offset_x=offset_x,
+            offset_y=offset_y,
+        )
+        for idx, (tree, (offset_x, offset_y)) in enumerate(
+            zip(ranked_subtrees, tree_offsets, strict=False)
+        )
+    ]
+    print(divider_lines)
+    draw_diagram(
+        shapes,
+        all_connectors,
+        diagram_output_path,
+        divider_lines,
+        diagram_uid=diagram_uid,
+    )
