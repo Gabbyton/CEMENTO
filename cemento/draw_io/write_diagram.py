@@ -14,6 +14,7 @@ from cemento.draw_io.preprocessing import (
 from cemento.draw_io.transforms import (
     compute_draw_positions,
     compute_grid_allocations,
+    conform_instance_draw_positions,
     conform_tree_positions,
     flip_edges,
     flip_edges_of_graphs,
@@ -65,9 +66,11 @@ def draw_tree(
     translate_x: int = 0,
     translate_y: int = 0,
     classes_only: bool = False,
+    demarcate_boxes: bool = False,
     horizontal_tree: bool = False,
 ) -> None:
     diagram_output_path = Path(diagram_output_path)
+    demarcate_boxes = demarcate_boxes and not classes_only
     # replace quotes to match shape content
     # TODO: prioritize is_rank terms over non-rank predicates when cutting
     graph = replace_term_quotes(graph)
@@ -98,6 +101,9 @@ def draw_tree(
         ),
         ranked_subtrees,
     )
+
+    if demarcate_boxes:
+        ranked_subtrees = map(conform_instance_draw_positions, ranked_subtrees)
     ranked_subtrees = list(ranked_subtrees)
     # flip the rank terms after position calculation
     ranked_subtrees = flip_edges_of_graphs(
@@ -114,7 +120,8 @@ def draw_tree(
         get_tree_offsets(ranked_subtrees, horizontal_tree=horizontal_tree)
     )
 
-    ranked_subtrees = conform_tree_positions(ranked_subtrees)
+    if demarcate_boxes:
+        ranked_subtrees = conform_tree_positions(ranked_subtrees)
 
     shapes = get_shapes_from_trees(
         ranked_subtrees,
@@ -165,26 +172,33 @@ def draw_tree(
         )
     all_connectors = rank_connectors + predicate_connectors + severed_link_connectors
 
-    divider_lines = [
-        get_tree_dividing_line(
-            tree,
-            f"{diagram_uid}-{entity_idx_start + idx + 1}",
-            offset_x=offset_x,
-            offset_y=offset_y,
+    divider_lines, divider_annotations = [], []
+    if demarcate_boxes:
+        divider_lines = [
+            get_tree_dividing_line(
+                tree,
+                f"{diagram_uid}-{entity_idx_start + idx + 1}",
+                offset_x=offset_x,
+                offset_y=offset_y,
+            )
+            for idx, (tree, (offset_x, offset_y)) in enumerate(
+                zip(ranked_subtrees, tree_offsets, strict=False)
+            )
+        ]
+        entity_idx_start += len(divider_lines)
+        divider_idx_starts = map(
+            lambda x: x + entity_idx_start + 1, range(0, len(divider_lines) * 2, 2)
         )
-        for idx, (tree, (offset_x, offset_y)) in enumerate(
-            zip(ranked_subtrees, tree_offsets, strict=False)
-        )
-    ]
-    entity_idx_start += len(divider_lines)
-    divider_idx_starts = map(
-        lambda x: x + entity_idx_start + 1, range(0, len(divider_lines) * 2, 2)
-    )
-    divider_annotations = [
-        get_divider_line_annotations(line, diagram_uid, label_id_start=label_id_start)
-        for line, label_id_start in zip(divider_lines, divider_idx_starts, strict=True)
-    ]
-    divider_annotations = [ann for anns in divider_annotations for ann in anns]
+        divider_annotations = [
+            get_divider_line_annotations(
+                line, diagram_uid, label_id_start=label_id_start
+            )
+            for line, label_id_start in zip(
+                divider_lines, divider_idx_starts, strict=True
+            )
+        ]
+        divider_annotations = [ann for anns in divider_annotations for ann in anns]
+
     draw_diagram(
         shapes,
         all_connectors,

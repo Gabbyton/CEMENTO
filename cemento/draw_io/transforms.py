@@ -539,7 +539,6 @@ def compute_draw_positions(
     tree: DiGraph,
     root_node: any,
     horizontal_tree: bool = False,
-    conform_instances: bool = True,
 ) -> DiGraph:
     tree = tree.copy()
     nodes_drawn = set()
@@ -579,8 +578,6 @@ def compute_draw_positions(
             tree.nodes[node]["draw_y"] = draw_x
             tree.nodes[node]["draw_x"] = draw_y
 
-    if conform_instances:
-        tree = conform_instance_draw_positions(tree)
     return tree
 
 
