@@ -454,6 +454,7 @@ def get_tree_dividing_line(
     line_offset_y: float = 0.5,
 ) -> Line:
     line_start_x, line_end_x = get_tree_horizontal_extents(tree)
+    # TODO: find more elegant solution for end point reindexing (and resolve the coordinate inflation)
     line_start_x, line_end_x = line_start_x + offset_x, line_end_x + offset_x + 1
     _, tree_size_y = get_tree_canvas_size(tree)
     line_y = tree_size_y - line_offset_y + offset_y
@@ -466,6 +467,30 @@ def get_tree_dividing_line(
         end_pos_x=line_end_x,
         end_pos_y=line_y,
     )
+
+
+def shift_tree(tree: DiGraph, shift_x: float = 0, shift_y: float = 0) -> DiGraph:
+    new_tree = tree.copy()
+    if not all(["draw_y" in data for _, data in tree.nodes(data=True)]):
+        raise ValueError(
+            "The input tree has missing draw_y values. If this is a mistake, please make sure to compute draw positions before conforming."
+        )
+    updated_node_positions = {
+        node: {"draw_x": data["draw_x"] + shift_x, "draw_y": data["draw_y"] + shift_y}
+        for node, data in tree.nodes(data=True)
+    }
+    nx.set_node_attributes(new_tree, updated_node_positions)
+    return new_tree
+
+
+def conform_tree_positions(trees: list[DiGraph]) -> list[DiGraph]:
+    max_y = snd(max(map(get_tree_canvas_size, trees), key=lambda size: snd(size)))
+    tree_diffs = (max_y - snd(get_tree_canvas_size(tree)) for tree in trees)
+    new_trees = [
+        shift_tree(new_tree, shift_y=shift_y)
+        for new_tree, shift_y in zip(trees, tree_diffs, strict=True)
+    ]
+    return new_trees
 
 
 def conform_instance_draw_positions(tree: DiGraph, box_offset=1.5) -> DiGraph:

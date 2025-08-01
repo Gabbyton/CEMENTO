@@ -14,6 +14,7 @@ from cemento.draw_io.preprocessing import (
 from cemento.draw_io.transforms import (
     compute_draw_positions,
     compute_grid_allocations,
+    conform_tree_positions,
     flip_edges,
     flip_edges_of_graphs,
     generate_diagram_content,
@@ -112,6 +113,8 @@ def draw_tree(
         get_tree_offsets(ranked_subtrees, horizontal_tree=horizontal_tree)
     )
 
+    ranked_subtrees = conform_tree_positions(ranked_subtrees)
+
     shapes = get_shapes_from_trees(
         ranked_subtrees,
         diagram_uid,
@@ -161,8 +164,6 @@ def draw_tree(
         )
     all_connectors = rank_connectors + predicate_connectors + severed_link_connectors
 
-    print(len(ranked_subtrees))
-    print(tree_offsets)
     divider_lines = [
         get_tree_dividing_line(
             tree,
@@ -174,7 +175,6 @@ def draw_tree(
             zip(ranked_subtrees, tree_offsets, strict=False)
         )
     ]
-    print(divider_lines)
     draw_diagram(
         shapes,
         all_connectors,
