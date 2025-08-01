@@ -33,6 +33,7 @@ from cemento.draw_io.transforms import (
     get_subgraphs,
     get_tree_dividing_line,
     get_tree_offsets,
+    invert_tree,
     split_multiple_inheritances,
 )
 
@@ -97,13 +98,16 @@ def draw_tree(
 
     ranked_subtrees = map(
         lambda subtree: compute_draw_positions(
-            subtree, get_graph_root_nodes(subtree)[0], horizontal_tree=horizontal_tree
+            subtree, get_graph_root_nodes(subtree)[0]
         ),
         ranked_subtrees,
     )
 
     if demarcate_boxes:
         ranked_subtrees = map(conform_instance_draw_positions, ranked_subtrees)
+
+    if horizontal_tree:
+        ranked_subtrees = map(invert_tree, ranked_subtrees)
 
     ranked_subtrees = list(ranked_subtrees)
     # flip the rank terms after position calculation

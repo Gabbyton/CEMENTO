@@ -535,10 +535,21 @@ def conform_instance_draw_positions(tree: DiGraph, box_offset=1.5) -> DiGraph:
     return new_tree
 
 
+def invert_tree(tree: DiGraph) -> DiGraph:
+    new_tree = tree.copy()
+    for node in new_tree.nodes:
+        draw_x = new_tree.nodes[node]["draw_x"]
+        draw_y = new_tree.nodes[node]["draw_y"]
+
+        new_tree.nodes[node]["draw_y"] = draw_x
+        new_tree.nodes[node]["draw_x"] = draw_y
+
+    return new_tree
+
+
 def compute_draw_positions(
     tree: DiGraph,
     root_node: any,
-    horizontal_tree: bool = False,
 ) -> DiGraph:
     tree = tree.copy()
     nodes_drawn = set()
@@ -569,14 +580,6 @@ def compute_draw_positions(
 
         tree.nodes[node]["draw_x"] = cursor_x + reserved_x
         tree.nodes[node]["draw_y"] = cursor_y + reserved_y
-
-    if horizontal_tree:
-        for node in tree.nodes:
-            draw_x = tree.nodes[node]["draw_x"]
-            draw_y = tree.nodes[node]["draw_y"]
-
-            tree.nodes[node]["draw_y"] = draw_x
-            tree.nodes[node]["draw_x"] = draw_y
 
     return tree
 
