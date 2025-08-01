@@ -309,29 +309,43 @@ def get_literal_values_with_id(
 
 def assign_literal_ids(
     rdf_graph: Graph, literal_replacements: Iterable[tuple[Literal, Literal]]
-) -> DiGraph:
-    # TODO: assign hashed constant for determining literal ids
-    # FIXME: zip is shorter in one argument
-    literal_terms, new_literal_values = zip(*literal_replacements, strict=True)
-    replace_triples = list(rdf_graph.triples_choices((None, None, list(literal_terms))))
-    substitute_triples = (
-        (subj, pred, new_literal)
-        for ((subj, pred, obj), new_literal) in zip(
-            replace_triples, new_literal_values, strict=True
-        )
-    )
-    # TODO: setup immutable copy for rdf_graph
-    new_graph = reduce(
-        lambda rdf_graph, triple: rdf_graph.remove(triple),
-        replace_triples,
-        rdf_graph,
-    )
-    new_graph = reduce(
-        lambda rdf_graph, triple: rdf_graph.add(triple),
-        substitute_triples,
-        new_graph,
-    )
-    return new_graph
+) -> Graph:
+    literal_map = dict(literal_replacements)  # old_literal -> new_literal
+
+    for old_literal, new_literal in literal_map.items():
+        for subj, pred, obj in list(rdf_graph.triples((None, None, old_literal))):
+            rdf_graph.remove((subj, pred, obj))
+            rdf_graph.add((subj, pred, new_literal))
+
+    return rdf_graph
+
+
+# TODO: talk about limitations of functional approaches during meeting
+# def assign_literal_ids(
+#     rdf_graph: Graph, literal_replacements: Iterable[tuple[Literal, Literal]]
+# ) -> DiGraph:
+#     # TODO: assign hashed constant for determining literal ids
+#     # FIXME: zip is shorter in one argument
+#     literal_terms, new_literal_values = zip(*literal_replacements, strict=True)
+#     replace_triples = list(rdf_graph.triples_choices((None, None, list(literal_terms))))
+#     substitute_triples = (
+#         (subj, pred, new_literal)
+#         for ((subj, pred, obj), new_literal) in zip(
+#             replace_triples, new_literal_values, strict=True
+#         )
+#     )
+#     # TODO: setup immutable copy for rdf_graph
+#     new_graph = reduce(
+#         lambda rdf_graph, triple: rdf_graph.remove(triple),
+#         replace_triples,
+#         rdf_graph,
+#     )
+#     new_graph = reduce(
+#         lambda rdf_graph, triple: rdf_graph.add(triple),
+#         substitute_triples,
+#         new_graph,
+#     )
+#     return new_graph
 
 
 def get_uuid():
