@@ -20,6 +20,10 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 
 ## [0.9.1] - 2025-08-01
 
+### Added
+
+- contributor
+
 ### Fixed
 
 - `assign_literal_ids` zips with uneven lengths

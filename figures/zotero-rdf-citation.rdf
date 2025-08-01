@@ -25,6 +25,12 @@
                 </rdf:li>
                 <rdf:li>
                     <foaf:Person>
+                        <foaf:surname>Frakes</foaf:surname>
+                        <foaf:givenName>Ethan</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
                         <foaf:surname>Sharma</foaf:surname>
                         <foaf:givenName>Hemant</foaf:givenName>
                     </foaf:Person>
@@ -32,12 +38,12 @@
                 <rdf:li>
                     <foaf:Person>
                         <foaf:surname>French</foaf:surname>
-                        <foaf:givenName>Roger H.</foaf:givenName>
+                        <foaf:givenName>Roger</foaf:givenName>
                     </foaf:Person>
                 </rdf:li>
             </rdf:Seq>
         </z:programmers>
-        <link:link rdf:resource="#item_66054"/>
+        <link:link rdf:resource="#item_61245"/>
         <prism:edition>0.8.9</prism:edition>
         <dc:title>cemento: A package to view and write ontologies directly from draw.io diagram files.</dc:title>
         <dc:date>7/27/2025</dc:date>
@@ -52,7 +58,7 @@
         <z:system>OS Independent</z:system>
         <z:programmingLanguage>Python</z:programmingLanguage>
     </bib:Data>
-    <z:Attachment rdf:about="#item_66054">
+    <z:Attachment rdf:about="#item_61245">
         <z:itemType>attachment</z:itemType>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
