@@ -20,6 +20,7 @@ from cemento.draw_io.constants import (
     DiagramKey,
     DiagramObject,
     InstanceShape,
+    Label,
     Line,
     LiteralShape,
     NxEdge,
@@ -444,6 +445,28 @@ def get_tree_horizontal_extents(tree: DiGraph) -> tuple[float, float]:
     min_tree_x = min(nx.get_node_attributes(tree, "draw_x").values())
     max_tree_x = max(nx.get_node_attributes(tree, "draw_x").values())
     return (min_tree_x, max_tree_x)
+
+
+def get_divider_line_annotations(
+    line: Line, diagram_uid: str, label_id_start: str
+) -> list[Label]:
+    annotation_x = line.start_pos_x
+    # TODO: move to constants
+    abox_annotation_y = line.start_pos_y
+    tbox_annotation_y = line.start_pos_y - 40
+    tbox_annotation = Label(
+        shape_id=f"{diagram_uid}-{label_id_start}",
+        shape_content="T-Box",
+        x_pos=annotation_x,
+        y_pos=tbox_annotation_y,
+    )
+    abox_annotation = Label(
+        shape_id=f"{diagram_uid}-{label_id_start + 1}",
+        shape_content="A-Box",
+        x_pos=annotation_x,
+        y_pos=abox_annotation_y,
+    )
+    return [tbox_annotation, abox_annotation]
 
 
 def get_tree_dividing_line(

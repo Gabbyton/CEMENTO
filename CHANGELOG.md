@@ -25,6 +25,7 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - instance conformation for T-box and A-box separation for each tree
 - draw divider line to demarcate instance conformation for T-box and A-box separation
 - tree conformation to align all demarcation lines
+- T-box and A-box labels
 - divider line template xml file
 
 ### Changed

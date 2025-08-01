@@ -18,6 +18,7 @@ from cemento.draw_io.transforms import (
     flip_edges,
     flip_edges_of_graphs,
     generate_diagram_content,
+    get_divider_line_annotations,
     get_graph_root_nodes,
     get_non_ranked_strat_edges,
     get_predicate_connectors,
@@ -175,10 +176,20 @@ def draw_tree(
             zip(ranked_subtrees, tree_offsets, strict=False)
         )
     ]
+    entity_idx_start += len(divider_lines)
+    divider_idx_starts = map(
+        lambda x: x + entity_idx_start + 1, range(0, len(divider_lines) * 2, 2)
+    )
+    divider_annotations = [
+        get_divider_line_annotations(line, diagram_uid, label_id_start=label_id_start)
+        for line, label_id_start in zip(divider_lines, divider_idx_starts, strict=True)
+    ]
+    divider_annotations = [ann for anns in divider_annotations for ann in anns]
     draw_diagram(
         shapes,
         all_connectors,
         diagram_output_path,
         divider_lines,
+        divider_annotations,
         diagram_uid=diagram_uid,
     )
