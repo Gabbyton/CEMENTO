@@ -476,40 +476,20 @@ def get_tree_dividing_line(
     line_id: str,
     offset_x: float = 0,
     offset_y: float = 0,
-    line_offset: float = 0,
-    horizontal_tree: bool = False,
+    line_offset_y: float = 0.5,
 ) -> Line:
-    min_max_x, min_max_y = get_tree_extents(tree)
-    tree_size_x, tree_size_y = get_tree_canvas_size(tree)
-    line_start_base, line_end_base = min_max_y if horizontal_tree else min_max_x
-    tree_size_perp = tree_size_y if horizontal_tree else tree_size_x
-    offset_base, offset_perp = (offset_x, offset_y)
-    # TODO: find more elegant solution for end point reindexing (and resolve the coordinate inflation)
-    line_start_base, line_end_base = (
-        line_start_base + offset_base,
-        line_end_base + offset_base + 1,
-    )
-    line_perp = tree_size_perp - line_offset + offset_perp
-
-    if horizontal_tree:
-        _, line_start_base = translate_coords(0, line_start_base)
-        line_perp, line_end_base = translate_coords(line_perp, line_end_base)
-        return Line(
-            line_id=line_id,
-            start_pos_x=line_perp,
-            start_pos_y=line_start_base,
-            end_pos_x=line_perp,
-            end_pos_y=line_end_base,
-        )
-
-    line_start_base, _ = translate_coords(line_start_base, 0)
-    line_end_base, line_perp = translate_coords(line_end_base, line_perp)
+    line_start_x, line_end_x = fst(get_tree_extents(tree))
+    line_start_x, line_end_x = line_start_x + offset_x, line_end_x + offset_x + 1
+    _, tree_size_y = get_tree_canvas_size(tree)
+    line_y = tree_size_y - line_offset_y + offset_y
+    line_start_x, _ = translate_coords(line_start_x, 0)
+    line_end_x, line_y = translate_coords(line_end_x, line_y)
     return Line(
         line_id=line_id,
-        start_pos_x=line_start_base,
-        start_pos_y=line_perp,
-        end_pos_x=line_end_base,
-        end_pos_y=line_perp,
+        start_pos_x=line_start_x,
+        start_pos_y=line_y,
+        end_pos_x=line_end_x,
+        end_pos_y=line_y,
     )
 
 
