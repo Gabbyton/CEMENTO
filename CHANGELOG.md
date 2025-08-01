@@ -35,6 +35,7 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - `get_severed_connectors` with a dangling function argument
 - severed links not being added to the graph
 - severed links being in reverse when displayed on the graph
+- `convert_drawio_to_ttl` null safety for reference folder arguments
 
 ## [0.8.9] - 2025-07-25
 

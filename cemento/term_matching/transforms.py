@@ -202,6 +202,7 @@ def get_prefixes(
 
     default_namespace_prefixes = get_default_namespace_prefixes()
     prefixes.update(default_namespace_prefixes)
+    inv_prefixes = {value: key for key, value in prefixes.items()}
 
     if onto_ref_folder:
         file_prefixes = map(
