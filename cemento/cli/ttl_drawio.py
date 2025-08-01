@@ -35,6 +35,12 @@ def register(subparsers):
         action="store_true",
     )
     parser.add_argument(
+        "-db",
+        "--demarcate-boxes",
+        help="set whether to divide the tree into A-Boxes and T-Boxes.",
+        action="store_true",
+    )
+    parser.add_argument(
         "-r",
         "--onto-ref-folder-path",
         help="the path to the folder containing the reference ontologies.",
@@ -71,6 +77,7 @@ def run(args):
         args.output,
         horizontal_tree=args.horizontal_graph,
         classes_only=args.classes_only,
+        demarcate_boxes=args.demarcate_boxes,
         onto_ref_folder=args.onto_ref_folder_path,
         defaults_folder=args.defaults_folder_path,
         prefixes_path=args.prefix_file_path,

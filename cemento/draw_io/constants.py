@@ -17,6 +17,11 @@ class ShapeType(Enum):
     UKNOWN = "shape"
 
 
+class TreeFolding(Enum):
+    FOLD = 1
+    NO_FOLD = 0
+
+
 # TODO: move to config.ini and parse with a function in preprocessing
 SHAPE_WIDTH = 200
 SHAPE_HEIGHT = 80
@@ -96,11 +101,11 @@ class Connector(DiagramObject):
         self,
         source_shape_pos: tuple[float, float],
         target_shape_pos: tuple[float, float],
-        classes_only: bool = False,
+        strat_only: bool = False,
         horizontal_tree: bool = False,
     ) -> None:
 
-        if not classes_only:
+        if not strat_only:
             self.start_pos_x, self.start_pos_y, self.end_pos_x, self.end_pos_y = (
                 Connector.compute_dynamic_position(*source_shape_pos, *target_shape_pos)
             )
@@ -126,12 +131,13 @@ class GhostConnector(Connector):
 class Shape:
     shape_id: str
     shape_content: str
-    fill_color: str
-    stroke_color: str
     x_pos: float
     y_pos: float
     shape_width: int
     shape_height: int
+    fill_color: str = FILL_COLOR
+    stroke_color: str = STROKE_COLOR
+    tree_folding: int = TreeFolding.FOLD.value
     template_key: str = "shape"
 
 
@@ -148,6 +154,28 @@ class ClassShape(Shape):
 @dataclass
 class InstanceShape(Shape):
     template_key: str = "instance"
+
+
+@dataclass
+class Label(Shape):
+    # TODO: move to constants
+    shape_width: int = 100
+    shape_height: int = 40
+    fill_color: str = "none"
+    stroke_color: str = "none"
+    tree_folding: int = TreeFolding.NO_FOLD.value
+
+
+@dataclass
+class Line(DiagramObject):
+    line_id: str
+    start_pos_x: float
+    start_pos_y: float
+    end_pos_x: float
+    end_pos_y: float
+    line_width: int = 50
+    line_height: int = 50
+    template_key: str = "line"
 
 
 class NxEdge(NamedTuple):

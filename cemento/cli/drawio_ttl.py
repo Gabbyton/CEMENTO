@@ -56,6 +56,12 @@ def register(subparsers):
         help="Set whether to check for diagram errors and to generate a diagram with errors indicated.",
         action="store_false",
     )
+    parser.add_argument(
+        "-cdr",
+        "--collect-domains-ranges",
+        help="Set whether to aggregate instances that are in the domain and range of a custom object property (Class inference coming soon).",
+        action="store_true",
+    )
     parser.set_defaults(_handler=run)
 
 
@@ -68,5 +74,6 @@ def run(args):
         args.defaults_folder_path,
         args.prefix_file_path,
         check_errors=args.dont_check_errors,
+        collect_domains_ranges=args.collect_domains_ranges,
         log_substitution_path=args.log_substitution_path,
     )

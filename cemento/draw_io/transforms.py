@@ -20,6 +20,8 @@ from cemento.draw_io.constants import (
     DiagramKey,
     DiagramObject,
     InstanceShape,
+    Label,
+    Line,
     LiteralShape,
     NxEdge,
     NxStringEdge,
@@ -115,11 +117,22 @@ def generate_graph(
     term_ids: set[str],
     relationship_ids: set[str],
     strat_terms: set[str] = None,
+    exempted_elements: set[str] = None,
     inverted_rank_arrow: bool = False,
 ) -> DiGraph:
     # for identified connectors, extract relationship information
     graph = nx.DiGraph()
     # add all terms
+    term_ids = filter(
+        lambda element_id: exempted_elements is None
+        or element_id not in exempted_elements,
+        term_ids,
+    )
+    relationship_ids = filter(
+        lambda element_id: exempted_elements is None
+        or element_id not in exempted_elements,
+        relationship_ids,
+    )
     for term_id in term_ids:
         term = elements[term_id]["value"]
         # TODO: find more sophisticated method to detect literals, or mention method in the docs
@@ -422,8 +435,122 @@ def get_tree_size(tree: DiGraph) -> tuple[int, int]:
     return (tree_size_x, tree_size_y)
 
 
+def get_tree_canvas_size(tree: DiGraph) -> tuple[float, float]:
+    tree_canvas_size_x = max(nx.get_node_attributes(tree, "draw_x").values())
+    tree_canvas_size_y = max(nx.get_node_attributes(tree, "draw_y").values())
+    return (tree_canvas_size_x, tree_canvas_size_y)
+
+
+def get_tree_extents(tree: DiGraph) -> tuple[tuple[float, float], tuple[float, float]]:
+    min_tree_x = min(nx.get_node_attributes(tree, "draw_x").values())
+    max_tree_x = max(nx.get_node_attributes(tree, "draw_x").values())
+    min_tree_y = min(nx.get_node_attributes(tree, "draw_y").values())
+    max_tree_y = max(nx.get_node_attributes(tree, "draw_y").values())
+    return ((min_tree_x, max_tree_x), (min_tree_y, max_tree_y))
+
+
+def get_divider_line_annotations(
+    line: Line, diagram_uid: str, label_id_start: str
+) -> list[Label]:
+    annotation_x = line.start_pos_x
+    # TODO: move to constants
+    abox_annotation_y = line.start_pos_y
+    tbox_annotation_y = line.start_pos_y - 40
+    tbox_annotation = Label(
+        shape_id=f"{diagram_uid}-{label_id_start}",
+        shape_content="T-Box",
+        x_pos=annotation_x,
+        y_pos=tbox_annotation_y,
+    )
+    abox_annotation = Label(
+        shape_id=f"{diagram_uid}-{label_id_start + 1}",
+        shape_content="A-Box",
+        x_pos=annotation_x,
+        y_pos=abox_annotation_y,
+    )
+    return [tbox_annotation, abox_annotation]
+
+
+def get_tree_dividing_line(
+    tree: DiGraph,
+    line_id: str,
+    offset_x: float = 0,
+    offset_y: float = 0,
+    line_offset_y: float = 0.5,
+) -> Line:
+    line_start_x, line_end_x = fst(get_tree_extents(tree))
+    line_start_x, line_end_x = line_start_x + offset_x, line_end_x + offset_x + 1
+    _, tree_size_y = get_tree_canvas_size(tree)
+    line_y = tree_size_y - line_offset_y + offset_y
+    line_start_x, _ = translate_coords(line_start_x, 0)
+    line_end_x, line_y = translate_coords(line_end_x, line_y)
+    return Line(
+        line_id=line_id,
+        start_pos_x=line_start_x,
+        start_pos_y=line_y,
+        end_pos_x=line_end_x,
+        end_pos_y=line_y,
+    )
+
+
+def shift_tree(tree: DiGraph, shift_x: float = 0, shift_y: float = 0) -> DiGraph:
+    new_tree = tree.copy()
+    if not all(["draw_y" in data for _, data in tree.nodes(data=True)]):
+        raise ValueError(
+            "The input tree has missing draw_y values. If this is a mistake, please make sure to compute draw positions before conforming."
+        )
+    updated_node_positions = {
+        node: {"draw_x": data["draw_x"] + shift_x, "draw_y": data["draw_y"] + shift_y}
+        for node, data in tree.nodes(data=True)
+    }
+    nx.set_node_attributes(new_tree, updated_node_positions)
+    return new_tree
+
+
+def conform_tree_positions(trees: list[DiGraph]) -> list[DiGraph]:
+    max_y = snd(max(map(get_tree_canvas_size, trees), key=lambda size: snd(size)))
+    tree_diffs = (max_y - snd(get_tree_canvas_size(tree)) for tree in trees)
+    new_trees = [
+        shift_tree(new_tree, shift_y=shift_y)
+        for new_tree, shift_y in zip(trees, tree_diffs, strict=True)
+    ]
+    return new_trees
+
+
+def conform_instance_draw_positions(tree: DiGraph, box_offset=1.5) -> DiGraph:
+    if not all(["draw_y" in data for _, data in tree.nodes(data=True)]):
+        raise ValueError(
+            "The input tree has missing draw_y values. If this is a mistake, please make sure to compute draw positions before conforming."
+        )
+    new_tree = tree.copy()
+    max_draw_x, max_draw_y = get_tree_canvas_size(new_tree)
+    max_draw_y += box_offset
+
+    instance_nodes = (
+        node for node, data in new_tree.nodes(data=True) if data["is_instance"]
+    )
+    updated_instance_node_positions = {
+        node: {"draw_y": max_draw_y} for node in instance_nodes
+    }
+    nx.set_node_attributes(new_tree, updated_instance_node_positions)
+    return new_tree
+
+
+def invert_tree(tree: DiGraph) -> DiGraph:
+    new_tree = tree.copy()
+    for node in new_tree.nodes:
+        draw_x = new_tree.nodes[node]["draw_x"]
+        draw_y = new_tree.nodes[node]["draw_y"]
+
+        new_tree.nodes[node]["draw_y"] = draw_x
+        new_tree.nodes[node]["draw_x"] = draw_y
+
+    return new_tree
+
+
 def compute_draw_positions(
-    tree: DiGraph, root_node: any, horizontal_tree: bool = False
+    tree: DiGraph,
+    root_node: any,
 ) -> DiGraph:
     tree = tree.copy()
     nodes_drawn = set()
@@ -455,27 +582,22 @@ def compute_draw_positions(
         tree.nodes[node]["draw_x"] = cursor_x + reserved_x
         tree.nodes[node]["draw_y"] = cursor_y + reserved_y
 
-    if horizontal_tree:
-        for node in tree.nodes:
-            draw_x = tree.nodes[node]["draw_x"]
-            draw_y = tree.nodes[node]["draw_y"]
-
-            tree.nodes[node]["draw_y"] = draw_x
-            tree.nodes[node]["draw_x"] = draw_y
-
     return tree
 
 
 def translate_coords(
     x_pos: float, y_pos: float, origin_x: float = 0, origin_y: float = 0
 ) -> tuple[int, int]:
+    # TODO: retrieve shape constants from config
     rect_width = 200
     rect_height = 80
+    scale_factor_x = 1.5
+    scale_factor_y = 1.5
     x_padding = 5
     y_padding = 20
 
-    grid_x = rect_width * 2 + x_padding
-    grid_y = rect_height * 2 + y_padding
+    grid_x = rect_width * scale_factor_x + x_padding
+    grid_y = rect_height * scale_factor_y + y_padding
 
     return ((x_pos + origin_x) * grid_x, (y_pos + origin_y) * grid_y)
 
@@ -578,7 +700,6 @@ def get_rank_connectors(
 
 
 def get_severed_link_connectors(
-    graph: DiGraph,
     edges: list[tuple[any, any, dict[str, any]]],
     shape_positions: dict[str, tuple[float, float]],
     shape_ids: dict[str, str],
@@ -721,18 +842,11 @@ def generate_shapes(
     return shapes
 
 
-def get_shapes_from_trees(
+def get_tree_offsets(
     trees: list[DiGraph],
-    diagram_uid: str,
-    entity_idx_start: int = 0,
     horizontal_tree: bool = False,
-) -> list[Shape]:
+) -> Iterable[tuple[float, float]]:
     tree_sizes = map(get_tree_size, trees)
-    entity_index_starts = accumulate(
-        trees,
-        lambda acc, tree: acc + len(tree.nodes),
-        initial=entity_idx_start,
-    )
     offsets = accumulate(
         tree_sizes,
         lambda acc, x: (fst(acc) + fst(x), snd(acc) + snd(x)),
@@ -745,6 +859,24 @@ def get_shapes_from_trees(
         ),
         offsets,
     )
+    return offsets
+
+
+def get_shapes_from_trees(
+    trees: list[DiGraph],
+    diagram_uid: str,
+    entity_idx_start: int = 0,
+    tree_offsets: list[tuple[float, float]] = None,
+    horizontal_tree: bool = False,
+) -> list[Shape]:
+    if tree_offsets is None:
+        tree_offsets = get_tree_offsets(trees, horizontal_tree=horizontal_tree)
+
+    entity_index_starts = accumulate(
+        trees,
+        lambda acc, tree: acc + len(tree.nodes),
+        initial=entity_idx_start,
+    )
     shapes_list = [
         generate_shapes(
             subtree,
@@ -754,7 +886,7 @@ def get_shapes_from_trees(
             idx_start=entity_idx_start,
         )
         for (subtree, (offset_x, offset_y), entity_idx_start) in zip(
-            trees, offsets, entity_index_starts, strict=False
+            trees, tree_offsets, entity_index_starts, strict=False
         )
     ]
     return [shape for shapes in shapes_list for shape in shapes]

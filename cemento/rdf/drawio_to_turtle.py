@@ -11,6 +11,7 @@ def convert_drawio_to_ttl(
     defaults_folder: str | Path,
     prefixes_path: str | Path,
     check_errors: bool = False,
+    collect_domains_ranges: bool = False,
     log_substitution_path: str | Path = None,
 ) -> None:
     """
@@ -38,6 +39,7 @@ def convert_drawio_to_ttl(
         graph,
         output_path,
         onto_ref_folder=onto_ref_folder,
+        collect_domains_ranges=collect_domains_ranges,
         defaults_folder=defaults_folder,
         prefixes_path=prefixes_path,
         log_substitution_path=log_substitution_path,

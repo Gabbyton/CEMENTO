@@ -18,6 +18,30 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
+## [0.9.0] - 2025-08-01
+
+### Added
+
+- instance conformation for T-box and A-box separation for each tree
+- draw divider line to demarcate instance conformation for T-box and A-box separation
+- tree conformation to align all demarcation lines
+- T-box and A-box labels
+- box demarcation option to CLI
+- divider line template xml file
+- option for activating domain-range instance collection. Default behavior now is not to collect.
+
+### Changed
+
+- separated `draw_diagram` from `draw_tree` for future layout schemes
+
+### Fixed
+
+- `get_aliases` "eating up" the label if more alt labels are provided
+- `get_severed_connectors` with a dangling function argument
+- severed links not being added to the graph
+- severed links being in reverse when displayed on the graph
+- `convert_drawio_to_ttl` null safety for reference folder arguments
+
 ## [0.8.9] - 2025-07-25
 
 ### Added

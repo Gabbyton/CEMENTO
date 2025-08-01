@@ -9,6 +9,7 @@ def convert_ttl_to_drawio(
     output_path: str | Path,
     horizontal_tree: bool = False,
     classes_only: bool = False,
+    demarcate_boxes: bool = False,
     onto_ref_folder: str | Path = None,
     defaults_folder: str | Path = None,
     prefixes_path: str | Path = None,
@@ -39,5 +40,9 @@ def convert_ttl_to_drawio(
         set_unique_literals=set_unique_literals,
     )
     draw_tree(
-        graph, output_path, classes_only=classes_only, horizontal_tree=horizontal_tree
+        graph,
+        output_path,
+        classes_only=classes_only,
+        demarcate_boxes=demarcate_boxes,
+        horizontal_tree=horizontal_tree,
     )

@@ -124,10 +124,13 @@ def convert_ttl_to_graph(
                 filter(lambda x: isinstance(x, Literal), rdf_graph.all_nodes())
             )
 
+        display_set = all_classes
+        if not classes_only:
+            display_set = all_classes | all_instances | all_literals
         display_terms = set(
             filter(
                 lambda term: term not in default_terms,
-                all_classes | all_instances | all_literals,
+                display_set,
             )
         )
         graph_triples = [

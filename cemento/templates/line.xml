@@ -1,0 +1,6 @@
+        <mxCell id="${line_id}" style="endArrow=none;startArrow=none;dashed=1;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="${line_width}" height="${line_height}" relative="1" as="geometry">
+            <mxPoint x="${start_pos_x}" y="${start_pos_y}" as="sourcePoint" />
+            <mxPoint x="${end_pos_x}" y="${end_pos_y}" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
