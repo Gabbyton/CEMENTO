@@ -104,6 +104,7 @@ def draw_tree(
 
     if demarcate_boxes:
         ranked_subtrees = map(conform_instance_draw_positions, ranked_subtrees)
+
     ranked_subtrees = list(ranked_subtrees)
     # flip the rank terms after position calculation
     ranked_subtrees = flip_edges_of_graphs(
