@@ -18,7 +18,7 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
-## [0.8.10] - 2025-07-25
+## [0.9.0] - 2025-08-01
 
 ### Added
 
@@ -28,6 +28,7 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - T-box and A-box labels
 - box demarcation option to CLI
 - divider line template xml file
+- option for activating domain-range instance collection. Default behavior now is not to collect.
 
 ### Changed
 

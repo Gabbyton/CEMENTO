@@ -51,6 +51,7 @@ from cemento.utils.utils import fst, get_abbrev_term, snd
 def convert_graph_to_ttl(
     graph: DiGraph,
     output_path: str | Path,
+    collect_domains_ranges: bool = False,
     onto_ref_folder: str | Path = None,
     defaults_folder: str | Path = None,
     prefixes_path: str | Path = None,
@@ -262,18 +263,20 @@ def convert_graph_to_ttl(
         ),
         rdf_graph,
     )
-    predicate_domains_ranges = map(
-        partial(get_domains_ranges, graph=output_graph),
-        filter(
-            term_not_in_default_namespace_filter,
-            filterfalse(term_in_search_results_filter, predicate_terms),
-        ),
-    )
-    rdf_graph = reduce(
-        lambda rdf_graph, triples: add_domains_ranges(triples, rdf_graph),
-        predicate_domains_ranges,
-        rdf_graph,
-    )
+
+    if collect_domains_ranges:
+        predicate_domains_ranges = map(
+            partial(get_domains_ranges, graph=output_graph),
+            filter(
+                term_not_in_default_namespace_filter,
+                filterfalse(term_in_search_results_filter, predicate_terms),
+            ),
+        )
+        rdf_graph = reduce(
+            lambda rdf_graph, triples: add_domains_ranges(triples, rdf_graph),
+            predicate_domains_ranges,
+            rdf_graph,
+        )
 
     # now add the triples from the drawio diagram
     for domain_term, range_term, data in output_graph.edges(data=True):
