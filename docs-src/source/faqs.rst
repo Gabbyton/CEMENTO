@@ -101,8 +101,8 @@ Issues and Package Contributions
 
 .. dropdown:: How do I report an issue with the package?
 
-    Please refer to our official github issue tracker at `<https://github.com/cwru-sdle/``CEMENTO``/issues>`_. Please provide a detailed description of your error and your system information (if you think it's relevant). Attach your turtle or diagram file if possible, or a contrived example that reproduces your error. Please be respectful. Remember this package is free and open source.
+    Please refer to our official github issue tracker at `<https://github.com/cwru-sdle/CEMENTO/issues>`_. Please provide a detailed description of your error and your system information (if you think it's relevant). Attach your turtle or diagram file if possible, or a contrived example that reproduces your error. Please be respectful. Remember this package is free and open source.
 
 .. dropdown:: I want to contribute to the package or make my own version. Do you have suggestions?
 
-    Feel free to create a pull request but associate it with an issue for proper documentation. Please check our user guide section :ref:`on using modules <module-structure>` for information about how the package is structured. You are also welcome to fork the project. Please make sure to abide by :ref:`project-license`.
+    Feel free to create a pull request but associate it with an issue for proper documentation. Please check our user guide section :ref:`on using modules <module-structure>` for information about how the package is structured. You are also welcome to fork the project. Please make sure to abide by the :ref:`project-license`.

@@ -43,13 +43,13 @@ Please make sure to cite us when you use our software for your publications. We 
 
         .. parsed-literal::
 
-            Ponon, G. O., Rajamohan, B. P., Sharma, H., & French, R. H. (2025). *cemento: A package to view and write ontologies directly from draw.io diagram files.* (Version 0.8.9) [Python; OS Independent]. \https://github.com/cwru-sdle/CEMENTO
+            Ponon, G. O., Rajamohan, B. P., Sharma, H., & French, R. H. (2025). *cemento: A package to view and write ontologies directly from draw.io diagram files.* (Version |release|) [Python; OS Independent]. \https://github.com/cwru-sdle/CEMENTO
 
     .. tab-item:: Chicago 18th
 
         .. parsed-literal::
 
-            Ponon, Gabriel O., Balashanmuga Priyan Rajamohan, Hemant Sharma, and Roger H. French. Cemento: A Package to View and Write Ontologies Directly from Draw.Io Diagram Files. Python. Version 0.8.9. Released July 27, 2025. OS Independent. \https://github.com/cwru-sdle/CEMENTO.
+            Ponon, Gabriel O., Balashanmuga Priyan Rajamohan, Hemant Sharma, and Roger H. French. Cemento: A Package to View and Write Ontologies Directly from Draw.Io Diagram Files. Python. Version |release|. Released July 27, 2025. OS Independent. \https://github.com/cwru-sdle/CEMENTO.
 
 Here are the files if you prefer :download:`BibTex <https://raw.githubusercontent.com/Gabbyton/CEMENTO/refs/heads/master/figures/bib-citation.bib>` or :download:`Zotero RDF <https://raw.githubusercontent.com/Gabbyton/CEMENTO/refs/heads/master/figures/zotero-rdf-citation.bib>`.
 
