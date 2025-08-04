@@ -13,7 +13,7 @@ def convert_ttl_to_drawio(
     onto_ref_folder: str | Path = None,
     defaults_folder: str | Path = None,
     prefixes_path: str | Path = None,
-    set_unique_literals: bool = True,
+    set_unique_literals: bool = False,
 ) -> None:
     """
     Convert RDF triples in the turtle format as an ontology diagram in a draw.io file.

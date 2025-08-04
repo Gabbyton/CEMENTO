@@ -18,12 +18,13 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
-## [0.9.1] - 2025-08-04
+## [0.9.2] - 2025-08-04
 
 ### Fixed
 
 - `read_diagram` and `convert_graph_to_ttl` not running when using scripts
 - null safety for folder variables. Get the default if not specified instead
+- `convert_ttl_to_graph` with improper null behavior for folders
 
 ## [0.9.1] - 2025-08-01
 
