@@ -13,14 +13,19 @@ Using the actual function is as easy as importing and calling it in a python scr
 
     from cemento.rdf.drawio_to_turtle import convert_drawio_to_ttl
 
-    INPUT_PATH = "your_onto_diagram.drawio"
-    OUTPUT_PATH = "your_triples.ttl"
-    ONTO_PATH = "data" # this path points to the folder containing all the ttl files you want to reference (optional)
-    DEFAULTS_FOLDER = "" # path to the folder containing default terms. It should come with the cloned repo (optional)
-    PREFIXES_PATH = "prefixes.json" # this path points to a prefixes file with custom prefix assignments (optional)
+    INPUT_PATH = "happy-example.drawio"
+    OUTPUT_PATH = "sample.ttl"
+    LOG_PATH = ""
 
     if __name__ == "__main__":
-        convert_drawio_to_ttl(INPUT_PATH, OUTPUT_PATH, ONTO_PATH, DEFAULTS_FOLDER, PREFIXES_PATH)
+        convert_drawio_to_ttl(
+            INPUT_PATH,
+            OUTPUT_PATH,
+            check_errors=True, # set whether to check for diagram errors prior to processing
+            log_substitution_path=LOG_PATH, # set where to save the substitution log for term fuzzy search
+            collect_domains_ranges=False, # set whether to collect the instances within the domain and range of a custom object property
+        )
+
 
 Converting ``.ttl`` files to draw.io files
 ==========================================
@@ -31,12 +36,19 @@ This case is very similiar to the previous one. The ``.ttl`` was assumed to cont
 
     from cemento.rdf.turtle_to_drawio import convert_ttl_to_drawio
 
-    INPUT_PATH = "your_triples.ttl"
-    OUTPUT_PATH = "your_onto_diagram.drawio"
+    INPUT_PATH = "your_onto.ttl"
+    OUTPUT_PATH = "your_diagram.drawio"
 
     if __name__ == "__main__":
-        # the horizontal tree parameter controls whether you want the default vertical tree (False) or an inverted horizontal tree (True)
-        convert_ttl_to_drawio(INPUT_PATH, OUTPUT_PATH, horizontal_tree=False, check_ttl_validity=True, set_unique_literals=True)
+        convert_ttl_to_drawio(
+            INPUT_PATH,
+            OUTPUT_PATH,
+            horizontal_tree=False, #sets whether to display tree horizontally or vertically
+            set_unique_literals=False, # sets whether to make literals with the same content, language and type unique
+            classes_only=False, # sets whether to display classes only, useful for large turtles like CCO
+            demarcate_boxes=True, # sets whether to move all instances to A-box and classes to T-box
+        )
+
 
 Converting draw.io to a ``networkx`` DiGraph
 ============================================
@@ -47,36 +59,30 @@ We used a directed networkx graph (DiGraph) as an intermediary data structure th
 .. code-block:: python
 
     from cemento.draw_io.read_diagram import read_drawio
-    from cemento.draw_io.rdf.turtle_to_graph import convert_ttl_to_graph
+    from cemento.draw_io.write_diagram import draw_tree
 
-    DRAWIO_INPUT_PATH = "your_onto_diagram.drawio"
-    TTL_INPUT_PATH = "your_triples.ttl"
-    ONTO_FOLDER = "data"  # this path points to the folder containing all the ttl files you want to reference (optional)
-    DEFAULTS_FOLDER = "defaults"  # path to the folder containing default terms. It should come with the cloned repo (optional)
-    PREFIXES_PATH = (
-        ""  # this path points to a prefixes file with custom prefix assignments (optional)
-    )
+    INPUT_PATH = "happy-example.drawio"
+    OUTPUT_PATH = "sample.drawio"
+
     if __name__ == "__main__":
-        # reads a draw.io diagram and converts it the graph
-        graph = read_drawio(DRAWIO_INPUT_PATH, ONTO_FOLDER, PREFIXES_PATH, DEFAULTS_FOLDER)
-        # use the graph here as proof
-        print(graph.edges(data=True))
-
-        #reads a ttl file and converts it to a graph
-        convert_ttl_to_graph(TTL_INPUT_PATH)
+        # reads a drawio file and converts it to a networkx graph
+        graph = read_drawio(
+            INPUT_PATH,
+            check_errors=True,
+            inverted_rank_arrow=False # set whether the rdfs:subClassOf and rdf:type were inverted
+        )
+        # reads a networkx graph and draws a draw.io diagram
+        draw_tree(
+            graph,
+            OUTPUT_PATH,
+            translate_x=0,
+            translate_y=0,
+            classes_only=False,
+            demarcate_boxes=True,
+            horizontal_tree=False,
+        )
 
 In fact, the functions ``read_drawio`` and ``convert_ttl_to_graph`` are actually wrapped around to form the ``convert_ttl_to_drawio`` and ``convert_drawio_to_ttl`` functions. You are already using the former pair when using the latter.
-
-Important Note on ``read_drawio``
-----------------------------------
-
-When using the ``read_drawio``, please exercise caution when providing the paths. The function has a signature:
-
-.. code-block:: python
-
-    read_drawio( input_path: str | Path, onto_ref_folder: str | Path = None, prefixes_folder: str | Path = None, defaults_folder: str | Path = None, relabel_key: DiagramKey = DiagramKey.LABEL, inverted_rank_arrow: bool = False)
-
-If you aren't planning on leveraging stratified layouts like the ones used in ``draw_tree``, please supply just the arguments for ``input_path`` and optionally, ``relabel_key`` and ``inverted_rank_arrow``.
 
 A Note on "Unique" Literals
 ---------------------------

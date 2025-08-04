@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Scripting &#8212; CEMENTO 0.9.1 documentation</title>
+    <title>Scripting &#8212; CEMENTO 0.9.2 documentation</title>
   
   
   
@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=9dc39874"></script>
+    <script src="../_static/documentation_options.js?v=aa3b121e"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
@@ -460,14 +460,18 @@
 <p>Using the actual function is as easy as importing and calling it in a python script. The function takes the exact same arguments that you can set in <code class="docutils literal notranslate"><span class="pre">cemento</span> <span class="pre">drawio_ttl</span></code>. In this case, the script needs to set those arguments explicitly.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cemento.rdf.drawio_to_turtle</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_drawio_to_ttl</span>
 
-<span class="n">INPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;your_onto_diagram.drawio&quot;</span>
-<span class="n">OUTPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;your_triples.ttl&quot;</span>
-<span class="n">ONTO_PATH</span> <span class="o">=</span> <span class="s2">&quot;data&quot;</span> <span class="c1"># this path points to the folder containing all the ttl files you want to reference (optional)</span>
-<span class="n">DEFAULTS_FOLDER</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="c1"># path to the folder containing default terms. It should come with the cloned repo (optional)</span>
-<span class="n">PREFIXES_PATH</span> <span class="o">=</span> <span class="s2">&quot;prefixes.json&quot;</span> <span class="c1"># this path points to a prefixes file with custom prefix assignments (optional)</span>
+<span class="n">INPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;happy-example.drawio&quot;</span>
+<span class="n">OUTPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;sample.ttl&quot;</span>
+<span class="n">LOG_PATH</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">convert_drawio_to_ttl</span><span class="p">(</span><span class="n">INPUT_PATH</span><span class="p">,</span> <span class="n">OUTPUT_PATH</span><span class="p">,</span> <span class="n">ONTO_PATH</span><span class="p">,</span> <span class="n">DEFAULTS_FOLDER</span><span class="p">,</span> <span class="n">PREFIXES_PATH</span><span class="p">)</span>
+    <span class="n">convert_drawio_to_ttl</span><span class="p">(</span>
+        <span class="n">INPUT_PATH</span><span class="p">,</span>
+        <span class="n">OUTPUT_PATH</span><span class="p">,</span>
+        <span class="n">check_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># set whether to check for diagram errors prior to processing</span>
+        <span class="n">log_substitution_path</span><span class="o">=</span><span class="n">LOG_PATH</span><span class="p">,</span> <span class="c1"># set where to save the substitution log for term fuzzy search</span>
+        <span class="n">collect_domains_ranges</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># set whether to collect the instances within the domain and range of a custom object property</span>
+    <span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -476,12 +480,18 @@
 <p>This case is very similiar to the previous one. The <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> was assumed to contain the necessary information so you only need to set the <code class="docutils literal notranslate"><span class="pre">INPUT_PATH</span></code> and <code class="docutils literal notranslate"><span class="pre">OUTPUT_PATH</span></code>. The option and <code class="docutils literal notranslate"><span class="pre">set_unique_literals</span></code> determines whether tot treat literals with the same name as different things. <code class="docutils literal notranslate"><span class="pre">horizontal_tree</span></code>, on the other hand, sets whether to draw tree diagrams horizontally or vertically.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cemento.rdf.turtle_to_drawio</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_ttl_to_drawio</span>
 
-<span class="n">INPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;your_triples.ttl&quot;</span>
-<span class="n">OUTPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;your_onto_diagram.drawio&quot;</span>
+<span class="n">INPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;your_onto.ttl&quot;</span>
+<span class="n">OUTPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;your_diagram.drawio&quot;</span>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="c1"># the horizontal tree parameter controls whether you want the default vertical tree (False) or an inverted horizontal tree (True)</span>
-    <span class="n">convert_ttl_to_drawio</span><span class="p">(</span><span class="n">INPUT_PATH</span><span class="p">,</span> <span class="n">OUTPUT_PATH</span><span class="p">,</span> <span class="n">horizontal_tree</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">check_ttl_validity</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">set_unique_literals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">convert_ttl_to_drawio</span><span class="p">(</span>
+        <span class="n">INPUT_PATH</span><span class="p">,</span>
+        <span class="n">OUTPUT_PATH</span><span class="p">,</span>
+        <span class="n">horizontal_tree</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1">#sets whether to display tree horizontally or vertically</span>
+        <span class="n">set_unique_literals</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># sets whether to make literals with the same content, language and type unique</span>
+        <span class="n">classes_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># sets whether to display classes only, useful for large turtles like CCO</span>
+        <span class="n">demarcate_boxes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># sets whether to move all instances to A-box and classes to T-box</span>
+    <span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -489,34 +499,31 @@
 <h2>Converting draw.io to a <code class="docutils literal notranslate"><span class="pre">networkx</span></code> DiGraph<a class="headerlink" href="#converting-draw-io-to-a-networkx-digraph" title="Link to this heading">#</a></h2>
 <p>We used a directed networkx graph (DiGraph) as an intermediary data structure that provides a much richer interface for graph manipulation than the default <code class="docutils literal notranslate"><span class="pre">rdflib</span></code> Graph. If you are interested in using this data structure, you are free to use the functions shown below:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cemento.draw_io.read_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_drawio</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">cemento.draw_io.rdf.turtle_to_graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_ttl_to_graph</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cemento.draw_io.write_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_tree</span>
 
-<span class="n">DRAWIO_INPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;your_onto_diagram.drawio&quot;</span>
-<span class="n">TTL_INPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;your_triples.ttl&quot;</span>
-<span class="n">ONTO_FOLDER</span> <span class="o">=</span> <span class="s2">&quot;data&quot;</span>  <span class="c1"># this path points to the folder containing all the ttl files you want to reference (optional)</span>
-<span class="n">DEFAULTS_FOLDER</span> <span class="o">=</span> <span class="s2">&quot;defaults&quot;</span>  <span class="c1"># path to the folder containing default terms. It should come with the cloned repo (optional)</span>
-<span class="n">PREFIXES_PATH</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;&quot;</span>  <span class="c1"># this path points to a prefixes file with custom prefix assignments (optional)</span>
-<span class="p">)</span>
+<span class="n">INPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;happy-example.drawio&quot;</span>
+<span class="n">OUTPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;sample.drawio&quot;</span>
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="c1"># reads a draw.io diagram and converts it the graph</span>
-    <span class="n">graph</span> <span class="o">=</span> <span class="n">read_drawio</span><span class="p">(</span><span class="n">DRAWIO_INPUT_PATH</span><span class="p">,</span> <span class="n">ONTO_FOLDER</span><span class="p">,</span> <span class="n">PREFIXES_PATH</span><span class="p">,</span> <span class="n">DEFAULTS_FOLDER</span><span class="p">)</span>
-    <span class="c1"># use the graph here as proof</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-
-    <span class="c1">#reads a ttl file and converts it to a graph</span>
-    <span class="n">convert_ttl_to_graph</span><span class="p">(</span><span class="n">TTL_INPUT_PATH</span><span class="p">)</span>
+    <span class="c1"># reads a drawio file and converts it to a networkx graph</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">read_drawio</span><span class="p">(</span>
+        <span class="n">INPUT_PATH</span><span class="p">,</span>
+        <span class="n">check_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">inverted_rank_arrow</span><span class="o">=</span><span class="kc">False</span> <span class="c1"># set whether the rdfs:subClassOf and rdf:type were inverted</span>
+    <span class="p">)</span>
+    <span class="c1"># reads a networkx graph and draws a draw.io diagram</span>
+    <span class="n">draw_tree</span><span class="p">(</span>
+        <span class="n">graph</span><span class="p">,</span>
+        <span class="n">OUTPUT_PATH</span><span class="p">,</span>
+        <span class="n">translate_x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">translate_y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">classes_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">demarcate_boxes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">horizontal_tree</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
 </pre></div>
 </div>
 <p>In fact, the functions <code class="docutils literal notranslate"><span class="pre">read_drawio</span></code> and <code class="docutils literal notranslate"><span class="pre">convert_ttl_to_graph</span></code> are actually wrapped around to form the <code class="docutils literal notranslate"><span class="pre">convert_ttl_to_drawio</span></code> and <code class="docutils literal notranslate"><span class="pre">convert_drawio_to_ttl</span></code> functions. You are already using the former pair when using the latter.</p>
-<section id="important-note-on-read-drawio">
-<h3>Important Note on <code class="docutils literal notranslate"><span class="pre">read_drawio</span></code><a class="headerlink" href="#important-note-on-read-drawio" title="Link to this heading">#</a></h3>
-<p>When using the <code class="docutils literal notranslate"><span class="pre">read_drawio</span></code>, please exercise caution when providing the paths. The function has a signature:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">read_drawio</span><span class="p">(</span> <span class="n">input_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">onto_ref_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">prefixes_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">defaults_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">relabel_key</span><span class="p">:</span> <span class="n">DiagramKey</span> <span class="o">=</span> <span class="n">DiagramKey</span><span class="o">.</span><span class="n">LABEL</span><span class="p">,</span> <span class="n">inverted_rank_arrow</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>If you aren’t planning on leveraging stratified layouts like the ones used in <code class="docutils literal notranslate"><span class="pre">draw_tree</span></code>, please supply just the arguments for <code class="docutils literal notranslate"><span class="pre">input_path</span></code> and optionally, <code class="docutils literal notranslate"><span class="pre">relabel_key</span></code> and <code class="docutils literal notranslate"><span class="pre">inverted_rank_arrow</span></code>.</p>
-</section>
 <section id="a-note-on-unique-literals">
 <h3>A Note on “Unique” Literals<a class="headerlink" href="#a-note-on-unique-literals" title="Link to this heading">#</a></h3>
 <p>By default, the package will not treat all literals as being unique from one another. Classes and instances, by design, have singular, unique IRIs so they are treated to be the same if drawn in multiple locations. By default, literals will be treated the same way even though they don’t have unique IRIs.</p>
@@ -615,7 +622,6 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-draw-io-to-ttl-files">Converting draw.io to <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-ttl-files-to-draw-io-files">Converting <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files to draw.io files</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-draw-io-to-a-networkx-digraph">Converting draw.io to a <code class="docutils literal notranslate"><span class="pre">networkx</span></code> DiGraph</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#important-note-on-read-drawio">Important Note on <code class="docutils literal notranslate"><span class="pre">read_drawio</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-note-on-unique-literals">A Note on “Unique” Literals</a></li>
 </ul>
 </li>
