@@ -18,6 +18,12 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
+## [0.9.5] - 2025-08-05
+
+### Fixed
+
+- print statements when running `convert_drawio_to_ttl`
+
 ## [0.9.4] - 2025-08-05
 
 ### Added

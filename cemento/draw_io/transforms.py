@@ -788,8 +788,6 @@ def get_rank_strat_connectors(
         )
     )
     inv_shape_id = {value: key for key, value in shape_id.items()}
-    for connector in connectors:
-        print((inv_shape_id[connector.source_id], inv_shape_id[connector.target_id]))
     rank_strat_connectors = [
         connector
         for connector in connectors

@@ -96,7 +96,6 @@ class Connector(DiagramObject):
         (source_shape_x, source_shape_y), (target_shape_x, target_shape_y) = map(
             lambda coords: Connector.center_coordinates(*coords), positions
         )
-        print((source_shape_x, source_shape_y), (target_shape_x, target_shape_y))
         angle = atan2(target_shape_y - source_shape_y, target_shape_x - source_shape_x)
 
         if -crit_angle <= angle <= crit_angle:
