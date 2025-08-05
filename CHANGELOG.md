@@ -18,6 +18,12 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
+## [0.9.4] - 2025-08-05
+
+### Added
+
+- dynamic version number detection in CLI message
+
 ## [0.9.3] - 2025-08-05
 
 ### Added
