@@ -18,6 +18,18 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
+## [0.9.3] - 2025-08-05
+
+### Added
+
+- center coordinates to `Connector` dataclass
+- coordinate centering when rendering arrow positions (hasn't fixed stray arrows)
+
+### Fixed
+
+- horizontal offsets not switching in `draw_tree`
+- non-rank stratified predicates being rendered as rank terms
+
 ## [0.9.2] - 2025-08-04
 
 ### Fixed
@@ -62,10 +74,6 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - `convert_drawio_to_ttl` null safety for reference folder arguments
 
 ## [0.8.9] - 2025-07-25
-
-### Added
-- FAQs page for common issues and solutions
-- section for citations and license in about page
 
 ### Changed
 

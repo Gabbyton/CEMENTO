@@ -76,6 +76,15 @@ class Connector(DiagramObject):
     template_key: str = "connector"
 
     @staticmethod
+    def center_coordinates(
+        x_coordinate: float,
+        y_coordinate: float,
+        shape_height=SHAPE_HEIGHT,
+        shape_width=SHAPE_WIDTH,
+    ) -> tuple[float, float]:
+        return (x_coordinate + shape_width / 2, y_coordinate + shape_height / 2)
+
+    @staticmethod
     def compute_dynamic_position(
         source_shape_x: float,
         source_shape_y: float,
@@ -83,6 +92,11 @@ class Connector(DiagramObject):
         target_shape_y: float,
     ) -> tuple[float, float, float, float]:
         crit_angle = abs(atan2(SHAPE_HEIGHT, SHAPE_WIDTH))
+        positions = [(source_shape_x, source_shape_y), (target_shape_x, target_shape_y)]
+        (source_shape_x, source_shape_y), (target_shape_x, target_shape_y) = map(
+            lambda coords: Connector.center_coordinates(*coords), positions
+        )
+        print((source_shape_x, source_shape_y), (target_shape_x, target_shape_y))
         angle = atan2(target_shape_y - source_shape_y, target_shape_x - source_shape_x)
 
         if -crit_angle <= angle <= crit_angle:
@@ -91,7 +105,6 @@ class Connector(DiagramObject):
             return (0.5, 1, 0.5, 0)
         elif angle > pi - crit_angle or angle < -(pi - crit_angle):
             return (0, 0.5, 1, 0.5)
-            # return (1, 0.5, 0, 0.5)
         elif -(pi - crit_angle) <= angle < -crit_angle:
             return (0.5, 0, 0.5, 1)
         else:
