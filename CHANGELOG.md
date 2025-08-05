@@ -18,6 +18,12 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
+## [0.9.6] - 2025-08-05
+
+### Fixed
+
+- wrong dividing line alignment for trees without instances
+
 ## [0.9.5] - 2025-08-05
 
 ### Fixed

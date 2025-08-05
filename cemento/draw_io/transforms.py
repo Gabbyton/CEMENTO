@@ -482,6 +482,8 @@ def get_tree_dividing_line(
     line_start_x, line_end_x = line_start_x + offset_x, line_end_x + offset_x + 1
     _, tree_size_y = get_tree_canvas_size(tree)
     line_y = tree_size_y - line_offset_y + offset_y
+    # TODO: convert this to own function that runs in write_diagram, add offsets to constants for global access to here
+    line_y += 1.5 if no_instance_in_tree(tree) else 0
     line_start_x, _ = translate_coords(line_start_x, 0)
     line_end_x, line_y = translate_coords(line_end_x, line_y)
     return Line(
@@ -507,12 +509,20 @@ def shift_tree(tree: DiGraph, shift_x: float = 0, shift_y: float = 0) -> DiGraph
     return new_tree
 
 
+def no_instance_in_tree(tree: DiGraph) -> bool:
+    return not any([data["is_instance"] for node, data in tree.nodes(data=True)])
+
+
 def conform_tree_positions(trees: list[DiGraph]) -> list[DiGraph]:
     max_y = snd(max(map(get_tree_canvas_size, trees), key=lambda size: snd(size)))
     tree_diffs = (max_y - snd(get_tree_canvas_size(tree)) for tree in trees)
+    no_instance_trees = map(no_instance_in_tree, trees)
     new_trees = [
-        shift_tree(new_tree, shift_y=shift_y)
-        for new_tree, shift_y in zip(trees, tree_diffs, strict=True)
+        # TODO: make scale factor global for access here
+        shift_tree(new_tree, shift_y=(shift_y - (1.5 if no_instance else 0)))
+        for new_tree, shift_y, no_instance in zip(
+            trees, tree_diffs, no_instance_trees, strict=True
+        )
     ]
     return new_trees
 
