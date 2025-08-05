@@ -18,6 +18,37 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
+## [0.9.3] - 2025-08-05
+
+### Added
+
+- center coordinates to `Connector` dataclass
+- coordinate centering when rendering arrow positions (hasn't fixed stray arrows)
+
+### Fixed
+
+- horizontal offsets not switching in `draw_tree`
+- non-rank stratified predicates being rendered as rank terms
+
+## [0.9.2] - 2025-08-04
+
+### Fixed
+
+- `read_diagram` and `convert_graph_to_ttl` not running when using scripts
+- null safety for folder variables. Get the default if not specified instead
+- `convert_ttl_to_graph` with improper null behavior for folders
+- example scripts in the example folder
+
+## [0.9.1] - 2025-08-01
+
+### Added
+
+- contributor
+
+### Fixed
+
+- `assign_literal_ids` zips with uneven lengths
+
 ## [0.9.0] - 2025-08-01
 
 ### Added
@@ -43,6 +74,11 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - `convert_drawio_to_ttl` null safety for reference folder arguments
 
 ## [0.8.9] - 2025-07-25
+
+### Added
+
+- FAQs page for common issues and solutions
+- section for citations and license in about page
 
 ### Changed
 
