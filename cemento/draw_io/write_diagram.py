@@ -24,6 +24,7 @@ from cemento.draw_io.transforms import (
     get_non_ranked_strat_edges,
     get_predicate_connectors,
     get_rank_connectors_from_trees,
+    get_rank_strat_connectors,
     get_ranked_subgraph,
     get_severed_link_connectors,
     get_shape_ids,
@@ -121,9 +122,9 @@ def draw_tree(
     diagram_uid = str(uuid4()).split("-")[-1]
     entity_idx_start = 0
 
-    tree_offsets = list(
-        get_tree_offsets(ranked_subtrees, horizontal_tree=horizontal_tree)
-    )
+    tree_offsets = list(get_tree_offsets(ranked_subtrees))
+    if horizontal_tree:
+        tree_offsets = [(y, x) for x, y in tree_offsets]
 
     if demarcate_boxes:
         ranked_subtrees = conform_tree_positions(ranked_subtrees)
@@ -166,13 +167,16 @@ def draw_tree(
 
     shape_positions_by_id = get_shape_positions_by_id(shapes)
 
+    rank_strat_connectors = get_rank_strat_connectors(
+        graph, rank_connectors, new_shape_ids
+    )
     for connector in chain(
         rank_connectors, predicate_connectors, severed_link_connectors
     ):
         connector.resolve_position(
             shape_positions_by_id[connector.source_id],
             shape_positions_by_id[connector.target_id],
-            strat_only=classes_only or connector in rank_connectors,
+            strat_only=classes_only or connector in rank_strat_connectors,
             horizontal_tree=horizontal_tree,
         )
     all_connectors = rank_connectors + predicate_connectors + severed_link_connectors

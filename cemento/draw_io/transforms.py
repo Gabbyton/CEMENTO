@@ -778,6 +778,27 @@ def get_rank_connectors_from_trees(
     ]
 
 
+def get_rank_strat_connectors(
+    graph: DiGraph, connectors: list[Connector], shape_id: dict[str, str]
+) -> list[Connector]:
+    rank_strat_set = set(
+        (nx_edge.subj, nx_edge.obj)
+        for nx_edge in get_graph_edges(
+            graph, lambda data: data["is_strat"] and data["is_rank"]
+        )
+    )
+    inv_shape_id = {value: key for key, value in shape_id.items()}
+    for connector in connectors:
+        print((inv_shape_id[connector.source_id], inv_shape_id[connector.target_id]))
+    rank_strat_connectors = [
+        connector
+        for connector in connectors
+        if (inv_shape_id[connector.source_id], inv_shape_id[connector.target_id])
+        in rank_strat_set
+    ]
+    return rank_strat_connectors
+
+
 def get_shape_designation(node: any, node_attr: dict[str, any]) -> ShapeType:
     shape_type = ShapeType.UKNOWN
     if "is_class" in node_attr and node_attr["is_class"]:
