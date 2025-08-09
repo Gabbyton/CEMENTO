@@ -125,11 +125,22 @@ def convert_ttl_to_graph(
             )
 
         display_set = all_classes
+
         if not classes_only:
             display_set = all_classes | all_instances | all_literals
+
+        # TODO: find a better solution for exemptions, possible include all transitive objects for rdf:subClassOf
+        exempted_terms = {
+            OWL.ObjectProperty,
+            OWL.AnnotationProperty,
+            OWL.DatatypeProperty,
+        }
+        display_set.update(exempted_terms)
+
+        exclude_terms = default_terms - exempted_terms
         display_terms = set(
             filter(
-                lambda term: term not in default_terms,
+                lambda term: term not in exclude_terms,
                 display_set,
             )
         )
@@ -155,8 +166,13 @@ def convert_ttl_to_graph(
         graph = assign_rank_status(graph)
         graph = assign_pred_status(graph)
         nx.set_node_attributes(
-            graph, {node: {"is_class": node in all_classes} for node in graph.nodes()}
+            graph,
+            {
+                node: {"is_class": node in all_classes or node in exempted_terms}
+                for node in graph.nodes()
+            },
         )
+        print(graph.nodes(data=True))
         nx.set_node_attributes(
             graph,
             {node: {"is_instance": node in all_instances} for node in graph.nodes()},

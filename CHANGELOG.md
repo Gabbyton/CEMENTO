@@ -18,6 +18,12 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
+## [Unreleased]
+
+### Fixed
+
+- properties not showing up as parent classes when outputting diagrams
+
 ## [0.9.6] - 2025-08-05
 
 ### Fixed
