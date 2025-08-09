@@ -8,3 +8,4 @@ sandbox/
 !.nojekyll
 /*.drawio
 /*.ttl
+*-error_check.drawio
