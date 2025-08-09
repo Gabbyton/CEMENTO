@@ -23,6 +23,7 @@ from cemento.term_matching.transforms import (
     get_aliases,
     get_default_terms,
     get_prefixes,
+    get_prop_family_from_defaults,
     get_strat_predicates,
 )
 
@@ -126,15 +127,14 @@ def convert_ttl_to_graph(
 
         display_set = all_classes
 
+        exempted_terms = {}
         if not classes_only:
             display_set = all_classes | all_instances | all_literals
+            exempted_terms = get_prop_family_from_defaults(
+                defaults_folder=defaults_folder
+            )
 
         # TODO: find a better solution for exemptions, possible include all transitive objects for rdf:subClassOf
-        exempted_terms = {
-            OWL.ObjectProperty,
-            OWL.AnnotationProperty,
-            OWL.DatatypeProperty,
-        }
         display_set.update(exempted_terms)
 
         exclude_terms = default_terms - exempted_terms
