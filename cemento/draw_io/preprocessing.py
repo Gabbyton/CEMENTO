@@ -61,6 +61,7 @@ def remove_literal_connector_id(connector: Connector) -> Connector:
 
 def clean_term_preserving_quotes(term: str) -> str:
     new_value = term.replace("&quot;", "{QUOTE_PLACEHOLDER}")
+    new_value = clean_term(new_value)
     new_value = new_value.replace("{QUOTE_PLACEHOLDER}", "&quot;")
     return new_value
 
