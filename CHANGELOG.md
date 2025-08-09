@@ -20,6 +20,10 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 
 ## [Unreleased]
 
+### Added
+
+- property family of exempted properties to exempt when drawing diagrams
+
 ### Fixed
 
 - properties not showing up as parent classes when outputting diagrams

@@ -137,8 +137,18 @@ def convert_ttl_to_graph(
         exempted_terms = {}
         if not classes_only:
             display_set = all_classes | all_instances | all_literals
-            exempted_terms = get_prop_family_from_defaults(
-                defaults_folder=defaults_folder
+            exempted_set = {
+                OWL.ObjectProperty,
+                OWL.AnnotationProperty,
+                OWL.DatatypeProperty,
+            }
+            exempted_terms = reduce(
+                lambda acc, prop: acc
+                | set(
+                    get_prop_family_from_defaults(prop, defaults_folder, inv_prefixes)
+                ),
+                exempted_set,
+                set(),
             )
 
         # TODO: find a better solution for exemptions, possible include all transitive objects for rdf:subClassOf
@@ -179,7 +189,6 @@ def convert_ttl_to_graph(
                 for node in graph.nodes()
             },
         )
-        print(graph.nodes(data=True))
         nx.set_node_attributes(
             graph,
             {node: {"is_instance": node in all_instances} for node in graph.nodes()},
