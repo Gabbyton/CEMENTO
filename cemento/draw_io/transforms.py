@@ -30,7 +30,6 @@ from cemento.draw_io.constants import (
 )
 from cemento.draw_io.io import get_template_files
 from cemento.draw_io.preprocessing import (
-    clean_term,
     clean_term_preserving_quotes,
     remove_predicate_quotes,
 )
@@ -61,7 +60,6 @@ def clean_element_values(
         )
         for key, element_attr in elements.items()
     }
-    print(new_elements)
     return new_elements
 
 
@@ -169,7 +167,7 @@ def generate_graph(
         graph.add_node(
             term_id,
             term_id=term_id,
-            label=clean_term(term),
+            label=term,
             is_literal=('"' in term or "&quot;" in term),
             parent=(
                 term_info["parent"]
@@ -188,7 +186,7 @@ def generate_graph(
                 f"cannot access {e.args[0]} from the attributes of a relationship in the elements dictionary. Please take a look at relationship with id {rel_id}"
             ) from KeyError
 
-        pred = clean_term(elements[rel_id]["value"])
+        pred = elements[rel_id]["value"]
 
         if strat_terms:
             pred, is_strat = substitute_term(pred, strat_terms)
@@ -305,7 +303,7 @@ def parse_containers(
     obj_term_data = (
         {
             "term_id": f"{container_id}-2",
-            "label": clean_term(obj_term),
+            "label": obj_term,
             "is_literal": ('"' in obj_term or "&quot;" in obj_term),
             "parent": container_id,
         }

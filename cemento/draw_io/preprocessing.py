@@ -113,7 +113,7 @@ def get_diagram_error_exemptions(elements: dict[str, dict[str, any]]) -> set[str
         for term_id, term_element in terms.items()
         for reserved_term in reserved_term_annotations
         if "value" in term_element
-        and reserved_term in clean_term(term_element["value"]).strip().lower()
+        and reserved_term in term_element["value"].strip().lower()
     }
 
     return lines | reserved_terms
@@ -137,12 +137,12 @@ def find_edge_errors_diagram_content(
         target_id = edge_attr.get("target", None)
         connected_terms = {
             (
-                f"{clean_term(source_term['value'])} ({source_id}) located in ({'Unknown' if 'x' not in source_term else source_term['x']}, {'Unknown' if 'y' not in source_term else source_term['y']})"
+                f"{source_term['value']} ({source_id}) located in ({'Unknown' if 'x' not in source_term else source_term['x']}, {'Unknown' if 'y' not in source_term else source_term['y']})"
                 if source_id and "value" in (source_term := elements[source_id])
                 else None
             ),
             (
-                f"{clean_term(target_term['value'])} ({target_id}) located in ({'Unknown' if 'x' not in target_term else target_term['x']}, {'Unknown' if 'y' not in target_term else target_term['y']})"
+                f"{target_term['value']} ({target_id}) located in ({'Unknown' if 'x' not in target_term else target_term['x']}, {'Unknown' if 'y' not in target_term else target_term['y']})"
                 if target_id and "value" in (target_term := elements[target_id])
                 else None
             ),
