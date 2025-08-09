@@ -257,6 +257,24 @@ class MissingChildEdgeError(DisconnectedEdgeError):
         super().__init__(self.message)
 
 
+class BidirectionalEdgeError(Exception):
+    def __init__(self, edge_id, edge_content, parent_content, child_content):
+        message_start = f"Edge with id: {edge_id}"
+        message_end = " does not have a source (parent) connected."
+
+        if edge_content is not None and edge_content.strip():
+            message_start = f"{message_start} and content: {edge_content}"
+
+        if parent_content:
+            message_start = f"{message_start} and with parent: {parent_content},"
+
+        if child_content:
+            message_start = f"{message_start} and with child: {child_content},"
+
+        self.message = f"{message_start} {message_end}"
+        super().__init__(self.message)
+
+
 class FloatingEdgeError(DisconnectedEdgeError):
     def __init__(self, edge_id, edge_content):
         if edge_content is None or not edge_content:

@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from networkx import DiGraph
 
 from cemento.draw_io.constants import (
+    BidirectionalEdgeError,
     BlankEdgeLabelError,
     BlankTermLabelError,
     CircularEdgeError,
@@ -149,6 +150,25 @@ def find_edge_errors_diagram_content(
         ):
             errors.append((edge_id, FloatingEdgeError(edge_id, edge_content)))
             continue
+
+        if (
+            "startArrow" in edge_attr
+            and "endArrow" in edge_attr
+            and edge_attr["startArrow"] != "none"
+            and edge_attr["endArrow"] != "none"
+        ):
+            connected_terms_iter = iter(connected_terms)
+            errors.append(
+                (
+                    edge_id,
+                    BidirectionalEdgeError(
+                        edge_id,
+                        edge_content,
+                        next(connected_terms_iter),
+                        next(connected_terms_iter),
+                    ),
+                )
+            )
 
         if "source" not in edge_attr or not edge_attr["source"]:
             errors.append(
