@@ -29,6 +29,7 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 ### Fixed
 
 - properties not showing up as parent classes when outputting diagrams
+- none-type check in diagram error parsing to consider capitalized `None`
 
 ## [0.9.6] - 2025-08-05
 
