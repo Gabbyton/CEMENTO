@@ -139,3 +139,24 @@ def test_inverted_arrow_errors():
         FloatingEdgeError: 1,
     }
     check_errors_by_count(errors, expected_error_types)
+
+
+def test_bidirectional_inverted_differentiation():
+    errors = get_diagram_errors(input_path=diagram_test_files[8])
+    expected_error_types = {
+        BidirectionalEdgeError: 1,
+        InvertedEdgeError: 2,
+        FloatingEdgeError: 5,
+    }
+    check_errors_by_count(errors, expected_error_types)
+
+
+def test_null_values():
+    errors = get_diagram_errors(input_path=diagram_test_files[9])
+    expected_error_types = {
+        DisconnectedTermError: 6,
+        FloatingEdgeError: 7,
+        BlankTermLabelError: 6,
+        BlankEdgeLabelError: 7,
+    }
+    check_errors_by_count(errors, expected_error_types)

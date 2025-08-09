@@ -1,3 +1,4 @@
+import html
 import re
 from collections.abc import Iterable
 
@@ -59,6 +60,8 @@ def remove_literal_connector_id(connector: Connector) -> Connector:
 
 
 def clean_term(term: str) -> str:
+    while (reduced_term := html.unescape(term).strip()) != term:
+        term = reduced_term
     soup = BeautifulSoup(term, "html.parser")
     term_text = soup.get_text(separator="", strip=True)
     return term_text
