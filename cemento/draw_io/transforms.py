@@ -29,10 +29,40 @@ from cemento.draw_io.constants import (
     ShapeType,
 )
 from cemento.draw_io.io import get_template_files
-from cemento.draw_io.preprocessing import clean_term, remove_predicate_quotes
+from cemento.draw_io.preprocessing import (
+    clean_term,
+    clean_term_preserving_quotes,
+    remove_predicate_quotes,
+)
 from cemento.term_matching.constants import RANK_PROPS
 from cemento.term_matching.transforms import substitute_term
 from cemento.utils.utils import aggregate_defaultdict, filter_graph, fst, snd, trd
+
+
+def clean_element_values(
+    elements: dict[str, dict[str, any]],
+) -> dict[str, dict[str, any]]:
+    new_elements = {
+        key: (
+            {
+                **element_attr,
+                "value": (
+                    quotes_preserved
+                    if (
+                        quotes_preserved := clean_term_preserving_quotes(
+                            element_attr["value"]
+                        )
+                    ) != '""'
+                    else ""
+                ),
+            }
+            if "value" in element_attr
+            else element_attr
+        )
+        for key, element_attr in elements.items()
+    }
+    print(new_elements)
+    return new_elements
 
 
 def parse_elements(file_path: str | Path) -> dict[str, dict[str, any]]:

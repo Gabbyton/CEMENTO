@@ -59,6 +59,13 @@ def remove_literal_connector_id(connector: Connector) -> Connector:
     return connector
 
 
+def clean_term_preserving_quotes(term: str) -> str:
+    new_value = term.replace("&quot;", "<QUOTE_PLACEHOLDER>")
+    new_value = clean_term(new_value)
+    new_value = new_value.replace("<QUOTE_PLACEHOLDER>", "&quot;")
+    return new_value
+
+
 def clean_term(term: str) -> str:
     while (reduced_term := html.unescape(term).strip()) != term:
         term = reduced_term

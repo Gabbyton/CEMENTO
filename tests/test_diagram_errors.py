@@ -19,6 +19,7 @@ from cemento.draw_io.preprocessing import (
     get_diagram_error_exemptions,
 )
 from cemento.draw_io.transforms import (
+    clean_element_values,
     extract_elements,
     parse_elements,
 )
@@ -29,11 +30,11 @@ diagram_test_files = [
     if re.fullmatch(r"diagram-error-(\d+)", Path(file.path).stem)
 ]
 diagram_test_files = sorted(diagram_test_files)
-print(diagram_test_files)
 
 
 def get_diagram_errors(input_path: str | Path, with_exemptions=True):
     elements = parse_elements(input_path)
+    elements = clean_element_values(elements)
     term_ids, rel_ids = extract_elements(elements)
     error_exemptions = None
     if with_exemptions:
