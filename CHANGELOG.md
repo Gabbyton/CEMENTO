@@ -28,6 +28,7 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 
 ### Changed
 - quote substitution in shape content to general html escape substitution
+- `parse_elements` implementation to be more functional
 
 ### Fixed
 

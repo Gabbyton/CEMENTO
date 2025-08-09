@@ -89,32 +89,30 @@ def parse_elements(file_path: str | Path) -> dict[str, dict[str, any]]:
         cell_attrs = dict()
         cell_attrs.update(cell.attrib)
 
-        # add nested position attributes if any
-        nested_attrs = dict()
-        for subcell in cell.findall("mxGeometry"):
-            nested_attrs.update(subcell.attrib)
+        nested_attrs = reduce(
+            lambda acc, subcell: acc | subcell.attrib,
+            cell.findall("mxGeometry"),
+            dict(),
+        )
         cell_attrs.update(nested_attrs)
 
-        # add style attributes as data attributes
-        if "style" in cell.attrib:
-            style_terms = dict()
-            style_tags = []
-            for style_attrib_string in cell.attrib["style"].split(";"):
-                style_term = style_attrib_string.split("=")
-                if len(style_term) > 1:  # for styles with values
-                    key, value = style_term
-                    style_terms[key] = value
-                elif style_term[0]:  # for style tags or names
-                    style_tags.append(style_term[0])
-            cell_attrs.update(style_terms)
-            cell_attrs["tags"] = style_tags
-            del cell_attrs["style"]  # remove style to prevent redundancy
-
-        cell_id = cell.attrib["id"]
-        del cell_attrs["id"]  # remove id since it is now used as a key
-        elements[cell_id] = (
-            cell_attrs  # set dictionary of cell key and attribute dictionary
+        style_attrib_str = (
+            cell.attrib["style"].split(";") if "style" in cell.attrib else []
         )
+        style_term_pairs = [tuple(style.split("=")) for style in style_attrib_str]
+        style_terms = reduce(
+            lambda acc, style_pair: acc | {fst(style_pair): snd(style_pair)},
+            filter(lambda style_pair: len(style_pair) > 1, style_term_pairs),
+            dict(),
+        )
+        style_tags = reduce(
+            lambda acc, style: acc + [fst(style)],
+            filter(lambda tag: len(tag) <= 1 and tag, style_term_pairs),
+            list(),
+        )
+        cell_attrs.update(style_terms)
+        cell_attrs["tags"] = style_tags
+        elements[cell.attrib["id"]] = cell_attrs
 
     return elements
 
