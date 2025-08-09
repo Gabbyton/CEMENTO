@@ -1,5 +1,8 @@
+import re
 from collections import Counter
+from os import scandir
 from pathlib import Path
+from pprint import pprint
 
 from cemento.draw_io.constants import (
     BlankEdgeLabelError,
@@ -19,12 +22,15 @@ from cemento.draw_io.transforms import (
 )
 
 diagram_test_files = [
-    Path(__file__).parent / "test_files" / f"diagram-error-{i:0>2}.drawio"
-    for i in range(1, 6)
+    file.path
+    for file in scandir(Path(__file__).parent / "test_files")
+    if re.fullmatch(r"diagram-error-(\d+)", Path(file.path).stem)
 ]
+diagram_test_files = sorted(diagram_test_files)
+print(diagram_test_files)
 
 
-def get_diagram_errors(input_path: str | Path, with_exemptions=False):
+def get_diagram_errors(input_path: str | Path, with_exemptions=True):
     elements = parse_elements(input_path)
     term_ids, rel_ids = extract_elements(elements)
     error_exemptions = None
@@ -45,7 +51,11 @@ def check_errors_by_count(
     error_types = dict(Counter(type(error) for _, error in errors))
     total_error_ct = sum(error_types.values())
     expected_error_ct = sum(expected_error_types.values())
-    print(error_types)
+    print("actual:")
+    pprint(error_types)
+
+    print("expected:")
+    pprint(expected_error_types)
     assert total_error_ct == expected_error_ct
     assert error_types == expected_error_types
 
@@ -92,5 +102,13 @@ def test_no_labels_disconnection_errors():
         BlankTermLabelError: 2,
         BlankEdgeLabelError: 1,
         FloatingEdgeError: 1,
+    }
+    check_errors_by_count(errors, expected_error_types)
+
+
+def test_all_arrow_types():
+    errors = get_diagram_errors(input_path=diagram_test_files[5])
+    expected_error_types = {
+        FloatingEdgeError: 5,
     }
     check_errors_by_count(errors, expected_error_types)

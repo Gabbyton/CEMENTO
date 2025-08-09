@@ -77,11 +77,8 @@ def remove_quotes(input_str: str) -> str:
 
 
 def is_line(element: dict[str, any]) -> bool:
-    return (
-        ("endArrow" not in element or element["endArrow"] == "none")
-        and ("startArrow" not in element or element["startArrow"] == "none")
-        and ("source" not in element or not element["source"])
-        and ("target" not in element or not element["target"])
+    return ("endArrow" in element and element["endArrow"] == "none") and (
+        "startArrow" not in element or element["startArrow"] == "none"
     )
 
 
