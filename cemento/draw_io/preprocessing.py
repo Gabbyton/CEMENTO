@@ -42,9 +42,9 @@ def remove_predicate_quotes(edges: Iterable[NxEdge]) -> Iterable[NxEdge]:
     )
 
 
-def replace_shape_html_quotes(shape: Shape) -> Shape:
+def escape_shape_content(shape: Shape) -> Shape:
     # TODO: implement immutable object copy
-    shape.shape_content = replace_quotes(shape.shape_content)
+    shape.shape_content = html.escape(shape.shape_content, quote=True)
     return shape
 
 

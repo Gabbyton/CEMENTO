@@ -6,9 +6,9 @@ from networkx import DiGraph
 
 from cemento.draw_io.constants import Connector, DiagramObject, Shape
 from cemento.draw_io.preprocessing import (
+    escape_shape_content,
     remove_literal_connector_id,
     remove_literal_shape_id,
-    replace_shape_html_quotes,
     replace_term_quotes,
 )
 from cemento.draw_io.transforms import (
@@ -49,7 +49,7 @@ def draw_diagram(
     if diagram_uid is None:
         diagram_uid = str(uuid4()).split("-")[-1]
 
-    shapes = list(map(replace_shape_html_quotes, shapes))
+    shapes = list(map(escape_shape_content, shapes))
     shapes = map(remove_literal_shape_id, shapes)
 
     connectors = map(remove_literal_connector_id, connectors)

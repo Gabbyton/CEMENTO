@@ -26,6 +26,9 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - tests for diagram error checks
 - error and error check for bidirectional and inverted arrows
 
+### Changed
+- quote substitution in shape content to general html escape substitution
+
 ### Fixed
 
 - properties not showing up as parent classes when outputting diagrams
