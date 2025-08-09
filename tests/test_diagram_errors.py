@@ -5,6 +5,7 @@ from pathlib import Path
 from pprint import pprint
 
 from cemento.draw_io.constants import (
+    BidirectionalEdgeError,
     BlankEdgeLabelError,
     BlankTermLabelError,
     DisconnectedTermError,
@@ -109,6 +110,19 @@ def test_no_labels_disconnection_errors():
 def test_all_arrow_types():
     errors = get_diagram_errors(input_path=diagram_test_files[5])
     expected_error_types = {
+        BidirectionalEdgeError: 4,
         FloatingEdgeError: 5,
+    }
+    check_errors_by_count(errors, expected_error_types)
+
+
+def test_bidirectional_arrow_errors():
+    errors = get_diagram_errors(input_path=diagram_test_files[6])
+    expected_error_types = {
+        DisconnectedTermError: 6,
+        MissingParentEdgeError: 1,
+        MissingChildEdgeError: 1,
+        BidirectionalEdgeError: 4,
+        FloatingEdgeError: 1,
     }
     check_errors_by_count(errors, expected_error_types)

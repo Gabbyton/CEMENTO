@@ -142,20 +142,10 @@ def find_edge_errors_diagram_content(
         if "value" not in edge_attr or not edge_attr["value"]:
             errors.append((edge_id, BlankEdgeLabelError(edge_id, connected_terms)))
 
-        if all(
-            [
-                "source" not in edge_attr or not edge_attr["source"],
-                "target" not in edge_attr or not edge_attr["target"],
-            ]
-        ):
-            errors.append((edge_id, FloatingEdgeError(edge_id, edge_content)))
-            continue
-
         if (
             "startArrow" in edge_attr
-            and "endArrow" in edge_attr
             and edge_attr["startArrow"] != "none"
-            and edge_attr["endArrow"] != "none"
+            or ("endArrow" in edge_attr and edge_attr["endArrow"] != "none")
         ):
             connected_terms_iter = iter(connected_terms)
             errors.append(
@@ -164,11 +154,20 @@ def find_edge_errors_diagram_content(
                     BidirectionalEdgeError(
                         edge_id,
                         edge_content,
-                        next(connected_terms_iter),
-                        next(connected_terms_iter),
+                        next(connected_terms_iter, None),
+                        next(connected_terms_iter, None),
                     ),
                 )
             )
+
+        if all(
+            [
+                "source" not in edge_attr or not edge_attr["source"],
+                "target" not in edge_attr or not edge_attr["target"],
+            ]
+        ):
+            errors.append((edge_id, FloatingEdgeError(edge_id, edge_content)))
+            continue
 
         if "source" not in edge_attr or not edge_attr["source"]:
             errors.append(

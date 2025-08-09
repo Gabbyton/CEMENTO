@@ -260,7 +260,9 @@ class MissingChildEdgeError(DisconnectedEdgeError):
 class BidirectionalEdgeError(Exception):
     def __init__(self, edge_id, edge_content, parent_content, child_content):
         message_start = f"Edge with id: {edge_id}"
-        message_end = " does not have a source (parent) connected."
+        message_end = (
+            " is bidirectional. Consider using regular arrows to avoid confusion."
+        )
 
         if edge_content is not None and edge_content.strip():
             message_start = f"{message_start} and content: {edge_content}"
