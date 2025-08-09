@@ -41,7 +41,7 @@ from cemento.utils.utils import aggregate_defaultdict, filter_graph, fst, snd, t
 def clean_element_values(
     elements: dict[str, dict[str, any]],
 ) -> dict[str, dict[str, any]]:
-    new_elements = {
+    return {
         key: (
             {
                 **element_attr,
@@ -51,7 +51,8 @@ def clean_element_values(
                         quotes_preserved := clean_term_preserving_quotes(
                             element_attr["value"]
                         )
-                    ) != '""'
+                    )
+                    != '""'
                     else ""
                 ),
             }
@@ -60,7 +61,19 @@ def clean_element_values(
         )
         for key, element_attr in elements.items()
     }
-    return new_elements
+
+
+def replace_element_value_html_quotes(
+    elements: dict[str, dict[str, any]],
+) -> dict[str, dict[str, any]]:
+    return {
+        key: (
+            {**element_attr, "value": element_attr["value"].replace("&quot;", '"')}
+            if "value" in element_attr
+            else element_attr
+        )
+        for key, element_attr in elements.items()
+    }
 
 
 def parse_elements(file_path: str | Path) -> dict[str, dict[str, any]]:
