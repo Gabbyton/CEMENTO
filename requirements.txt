@@ -7,3 +7,4 @@ thefuzz
 tldextract
 build
 twine
+pytest
