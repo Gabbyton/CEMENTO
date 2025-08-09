@@ -268,10 +268,28 @@ class BidirectionalEdgeError(Exception):
             message_start = f"{message_start} and content: {edge_content}"
 
         if parent_content:
-            message_start = f"{message_start} and with parent: {parent_content},"
+            message_start = f"{message_start} and connected to term: {parent_content},"
 
         if child_content:
-            message_start = f"{message_start} and with child: {child_content},"
+            message_start = f"{message_start} as well as term: {child_content},"
+
+        self.message = f"{message_start} {message_end}"
+        super().__init__(self.message)
+
+
+class InvertedEdgeError(Exception):
+    def __init__(self, edge_id, edge_content, parent_content, child_content):
+        message_start = f"Edge with id: {edge_id}"
+        message_end = " is inverted! Please make sure to use end-arrows only for ontology diagrams."
+
+        if edge_content is not None and edge_content.strip():
+            message_start = f"{message_start} and content: {edge_content}"
+
+        if parent_content:
+            message_start = f"{message_start} and connected to term: {parent_content},"
+
+        if child_content:
+            message_start = f"{message_start} as well as term: {child_content},"
 
         self.message = f"{message_start} {message_end}"
         super().__init__(self.message)

@@ -23,6 +23,8 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 ### Added
 
 - property family of exempted properties to exempt when drawing diagrams
+- tests for diagram error checks
+- error and error check for bidirectional and inverted arrows
 
 ### Fixed
 

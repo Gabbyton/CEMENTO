@@ -13,6 +13,7 @@ from cemento.draw_io.constants import (
     Connector,
     DisconnectedTermError,
     FloatingEdgeError,
+    InvertedEdgeError,
     MissingChildEdgeError,
     MissingParentEdgeError,
     NxEdge,
@@ -142,16 +143,29 @@ def find_edge_errors_diagram_content(
         if "value" not in edge_attr or not edge_attr["value"]:
             errors.append((edge_id, BlankEdgeLabelError(edge_id, connected_terms)))
 
-        if (
-            "startArrow" in edge_attr
-            and edge_attr["startArrow"] != "none"
-            or ("endArrow" in edge_attr and edge_attr["endArrow"] != "none")
-        ):
+        if ("startArrow" in edge_attr and edge_attr["startArrow"] != "none") and (
+            "endArrow" in edge_attr and edge_attr["endArrow"] != "none"
+        ) or (("startArrow" in edge_attr and edge_attr["startArrow"] != "none") and "endArrow" not in edge_attr):
             connected_terms_iter = iter(connected_terms)
             errors.append(
                 (
                     edge_id,
                     BidirectionalEdgeError(
+                        edge_id,
+                        edge_content,
+                        next(connected_terms_iter, None),
+                        next(connected_terms_iter, None),
+                    ),
+                )
+            )
+        elif ("startArrow" in edge_attr and edge_attr["startArrow"] != "none") and (
+            "endArrow" in edge_attr and edge_attr["endArrow"] == "none"
+        ):
+            connected_terms_iter = iter(connected_terms)
+            errors.append(
+                (
+                    edge_id,
+                    InvertedEdgeError(
                         edge_id,
                         edge_content,
                         next(connected_terms_iter, None),
