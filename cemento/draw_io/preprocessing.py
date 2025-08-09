@@ -79,8 +79,8 @@ def remove_quotes(input_str: str) -> str:
 
 
 def is_line(element: dict[str, any]) -> bool:
-    return ("endArrow" in element and element["endArrow"] == "none") and (
-        "startArrow" not in element or element["startArrow"] == "none"
+    return ("endArrow" in element and element["endArrow"].lower() == "none") and (
+        "startArrow" not in element or element["startArrow"].lower() == "none"
     )
 
 
@@ -143,9 +143,17 @@ def find_edge_errors_diagram_content(
         if "value" not in edge_attr or not edge_attr["value"]:
             errors.append((edge_id, BlankEdgeLabelError(edge_id, connected_terms)))
 
-        if ("startArrow" in edge_attr and edge_attr["startArrow"] != "none") and (
-            "endArrow" in edge_attr and edge_attr["endArrow"] != "none"
-        ) or (("startArrow" in edge_attr and edge_attr["startArrow"] != "none") and "endArrow" not in edge_attr):
+        if (
+            ("startArrow" in edge_attr and edge_attr["startArrow"].lower() != "none")
+            and ("endArrow" in edge_attr and edge_attr["endArrow"].lower() != "none")
+            or (
+                (
+                    "startArrow" in edge_attr
+                    and edge_attr["startArrow"].lower() != "none"
+                )
+                and "endArrow" not in edge_attr
+            )
+        ):
             connected_terms_iter = iter(connected_terms)
             errors.append(
                 (
@@ -158,9 +166,9 @@ def find_edge_errors_diagram_content(
                     ),
                 )
             )
-        elif ("startArrow" in edge_attr and edge_attr["startArrow"] != "none") and (
-            "endArrow" in edge_attr and edge_attr["endArrow"] == "none"
-        ):
+        elif (
+            "startArrow" in edge_attr and edge_attr["startArrow"].lower() != "none"
+        ) and ("endArrow" in edge_attr and edge_attr["endArrow"].lower() == "none"):
             connected_terms_iter = iter(connected_terms)
             errors.append(
                 (
