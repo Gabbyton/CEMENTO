@@ -1,0 +1,698 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Scripting &#8212; CEMENTO 0.9.6 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_iframe.css?v=96c28b52" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=051ffe83" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=564a08b9"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/h5p-resizer.js?v=a3e8b8ed"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user-guide-pages/scripting';</script>
+    <link rel="canonical" href="https://cwru-sdle.github.io/CEMENTO/user-guide-pages/scripting.html" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Drawing Basics" href="drawing-basics.html" />
+    <link rel="prev" title="CLI Guide" href="cli-guide.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-light.svg" class="logo__image only-light" alt="CEMENTO - Home"/>
+    <img src="../_static/logo-dark.svg" class="logo__image only-dark pst-js-only" alt="CEMENTO - Home"/>
+  
+  
+    <p class="title logo__title">CEMENTO</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../quickstart.html">
+    Quickstart
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../user-guide.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../modules.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../faqs.html">
+    FAQs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../about.html">
+    About
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../changelog.html">
+    Changelog
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cwru-sdle/CEMENTO/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/cemento/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-python fa-lg fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../quickstart.html">
+    Quickstart
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../user-guide.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../modules.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../faqs.html">
+    FAQs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../about.html">
+    About
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../changelog.html">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cwru-sdle/CEMENTO/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/cemento/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-python fa-lg fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli-guide.html">CLI Guide</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Scripting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drawing-basics.html">Drawing Basics</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../user-guide.html" class="nav-link">User Guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Scripting</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="scripting">
+<h1>Scripting<a class="headerlink" href="#scripting" title="Link to this heading">#</a></h1>
+<p>The package is composed of four main modules that can be imported into a python script. The following sections can show how to use the package for the its most common (and simplest) use-cases:</p>
+<section id="converting-draw-io-to-ttl-files">
+<h2>Converting draw.io to <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files<a class="headerlink" href="#converting-draw-io-to-ttl-files" title="Link to this heading">#</a></h2>
+<p>Using the actual function is as easy as importing and calling it in a python script. The function takes the exact same arguments that you can set in <code class="docutils literal notranslate"><span class="pre">cemento</span> <span class="pre">drawio_ttl</span></code>. In this case, the script needs to set those arguments explicitly.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cemento.rdf.drawio_to_turtle</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_drawio_to_ttl</span>
+
+<span class="n">INPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;happy-example.drawio&quot;</span>
+<span class="n">OUTPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;sample.ttl&quot;</span>
+<span class="n">LOG_PATH</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">convert_drawio_to_ttl</span><span class="p">(</span>
+        <span class="n">INPUT_PATH</span><span class="p">,</span>
+        <span class="n">OUTPUT_PATH</span><span class="p">,</span>
+        <span class="n">check_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># set whether to check for diagram errors prior to processing</span>
+        <span class="n">log_substitution_path</span><span class="o">=</span><span class="n">LOG_PATH</span><span class="p">,</span> <span class="c1"># set where to save the substitution log for term fuzzy search</span>
+        <span class="n">collect_domains_ranges</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># set whether to collect the instances within the domain and range of a custom object property</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="converting-ttl-files-to-draw-io-files">
+<h2>Converting <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files to draw.io files<a class="headerlink" href="#converting-ttl-files-to-draw-io-files" title="Link to this heading">#</a></h2>
+<p>This case is very similiar to the previous one. The <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> was assumed to contain the necessary information so you only need to set the <code class="docutils literal notranslate"><span class="pre">INPUT_PATH</span></code> and <code class="docutils literal notranslate"><span class="pre">OUTPUT_PATH</span></code>. The option and <code class="docutils literal notranslate"><span class="pre">set_unique_literals</span></code> determines whether tot treat literals with the same name as different things. <code class="docutils literal notranslate"><span class="pre">horizontal_tree</span></code>, on the other hand, sets whether to draw tree diagrams horizontally or vertically.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cemento.rdf.turtle_to_drawio</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_ttl_to_drawio</span>
+
+<span class="n">INPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;your_onto.ttl&quot;</span>
+<span class="n">OUTPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;your_diagram.drawio&quot;</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">convert_ttl_to_drawio</span><span class="p">(</span>
+        <span class="n">INPUT_PATH</span><span class="p">,</span>
+        <span class="n">OUTPUT_PATH</span><span class="p">,</span>
+        <span class="n">horizontal_tree</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1">#sets whether to display tree horizontally or vertically</span>
+        <span class="n">set_unique_literals</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># sets whether to make literals with the same content, language and type unique</span>
+        <span class="n">classes_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># sets whether to display classes only, useful for large turtles like CCO</span>
+        <span class="n">demarcate_boxes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># sets whether to move all instances to A-box and classes to T-box</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="converting-draw-io-to-a-networkx-digraph">
+<h2>Converting draw.io to a <code class="docutils literal notranslate"><span class="pre">networkx</span></code> DiGraph<a class="headerlink" href="#converting-draw-io-to-a-networkx-digraph" title="Link to this heading">#</a></h2>
+<p>We used a directed networkx graph (DiGraph) as an intermediary data structure that provides a much richer interface for graph manipulation than the default <code class="docutils literal notranslate"><span class="pre">rdflib</span></code> Graph. If you are interested in using this data structure, you are free to use the functions shown below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cemento.draw_io.read_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_drawio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cemento.draw_io.write_diagram</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_tree</span>
+
+<span class="n">INPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;happy-example.drawio&quot;</span>
+<span class="n">OUTPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;sample.drawio&quot;</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># reads a drawio file and converts it to a networkx graph</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">read_drawio</span><span class="p">(</span>
+        <span class="n">INPUT_PATH</span><span class="p">,</span>
+        <span class="n">check_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">inverted_rank_arrow</span><span class="o">=</span><span class="kc">False</span> <span class="c1"># set whether the rdfs:subClassOf and rdf:type were inverted</span>
+    <span class="p">)</span>
+    <span class="c1"># reads a networkx graph and draws a draw.io diagram</span>
+    <span class="n">draw_tree</span><span class="p">(</span>
+        <span class="n">graph</span><span class="p">,</span>
+        <span class="n">OUTPUT_PATH</span><span class="p">,</span>
+        <span class="n">translate_x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">translate_y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">classes_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">demarcate_boxes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">horizontal_tree</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>In fact, the functions <code class="docutils literal notranslate"><span class="pre">read_drawio</span></code> and <code class="docutils literal notranslate"><span class="pre">convert_ttl_to_graph</span></code> are actually wrapped around to form the <code class="docutils literal notranslate"><span class="pre">convert_ttl_to_drawio</span></code> and <code class="docutils literal notranslate"><span class="pre">convert_drawio_to_ttl</span></code> functions. You are already using the former pair when using the latter.</p>
+<section id="a-note-on-unique-literals">
+<h3>A Note on “Unique” Literals<a class="headerlink" href="#a-note-on-unique-literals" title="Link to this heading">#</a></h3>
+<p>By default, the package will not treat all literals as being unique from one another. Classes and instances, by design, have singular, unique IRIs so they are treated to be the same if drawn in multiple locations. By default, literals will be treated the same way even though they don’t have unique IRIs.</p>
+<p>To make unique literals (which don’t come with IRIs), the package can append all literal terms with a unique ID that prevents merging. To do so, set the <code class="docutils literal notranslate"><span class="pre">set_unique_literals</span></code> argument when using the functions <code class="docutils literal notranslate"><span class="pre">convert_ttl_to_drawio</span></code> and <code class="docutils literal notranslate"><span class="pre">convert_ttl_to_graph</span></code>.</p>
+<p>You are free to remove them using <code class="docutils literal notranslate"><span class="pre">remove_literal_id</span></code> which is just one of the functions we wrote in <code class="docutils literal notranslate"><span class="pre">cemento.draw_io.preprocessing</span></code>. You are also free to implement your own algorithm as well.</p>
+</section>
+</section>
+<section id="using-other-modules">
+<span id="module-structure"></span><h2>Using Other Modules<a class="headerlink" href="#using-other-modules" title="Link to this heading">#</a></h2>
+<p>This package was built along the paradigms of <a class="reference external" href="https://en.wikipedia.org/wiki/Functional_programming">functional programming</a> which is only possible in Python through a <a class="reference external" href="https://docs.python.org/3/howto/functional.html">hybrid approach</a>. The modules are divided by four main logical groupings, and are as follows:</p>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">cemento.cli</span></code></dt><dd><p>This module contains code with the CLI interface definitions.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">cemento.draw_io</span></code></dt><dd><p>This module has code that parses, reads and converts draw.io diagrams of ontologies into <code class="docutils literal notranslate"><span class="pre">networkx</span></code> DiGraph objects (with proper formatted content) and vice versa. The content generated here is subsequently used in the <code class="docutils literal notranslate"><span class="pre">rdf</span></code> module.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">cemento.rdf</span></code></dt><dd><p>This module handles the conversion of <code class="docutils literal notranslate"><span class="pre">draw.io</span></code> to <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> and vice versa. It bridges and orchestrates some functions in <code class="docutils literal notranslate"><span class="pre">cemento.draw_io</span></code> to do so.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">cemento.term_matching</span></code></dt><dd><p>This module contains functions related to term matching and substitution, such as prefixes, namespace mappings, and fuzzy search.</p>
+</dd>
+</dl>
+</li>
+</ol>
+<p>Each module is again subdivided into different submodules that envelope functions based on their purpose:</p>
+<ul class="simple">
+<li><p><strong>preprocessing</strong> - contains functions that deal with cleaning and organizing terms prior to use in other functions.</p></li>
+<li><p><strong>transforms</strong> - deals with data transformations, aggregations and splitting for both final and intermediate data.</p></li>
+<li><p><strong>filters</strong> - some functions that filter data that ended up being reused across modules.</p></li>
+<li><p><strong>io</strong> - handles file or data loading from file or library sources.</p></li>
+<li><p><strong>constants</strong> - contains fixed constants and definitions for dataclasses and enums.</p></li>
+</ul>
+<p>As you can imagine, these combinations can help navigate the function you probably want to inspect. For example, you can bet that <code class="docutils literal notranslate"><span class="pre">cemento.draw_io.io</span></code> and <code class="docutils literal notranslate"><span class="pre">cemento.draw_io.transforms</span></code> will contain the functions for actually reading and writing a draw.io diagram.</p>
+<section id="the-api-guide">
+<h3>The API guide<a class="headerlink" href="#the-api-guide" title="Link to this heading">#</a></h3>
+<p>We invite you to read through our <a class="reference internal" href="../modules.html"><span class="doc">API guide</span></a> to get an in-depth understanding of what each of the functions do. This codebase is more than 2,000 lines, and is still in active development. We cannot guarantee that all functions will have documentation, but we will slowly add as many of them as possible starting with the major functions for conversion.</p>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="cli-guide.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">CLI Guide</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="drawing-basics.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Drawing Basics</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-draw-io-to-ttl-files">Converting draw.io to <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-ttl-files-to-draw-io-files">Converting <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files to draw.io files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-draw-io-to-a-networkx-digraph">Converting draw.io to a <code class="docutils literal notranslate"><span class="pre">networkx</span></code> DiGraph</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-note-on-unique-literals">A Note on “Unique” Literals</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-other-modules">Using Other Modules</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-api-guide">The API guide</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+        <div class="footer-item"><a href="https://www.flaticon.com/free-icons/concrete" title="concrete icons">Concrete icons created by smashingstocks - Flaticon</a></div>
+      
+    </div>
+  
+  
+    <div class="footer-items__center">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, CWRU SDLE-MDS3 Center of Excellence.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -26,6 +26,11 @@ from cemento.term_matching.transforms import (
     get_prop_family_from_defaults,
     get_strat_predicates,
 )
+from cemento.utils.io import (
+    get_default_defaults_folder,
+    get_default_prefixes_file,
+    get_default_references_folder,
+)
 
 
 def convert_ttl_to_graph(
@@ -36,11 +41,13 @@ def convert_ttl_to_graph(
     prefixes_path: str | Path = None,
     set_unique_literals=True,
 ) -> DiGraph:
-
-    file_args = [onto_ref_folder, prefixes_path, defaults_folder]
-    if not all(file_args) and any(file_args):
-        raise ValueError("Either all the folders are set or none at all!")
-
+    onto_ref_folder = (
+        get_default_references_folder() if not onto_ref_folder else onto_ref_folder
+    )
+    defaults_folder = (
+        get_default_defaults_folder() if not defaults_folder else defaults_folder
+    )
+    prefixes_path = get_default_prefixes_file() if not prefixes_path else prefixes_path
     print("retrieving reference data...")
     file_strat_preds = set()
     ref_strat_preds = set()

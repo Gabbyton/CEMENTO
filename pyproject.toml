@@ -38,7 +38,7 @@ packages = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Gabbyton/CEMENTO"
+Homepage = "https://cwru-sdle.github.io/CEMENTO/"
 
 [project.license]
 text = "BSD-3-Clause"

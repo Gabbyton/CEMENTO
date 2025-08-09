@@ -44,7 +44,11 @@ from cemento.term_matching.transforms import (
     get_term_types,
 )
 from cemento.utils.constants import NullTermError
-from cemento.utils.io import get_default_prefixes_file
+from cemento.utils.io import (
+    get_default_defaults_folder,
+    get_default_prefixes_file,
+    get_default_references_folder,
+)
 from cemento.utils.utils import fst, get_abbrev_term, snd
 
 
@@ -57,6 +61,13 @@ def convert_graph_to_ttl(
     prefixes_path: str | Path = None,
     log_substitution_path: str | Path = None,
 ) -> None:
+    onto_ref_folder = (
+        get_default_references_folder() if not onto_ref_folder else onto_ref_folder
+    )
+    defaults_folder = (
+        get_default_defaults_folder() if not defaults_folder else defaults_folder
+    )
+    prefixes_path = get_default_prefixes_file() if not prefixes_path else prefixes_path
     prefixes, inv_prefixes = get_prefixes(prefixes_path, onto_ref_folder)
     search_terms = get_search_terms(inv_prefixes, onto_ref_folder, defaults_folder)
 

@@ -2,23 +2,20 @@
 @prefix mds: <https://cwrusdle.bitbucket.io/mds/> .
 @prefix obo: <http://purl.obolibrary.org/obo/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 mds:ActOfPlayingGolf a owl:Class ;
     obo:BFO_0000057 mds:HappyGilmore ;
     rdfs:subClassOf cco:ont00000005 .
 
 mds:NicknameOfHappyGilmore a cco:ont00000990 ;
-    cco:ont00001761 "Happy" ;
+    cco:ont00001761 "Happy"^^xsd:string ;
     cco:ont00001916 mds:HappyGilmore .
 
 mds:hasCatchphrase a owl:ObjectProperty ;
-    rdfs:domain [ a owl:Class ;
-            owl:unionOf ( mds:HappyGilmore ) ] ;
-    rdfs:range [ a owl:Class ;
-            owl:unionOf ( mds:CatchPhraseOfHappyGilmore ) ] .
+    skos:definition "a relation that holds between a person p and a linguistic expression e at time t iff p exhibits a pattern of verbal behavior that realizes e with sufficient frequency and consistency to constitute a characteristic identifier of p's communicative disposition within relevant social contexts."@en .
 
 obo:BFO_0000057 a owl:ObjectProperty ;
     rdfs:label "has participant"@en ;
@@ -29,6 +26,9 @@ mds:CatchPhrase a owl:Class ;
     rdfs:subClassOf cco:ont00000958 ;
     skos:altLabel "slogan" ;
     skos:definition "a well-known sentence or phrase, especially one that is associated with a particular famous person."@en .
+
+mds:CatchPhraseOfHappyGilmore a mds:CatchPhrase ;
+    cco:ont00001761 "¿Por que no te vas a casa? ¡Eso es tu casa"@es .
 
 mds:HappyPerson a owl:Class ;
     rdfs:subClassOf cco:ont00001262 ;
@@ -42,8 +42,8 @@ cco:ont00001916 a owl:ObjectProperty ;
     rdfs:label "designates"@en ;
     skos:exactMatch cco:ont00001916 .
 
-mds:CatchPhraseOfHappyGilmore a mds:CatchPhrase ;
-    cco:ont00001761 "¿Por que no te vas a casa? ¡Eso es tu casa!"@es .
+mds:HappyGilmore a mds:HappyPerson ;
+    mds:hasCatchphrase mds:CatchPhraseOfHappyGilmore .
 
 cco:ont00000005 a owl:Class ;
     rdfs:label "Act"@en ;
@@ -60,7 +60,4 @@ cco:ont00000990 a owl:Class ;
 cco:ont00001262 a owl:Class ;
     rdfs:label "Person"@en ;
     skos:exactMatch cco:ont00001262 .
-
-mds:HappyGilmore a mds:HappyPerson ;
-    mds:hasCatchphrase mds:CatchPhraseOfHappyGilmore .
 

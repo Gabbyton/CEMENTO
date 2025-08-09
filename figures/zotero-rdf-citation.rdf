@@ -1,0 +1,73 @@
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:z="http://www.zotero.org/namespaces/export#"
+ xmlns:foaf="http://xmlns.com/foaf/0.1/"
+ xmlns:link="http://purl.org/rss/1.0/modules/link/"
+ xmlns:prism="http://prismstandard.org/namespaces/1.2/basic/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:dcterms="http://purl.org/dc/terms/"
+ xmlns:bib="http://purl.org/net/biblio#">
+    <bib:Data rdf:about="https://github.com/cwru-sdle/CEMENTO">
+        <z:itemType>computerProgram</z:itemType>
+        <z:programmers>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Ponon</foaf:surname>
+                        <foaf:givenName>Gabriel O.</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Rajamohan</foaf:surname>
+                        <foaf:givenName>Balashanmuga Priyan</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Frakes</foaf:surname>
+                        <foaf:givenName>Ethan</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Sharma</foaf:surname>
+                        <foaf:givenName>Hemant</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>French</foaf:surname>
+                        <foaf:givenName>Roger</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </z:programmers>
+        <link:link rdf:resource="#item_61245"/>
+        <prism:edition>0.8.9</prism:edition>
+        <dc:title>cemento: A package to view and write ontologies directly from draw.io diagram files.</dc:title>
+        <dc:date>7/27/2025</dc:date>
+        <z:shortTitle>cemento</z:shortTitle>
+        <z:libraryCatalog>PyPI</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://github.com/cwru-sdle/CEMENTO</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2025-07-28 20:08:45</dcterms:dateSubmitted>
+        <z:system>OS Independent</z:system>
+        <z:programmingLanguage>Python</z:programmingLanguage>
+    </bib:Data>
+    <z:Attachment rdf:about="#item_61245">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://github.com/Gabbyton/CEMENTO</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2025-07-28 20:08:51</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+</rdf:RDF>
