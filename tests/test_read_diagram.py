@@ -20,10 +20,17 @@ diagram_test_files = [
 ]
 diagram_test_files = sorted(diagram_test_files)
 
+
 def get_corresponding_ref_file(input_file: str | Path):
+    input_file_path = Path(input_file)
     ref_folder_path = Path(__file__).parent / "test_refs"
-    ref_path = f"{ref_folder_path / Path(diagram_test_files[1]).stem}.json"
-    return ref_path
+    ref_paths = {
+        (file_path := Path(file.path)).suffix.replace(".", ""): file_path
+        for file in scandir(ref_folder_path)
+        if re.fullmatch(input_file_path.stem, Path(file.path).stem)
+    }
+    return ref_paths
+
 
 def assert_attrs(element: dict[str, dict[str, any]], keys: Iterable[str]) -> None:
     _, attrs = element
@@ -78,7 +85,7 @@ def get_graph_reference(
 
 def test_graph_generation_basic():
     graph = read_drawio(diagram_test_files[1], check_errors=True)
-    ref_path = get_corresponding_ref_file(diagram_test_files[1])
+    ref_path = get_corresponding_ref_file(diagram_test_files[1])['json']
     ref_nodes, ref_edges = get_graph_reference(ref_path)
     graph_nodes, graph_edges = dict(graph.nodes(data=True)), list(
         graph.edges(data=True)
@@ -115,3 +122,21 @@ def test_graph_generation_basic():
         for (subj, obj, attr) in graph_edges
     }
     assert graph_edges == ref_edges
+
+
+def test_graph_generation_advanced():
+    graph = read_drawio(diagram_test_files[2], check_errors=True)
+    ref_path = get_corresponding_ref_file(diagram_test_files[2])['json']
+    print(ref_path)
+    ref_nodes, ref_edges = get_graph_reference(ref_path)
+    ref_nodes = set(ref_nodes.keys())
+    graph_nodes = set(graph.nodes)
+
+    assert ref_nodes == graph_nodes
+    assert len(graph_nodes) == len(ref_nodes)
+
+    graph_edges = set(graph.edges)
+    ref_edges = set((subj, obj) for subj, obj, _ in ref_edges)
+
+    assert ref_edges == graph_edges
+    assert len(ref_edges) == len(graph_edges)
