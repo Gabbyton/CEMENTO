@@ -1,3 +1,4 @@
+import json
 import re
 from collections.abc import Iterable
 from functools import partial
@@ -5,6 +6,7 @@ from os import scandir
 from pathlib import Path
 from pprint import pprint
 
+from cemento.draw_io.read_diagram import read_drawio
 from cemento.draw_io.transforms import (
     extract_elements,
     parse_elements,
@@ -18,6 +20,10 @@ diagram_test_files = [
 ]
 diagram_test_files = sorted(diagram_test_files)
 
+def get_corresponding_ref_file(input_file: str | Path):
+    ref_folder_path = Path(__file__).parent / "test_refs"
+    ref_path = f"{ref_folder_path / Path(diagram_test_files[1]).stem}.json"
+    return ref_path
 
 def assert_attrs(element: dict[str, dict[str, any]], keys: Iterable[str]) -> None:
     _, attrs = element
@@ -55,3 +61,57 @@ def test_file_read():
     expected_rels = {"mds:two", "mds:five"}
     actual_rels = set(attr["value"] for _, attr in rel_elements)
     assert actual_rels == expected_rels
+
+
+def remove_attr(input_dict: dict[str, any], remove_key: str) -> dict[str, any]:
+    return {key: value for key, value in input_dict.items() if key != remove_key}
+
+
+def get_graph_reference(
+    input_path: str | Path,
+) -> tuple[dict[str, dict[str, any]], list[list[any]]]:
+    with open(input_path, "r") as f:
+        ref_graph_data = json.load(f)
+        return ref_graph_data["nodes"], ref_graph_data["edges"]
+    raise ValueError("Cannot retrieve reference file!")
+
+
+def test_graph_generation_basic():
+    graph = read_drawio(diagram_test_files[1], check_errors=True)
+    ref_path = get_corresponding_ref_file(diagram_test_files[1])
+    ref_nodes, ref_edges = get_graph_reference(ref_path)
+    graph_nodes, graph_edges = dict(graph.nodes(data=True)), list(
+        graph.edges(data=True)
+    )
+
+    # check that the nodes and edges all have unique IDs
+    node_ids = [attr["term_id"] for attr in graph_nodes.values()]
+    assert len(node_ids) == len(set(node_ids))
+
+    all_ids = node_ids
+    edge_ids = [attr["pred_id"] for (_, _, attr) in graph_edges]
+    assert len(edge_ids) == len(set(edge_ids))
+
+    all_ids += edge_ids
+
+    assert len(all_ids) == len(set(all_ids))
+
+    # check that the parsed graph elements correspond with the reference
+    # start with nodes
+    ref_nodes = {key: remove_attr(attr, "term_id") for key, attr in ref_nodes.items()}
+    graph_nodes = {
+        key: remove_attr(value, "term_id") for key, value in graph_nodes.items()
+    }
+
+    assert graph_nodes == ref_nodes
+
+    # then compare edges
+    ref_edges = {
+        (subj, obj, frozenset(remove_attr(attr, "pred_id").items()))
+        for (subj, obj, attr) in ref_edges
+    }
+    graph_edges = {
+        (subj, obj, frozenset(remove_attr(attr, "pred_id").items()))
+        for (subj, obj, attr) in graph_edges
+    }
+    assert graph_edges == ref_edges
