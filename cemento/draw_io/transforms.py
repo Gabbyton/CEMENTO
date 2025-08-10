@@ -77,6 +77,14 @@ def replace_element_value_html_quotes(
 
 
 def parse_elements(file_path: str | Path) -> dict[str, dict[str, any]]:
+    elements = retrieve_elements(file_path)
+    elements = assign_edge_label_attrs(elements)
+    elements = clean_element_values(elements)
+    elements = replace_element_value_html_quotes(elements)
+    return elements
+
+
+def retrieve_elements(file_path: str | Path) -> dict[str, dict[str, any]]:
     # parse elements
     tree = ET.parse(file_path)
 
@@ -97,7 +105,7 @@ def parse_elements(file_path: str | Path) -> dict[str, dict[str, any]]:
         cell_attrs.update(nested_attrs)
 
         style_attrib_str = (
-            cell.attrib["style"].split(";") if "style" in cell.attrib else []
+            cell_attrs["style"].split(";") if "style" in cell_attrs else []
         )
         style_term_pairs = [tuple(style.split("=")) for style in style_attrib_str]
         style_terms = reduce(
@@ -107,43 +115,61 @@ def parse_elements(file_path: str | Path) -> dict[str, dict[str, any]]:
         )
         style_tags = reduce(
             lambda acc, style: acc + [fst(style)],
-            filter(lambda tag: len(tag) <= 1 and tag, style_term_pairs),
+            filter(lambda tag: len(tag) <= 1 and fst(tag), style_term_pairs),
             list(),
         )
         cell_attrs.update(style_terms)
         cell_attrs["tags"] = style_tags
-        elements[cell.attrib["id"]] = cell_attrs
+        elements[cell_attrs["id"]] = cell_attrs
 
     return elements
+
+
+def assign_edge_label_attrs(
+    elements: dict[str, dict[str, any]],
+) -> dict[str, dict[str, any]]:
+    new_elements = elements
+    to_remove = set()
+    for label_id, data in elements.items():
+        if "tags" in data and "edgeLabel" in data["tags"]:
+            rel_id = data["parent"]
+            new_elements[rel_id]["tags"] += data["tags"]
+            new_elements[rel_id]["value"] = data["value"]
+            to_remove.add(label_id)
+    new_elements = {
+        key: value for key, value in new_elements.items() if key not in to_remove
+    }
+    return new_elements
 
 
 def extract_elements(
     elements: dict[str, dict[str, any]],
 ) -> tuple[set[dict[str, any], set[str]]]:
-    # read edges
-    term_ids, rel_ids = set(), set()
-    for element, data in elements.items():
-        # if the vertex attribute is 1 and edgeLabel is not in tags, it is a term (shape)
-        if (
-            "vertex" in data
-            and data["vertex"] == "1"
-            and (
-                "tags" not in data
-                or ("tags" in data and "edgeLabel" not in data["tags"])
-            )
-        ):
-            term_ids.add(element)
-        # if an element has an edgeLabel tag, it is a relationship (connection)
-        elif "tags" in data and "edgeLabel" in data["tags"]:
-            rel_val = data["value"]
-            rel_id = data["parent"]
-            elements[rel_id]["value"] = rel_val
-            rel_ids.add(rel_id)
-        # if an element has value, source and target, it is also a relationship (connection)
-        elif "value" in data and "source" in data and "target" in data:
-            rel_val = data["value"]
-            rel_id = element
-            rel_ids.add(rel_id)
+    term_ids = set(
+        map(
+            fst,
+            filter(
+                lambda x: "vertex" in (attrs := snd(x))
+                and attrs["vertex"] == "1"
+                and ("tags" not in attrs or "edgeLabel" not in attrs["tags"]),
+                elements.items(),
+            ),
+        )
+    )
+    rel_ids = set(
+        map(
+            fst,
+            filter(
+                lambda x: (
+                    "value" in (attrs := snd(x))
+                    and "source" in attrs
+                    and "target" in attrs
+                )
+                or ("tags" in attrs and "edgeLabel" in attrs["tags"]),
+                elements.items(),
+            ),
+        )
+    )
     # remove root IDs that get added due to draw.io bugs
     reserved_root_ids = {"0", "1"}
     term_ids -= reserved_root_ids

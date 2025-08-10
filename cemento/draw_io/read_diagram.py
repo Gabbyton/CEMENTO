@@ -9,12 +9,10 @@ from cemento.draw_io.preprocessing import (
     get_diagram_error_exemptions,
 )
 from cemento.draw_io.transforms import (
-    clean_element_values,
     extract_elements,
     generate_graph,
     parse_elements,
     relabel_graph_nodes_with_node_attr,
-    replace_element_value_html_quotes,
 )
 from cemento.term_matching.transforms import get_prefixes, get_strat_predicates_str
 from cemento.utils.io import (
@@ -42,8 +40,6 @@ def read_drawio(
     )
 
     elements = parse_elements(input_path)
-    elements = clean_element_values(elements)
-    elements = replace_element_value_html_quotes(elements)
     term_ids, rel_ids = extract_elements(elements)
     strat_props = None
     prefixes, inv_prefixes = get_prefixes(prefixes_file, onto_ref_folder)

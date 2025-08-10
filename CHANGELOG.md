@@ -25,10 +25,12 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - property family of exempted properties to exempt when drawing diagrams
 - tests for diagram error checks
 - error and error check for bidirectional and inverted arrows
+- step for assigning nested edge label values to label in `extract_elements` as its own function
 
 ### Changed
 - quote substitution in shape content to general html escape substitution
 - `parse_elements` implementation to be more functional
+- moved `parse_elements` post-processing steps and `parse_elements` into updated function
 
 ### Fixed
 
