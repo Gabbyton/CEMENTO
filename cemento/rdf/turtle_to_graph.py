@@ -204,6 +204,6 @@ def convert_ttl_to_graph(
         graph = rename_edges(graph, rename_terms)
 
         print("formatting literals...")
-        rename_format_literals = get_literal_format_mapping(graph)
+        rename_format_literals = get_literal_format_mapping(graph, inv_prefixes)
         graph = nx.relabel_nodes(graph, rename_format_literals)
         return graph

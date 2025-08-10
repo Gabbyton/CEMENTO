@@ -10,6 +10,7 @@ def clean_literal_string(literal_term: str) -> str:
     new_literal_term = re.sub(r"\^\^\w+:\w+", "", new_literal_term)
     return new_literal_term
 
+
 # TODO: set supppression key as constant
 def remove_suppression_key(term: str) -> str:
     return term.replace("*", "")
@@ -24,7 +25,11 @@ def get_term_aliases(term: str) -> list[str]:
     return []
 
 
-def format_literal(literal: Literal) -> str:
+def format_literal(literal: Literal, prefix: str) -> str:
+    if prefix is None:
+        raise ValueError(
+            "The literal datatype prefix was not specified. Literal datatype namespaces cannot be None."
+        )
     literal_str = f'"{literal.value}"'
     lang_str = (
         f"@{literal.language}"
@@ -36,6 +41,6 @@ def format_literal(literal: Literal) -> str:
     if hasattr(literal, "datatype") and literal.datatype:
         datatype = literal.datatype
         _, abbrev = split_uri(datatype)
-        datatype_str = f"^^xsd:{abbrev}"
+        datatype_str = f"^^{prefix}:{abbrev}"
 
     return f"{literal_str}{lang_str}{datatype_str}"

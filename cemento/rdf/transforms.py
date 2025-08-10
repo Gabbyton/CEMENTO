@@ -210,9 +210,21 @@ def get_graph_relabel_mapping(
     return rename_mapping
 
 
-def get_literal_format_mapping(graph: DiGraph) -> dict[Literal, str]:
+def get_literal_prefix(
+    literal: Literal, inv_prefixes: dict[URIRef | Namespace, str]
+) -> str:
+    if hasattr(literal, "datatype") and literal.datatype:
+        ns, _ = split_uri(literal.datatype)
+        prefix = inv_prefixes.get(ns, None)
+        return prefix
+    return None
+
+
+def get_literal_format_mapping(
+    graph: DiGraph, inv_prefixes: dict[URIRef | Namespace, str]
+) -> dict[Literal, str]:
     return {
-        literal: format_literal(literal)
+        literal: format_literal(literal, get_literal_prefix(literal, inv_prefixes))
         for literal in filter(lambda term: isinstance(term, Literal), graph.nodes)
     }
 
