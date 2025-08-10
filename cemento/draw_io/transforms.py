@@ -144,7 +144,7 @@ def assign_edge_label_attrs(
 
 def extract_elements(
     elements: dict[str, dict[str, any]],
-) -> tuple[set[dict[str, any], set[str]]]:
+) -> tuple[set[str], set[str]]:
     term_ids = set(
         map(
             fst,
