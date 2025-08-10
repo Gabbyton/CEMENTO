@@ -85,7 +85,7 @@ def get_graph_reference(
 
 def test_graph_generation_basic():
     graph = read_drawio(diagram_test_files[1], check_errors=True)
-    ref_path = get_corresponding_ref_file(diagram_test_files[1])['json']
+    ref_path = get_corresponding_ref_file(diagram_test_files[1])["json"]
     ref_nodes, ref_edges = get_graph_reference(ref_path)
     graph_nodes, graph_edges = dict(graph.nodes(data=True)), list(
         graph.edges(data=True)
@@ -126,7 +126,7 @@ def test_graph_generation_basic():
 
 def test_graph_generation_advanced():
     graph = read_drawio(diagram_test_files[2], check_errors=True)
-    ref_path = get_corresponding_ref_file(diagram_test_files[2])['json']
+    ref_path = get_corresponding_ref_file(diagram_test_files[2])["json"]
     print(ref_path)
     ref_nodes, ref_edges = get_graph_reference(ref_path)
     ref_nodes = set(ref_nodes.keys())
@@ -140,3 +140,7 @@ def test_graph_generation_advanced():
 
     assert ref_edges == graph_edges
     assert len(ref_edges) == len(graph_edges)
+
+
+def test_rdf_graph_generation():
+    pass
