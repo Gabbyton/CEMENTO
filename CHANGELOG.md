@@ -18,7 +18,7 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
-## [Unreleased]
+## [0.10.0] - 2025-08-11
 
 ### Added
 
