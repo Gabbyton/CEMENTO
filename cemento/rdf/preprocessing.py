@@ -30,7 +30,8 @@ def format_literal(literal: Literal, prefix: str) -> str:
         raise ValueError(
             "The literal datatype prefix was not specified. Literal datatype namespaces cannot be None."
         )
-    literal_str = f'"{literal.value}"'
+    literal_value = literal.value if literal.value else str(literal)
+    literal_str = f'"{literal_value}"'
     lang_str = (
         f"@{literal.language}"
         if hasattr(literal, "language") and literal.language
