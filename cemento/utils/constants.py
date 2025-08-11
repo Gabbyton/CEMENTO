@@ -16,7 +16,7 @@ class RDFFormat(Enum):
     N3 = "n3"
 
     @classmethod
-    def from_input(input_format: str) -> Self:
+    def from_input(cls: Self, input_format: str) -> Self:
         format_mapping = {
             "turtle": RDFFormat.TURTLE,
             "ttl": RDFFormat.TURTLE,
@@ -38,7 +38,7 @@ class RDFFormat(Enum):
         return format_mapping[input_format]
 
     @classmethod
-    def from_ext(file_ext: str) -> Self:
+    def from_ext(cls: Self, file_ext: str) -> Self:
         format_mapping = {
             ".ttl": RDFFormat.TURTLE,
             ".xml": RDFFormat.XML,
