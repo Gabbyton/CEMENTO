@@ -217,6 +217,9 @@ def get_literal_prefix(
         ns, _ = split_uri(literal.datatype)
         prefix = inv_prefixes.get(ns, None)
         return prefix
+    elif literal.value:
+        # default to xsd, since non-annotated terms are strings
+        return "xsd"
     return None
 
 
@@ -330,34 +333,6 @@ def assign_literal_ids(
             rdf_graph.add((subj, pred, new_literal))
 
     return rdf_graph
-
-
-# TODO: talk about limitations of functional approaches during meeting
-# def assign_literal_ids(
-#     rdf_graph: Graph, literal_replacements: Iterable[tuple[Literal, Literal]]
-# ) -> DiGraph:
-#     # TODO: assign hashed constant for determining literal ids
-#     # FIXME: zip is shorter in one argument
-#     literal_terms, new_literal_values = zip(*literal_replacements, strict=True)
-#     replace_triples = list(rdf_graph.triples_choices((None, None, list(literal_terms))))
-#     substitute_triples = (
-#         (subj, pred, new_literal)
-#         for ((subj, pred, obj), new_literal) in zip(
-#             replace_triples, new_literal_values, strict=True
-#         )
-#     )
-#     # TODO: setup immutable copy for rdf_graph
-#     new_graph = reduce(
-#         lambda rdf_graph, triple: rdf_graph.remove(triple),
-#         replace_triples,
-#         rdf_graph,
-#     )
-#     new_graph = reduce(
-#         lambda rdf_graph, triple: rdf_graph.add(triple),
-#         substitute_triples,
-#         new_graph,
-#     )
-#     return new_graph
 
 
 def get_uuid():

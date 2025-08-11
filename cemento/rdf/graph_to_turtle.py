@@ -156,7 +156,6 @@ def convert_graph_to_ttl(
 
     inv_constructed_terms = {value: key for key, value in constructed_terms.items()}
     constructed_terms.update(substitution_results)
-    print(constructed_terms)
 
     # get datatypes in graph first
     datatype_search_terms = get_xsd_terms()
