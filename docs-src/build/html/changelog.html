@@ -1,0 +1,958 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Changelog &#8212; CEMENTO 0.10.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx_iframe.css?v=96c28b52" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=051ffe83" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=82662543"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script src="_static/h5p-resizer.js?v=a3e8b8ed"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'changelog';</script>
+    <link rel="canonical" href="https://cwru-sdle.github.io/CEMENTO/changelog.html" />
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="About" href="about.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo-light.svg" class="logo__image only-light" alt="CEMENTO - Home"/>
+    <img src="_static/logo-dark.svg" class="logo__image only-dark pst-js-only" alt="CEMENTO - Home"/>
+  
+  
+    <p class="title logo__title">CEMENTO</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="quickstart.html">
+    Quickstart
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="user-guide.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="modules.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="faqs.html">
+    FAQs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="about.html">
+    About
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" current active">
+  <a class="nav-link dropdown-item nav-internal" href="#">
+    Changelog
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cwru-sdle/CEMENTO/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/cemento/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-python fa-lg fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="quickstart.html">
+    Quickstart
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="user-guide.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="modules.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="faqs.html">
+    FAQs
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="about.html">
+    About
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Changelog
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cwru-sdle/CEMENTO/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/cemento/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-python fa-lg fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"></div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Changelog</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">#</a></h1>
+<p>All notable changes to this project will be documented in this file.</p>
+<p>The format is based on <a class="reference external" href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>,
+and this project adheres to <a class="reference external" href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+<section id="guide">
+<h2>[Guide]<a class="headerlink" href="#guide" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Added</strong> for new features.</p></li>
+<li><p><strong>Changed</strong> for changes in existing functionality.</p></li>
+<li><p><strong>Deprecated</strong> for soon-to-be removed features.</p></li>
+<li><p><strong>Removed</strong> for now removed features.</p></li>
+<li><p><strong>Fixed</strong> for any bug fixes.</p></li>
+<li><p><strong>Security</strong> in case of vulnerabilities.</p></li>
+</ul>
+<p><em>[Unreleased]</em> section for tracking changes prior to binning to versions.</p>
+<p><em>[X.X.X] - YYYY-MM-YY</em> for version-date header</p>
+</section>
+<section id="id1">
+<h2>[0.10.0] - 2025-08-11<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<section id="added">
+<h3>Added<a class="headerlink" href="#added" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>property family of exempted properties to exempt when drawing diagrams</p></li>
+<li><p>tests for diagram error checks</p></li>
+<li><p>error and error check for bidirectional and inverted arrows</p></li>
+<li><p>step for assigning nested edge label values to label in <code class="docutils literal notranslate"><span class="pre">extract_elements</span></code> as its own function</p></li>
+<li><p>tests for diagram element parsing and reading into graphs</p></li>
+<li><p>dynamic prefix generation for literal datatypes versus previous hard-coded <code class="docutils literal notranslate"><span class="pre">xsd</span></code></p></li>
+<li><p>support for imported non-<code class="docutils literal notranslate"><span class="pre">xsd</span></code> datatypes. Hand-coded datatypes not supported yet (issue with <code class="docutils literal notranslate"><span class="pre">rdflib</span></code>)</p></li>
+</ul>
+</section>
+<section id="changed">
+<h3>Changed<a class="headerlink" href="#changed" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>quote substitution in shape content to general html escape substitution</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">parse_elements</span></code> implementation to be more functional</p></li>
+<li><p>moved <code class="docutils literal notranslate"><span class="pre">parse_elements</span></code> post-processing steps and <code class="docutils literal notranslate"><span class="pre">parse_elements</span></code> into updated function</p></li>
+<li><p>hard-coded <code class="docutils literal notranslate"><span class="pre">xsd</span></code> requirements for literal datatypes</p></li>
+<li><p>changed from searching just <code class="docutils literal notranslate"><span class="pre">xsd</span></code> types to entire search term pool</p></li>
+</ul>
+</section>
+<section id="fixed">
+<h3>Fixed<a class="headerlink" href="#fixed" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>properties not showing up as parent classes when outputting diagrams</p></li>
+<li><p>none-type check in diagram error parsing to consider capitalized <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="id2">
+<h2>[0.9.6] - 2025-08-05<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<section id="id3">
+<h3>Fixed<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>wrong dividing line alignment for trees without instances</p></li>
+</ul>
+</section>
+</section>
+<section id="id4">
+<h2>[0.9.5] - 2025-08-05<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<section id="id5">
+<h3>Fixed<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>print statements when running <code class="docutils literal notranslate"><span class="pre">convert_drawio_to_ttl</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="id6">
+<h2>[0.9.4] - 2025-08-05<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<section id="id7">
+<h3>Added<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>dynamic version number detection in CLI message</p></li>
+</ul>
+</section>
+</section>
+<section id="id8">
+<h2>[0.9.3] - 2025-08-05<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
+<section id="id9">
+<h3>Added<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>center coordinates to <code class="docutils literal notranslate"><span class="pre">Connector</span></code> dataclass</p></li>
+<li><p>coordinate centering when rendering arrow positions (hasn’t fixed stray arrows)</p></li>
+</ul>
+</section>
+<section id="id10">
+<h3>Fixed<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>horizontal offsets not switching in <code class="docutils literal notranslate"><span class="pre">draw_tree</span></code></p></li>
+<li><p>non-rank stratified predicates being rendered as rank terms</p></li>
+</ul>
+</section>
+</section>
+<section id="id11">
+<h2>[0.9.2] - 2025-08-04<a class="headerlink" href="#id11" title="Link to this heading">#</a></h2>
+<section id="id12">
+<h3>Fixed<a class="headerlink" href="#id12" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">read_diagram</span></code> and <code class="docutils literal notranslate"><span class="pre">convert_graph_to_ttl</span></code> not running when using scripts</p></li>
+<li><p>null safety for folder variables. Get the default if not specified instead</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">convert_ttl_to_graph</span></code> with improper null behavior for folders</p></li>
+<li><p>example scripts in the example folder</p></li>
+</ul>
+</section>
+</section>
+<section id="id13">
+<h2>[0.9.1] - 2025-08-01<a class="headerlink" href="#id13" title="Link to this heading">#</a></h2>
+<section id="id14">
+<h3>Added<a class="headerlink" href="#id14" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>contributor</p></li>
+</ul>
+</section>
+<section id="id15">
+<h3>Fixed<a class="headerlink" href="#id15" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">assign_literal_ids</span></code> zips with uneven lengths</p></li>
+</ul>
+</section>
+</section>
+<section id="id16">
+<h2>[0.9.0] - 2025-08-01<a class="headerlink" href="#id16" title="Link to this heading">#</a></h2>
+<section id="id17">
+<h3>Added<a class="headerlink" href="#id17" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>instance conformation for T-box and A-box separation for each tree</p></li>
+<li><p>draw divider line to demarcate instance conformation for T-box and A-box separation</p></li>
+<li><p>tree conformation to align all demarcation lines</p></li>
+<li><p>T-box and A-box labels</p></li>
+<li><p>box demarcation option to CLI</p></li>
+<li><p>divider line template xml file</p></li>
+<li><p>option for activating domain-range instance collection. Default behavior now is not to collect.</p></li>
+</ul>
+</section>
+<section id="id18">
+<h3>Changed<a class="headerlink" href="#id18" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>separated <code class="docutils literal notranslate"><span class="pre">draw_diagram</span></code> from <code class="docutils literal notranslate"><span class="pre">draw_tree</span></code> for future layout schemes</p></li>
+</ul>
+</section>
+<section id="id19">
+<h3>Fixed<a class="headerlink" href="#id19" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">get_aliases</span></code> “eating up” the label if more alt labels are provided</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_severed_connectors</span></code> with a dangling function argument</p></li>
+<li><p>severed links not being added to the graph</p></li>
+<li><p>severed links being in reverse when displayed on the graph</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">convert_drawio_to_ttl</span></code> null safety for reference folder arguments</p></li>
+</ul>
+</section>
+</section>
+<section id="id20">
+<h2>[0.8.9] - 2025-07-25<a class="headerlink" href="#id20" title="Link to this heading">#</a></h2>
+<section id="id21">
+<h3>Added<a class="headerlink" href="#id21" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>FAQs page for common issues and solutions</p></li>
+<li><p>section for citations and license in about page</p></li>
+</ul>
+</section>
+<section id="id22">
+<h3>Changed<a class="headerlink" href="#id22" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>adjusted <code class="docutils literal notranslate"><span class="pre">write_diagram</span></code> graph flipping for repaired orientations</p></li>
+<li><p>updated default arrow position calculation on <code class="docutils literal notranslate"><span class="pre">Connector</span></code> dataclass to reflect repaired orientations</p></li>
+<li><p>repository location. The CEMENTO repository is now “owned” by the CWRU-SDLE organization</p></li>
+<li><p>base URL for documentation. It is now in <a class="reference external" href="https://cwru-sdle.github.io/CEMENTO/">https://cwru-sdle.github.io/CEMENTO/</a></p></li>
+</ul>
+</section>
+<section id="id23">
+<h3>Fixed<a class="headerlink" href="#id23" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>term location not printing on diagram error causing error</p></li>
+<li><p>reversed arrow configuration on <code class="docutils literal notranslate"><span class="pre">connector.xml</span></code> template</p></li>
+<li><p>missing parent content for <code class="docutils literal notranslate"><span class="pre">missingChildError</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="id24">
+<h2>[0.8.8] - 2025-07-25<a class="headerlink" href="#id24" title="Link to this heading">#</a></h2>
+<section id="id25">
+<h3>Added<a class="headerlink" href="#id25" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Shape type implementation for generating shapes</p></li>
+<li><p>New enum <code class="docutils literal notranslate"><span class="pre">ShapeType</span></code> for determining shape type</p></li>
+</ul>
+</section>
+</section>
+<section id="id26">
+<h2>[0.8.7] - 2025-07-24<a class="headerlink" href="#id26" title="Link to this heading">#</a></h2>
+<section id="id27">
+<h3>Added<a class="headerlink" href="#id27" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>added new template files for class, instance, and literal</p></li>
+<li><p>more detailed key error message for <code class="docutils literal notranslate"><span class="pre">generate_graph</span></code></p></li>
+<li><p>null safety checks after diagram error detection in <code class="docutils literal notranslate"><span class="pre">diagram_terms_iter</span></code></p></li>
+<li><p>connected term location and ID when outputting diagram errors</p></li>
+<li><p>checks to ignore horizontal lines for diagram error checking</p></li>
+</ul>
+</section>
+<section id="id28">
+<h3>Changed<a class="headerlink" href="#id28" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>error check to make changes are made in-place if the user is already working n a file with “error_check” on the file name</p></li>
+<li><p>default terms in <code class="docutils literal notranslate"><span class="pre">drawio_to_ttl</span></code> to use all default terms in rdflib and in default file folders</p></li>
+<li><p>print out triples that passed diagram checks but caught in null check in <code class="docutils literal notranslate"><span class="pre">convert_graph_to_ttl</span></code></p></li>
+<li><p>replaced all ghost connectors with straight orthogonal connectors</p></li>
+</ul>
+</section>
+<section id="id29">
+<h3>Fixed<a class="headerlink" href="#id29" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>fixed class and instance designation in graph_to_tll</p></li>
+<li><p>fixed error message input parsing</p></li>
+</ul>
+</section>
+<section id="removed">
+<h3>Removed<a class="headerlink" href="#removed" title="Link to this heading">#</a></h3>
+<p>removed root IDs from extracted terms and relationships in extract_elements</p>
+</section>
+</section>
+<section id="id30">
+<h2>[0.8.6] - 2025-07-24<a class="headerlink" href="#id30" title="Link to this heading">#</a></h2>
+<section id="id31">
+<h3>Added<a class="headerlink" href="#id31" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>error check option on CLI</p></li>
+<li><p>term content in diagram error message</p></li>
+<li><p>defaults folder file contents to search terms</p></li>
+<li><p>feature to remove redundant statements about default namespace terms</p></li>
+<li><p>ability to define object properties</p></li>
+<li><p>support for multipage inputs</p></li>
+<li><p>feature to replace default object-property assignment to custom properties to swap with definitions if available</p></li>
+</ul>
+</section>
+<section id="id32">
+<h3>Changed<a class="headerlink" href="#id32" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>domain-range <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> output to single element if only one</p></li>
+<li><p>to check errors by default</p></li>
+<li><p>updated examples for the new version</p></li>
+<li><p>updated figure with the new features</p></li>
+</ul>
+</section>
+</section>
+<section id="id33">
+<h2>[0.8.5] - 2025-07-23<a class="headerlink" href="#id33" title="Link to this heading">#</a></h2>
+<section id="id34">
+<h3>Added<a class="headerlink" href="#id34" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>package documentation on github pages</p></li>
+<li><p>parse containers function</p></li>
+<li><p>googe site verification</p></li>
+<li><p>site logo and icon attribution</p></li>
+<li><p>sitemap</p></li>
+<li><p>reference ontology retrieval</p></li>
+<li><p>term types for all predicates</p></li>
+<li><p>restored error check feature on diagram, including error classes</p></li>
+</ul>
+</section>
+<section id="id35">
+<h3>Changed<a class="headerlink" href="#id35" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>hand-made XSD reference to XSD namespace inside <code class="docutils literal notranslate"><span class="pre">rdflib</span></code></p></li>
+<li><p>no unique literals option to store true flag, setting no unique literals as the default behavior</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">file_path</span></code> argument in <code class="docutils literal notranslate"><span class="pre">conver_drawio_ttl</span></code> function to <code class="docutils literal notranslate"><span class="pre">input_path</span></code></p></li>
+</ul>
+</section>
+<section id="id36">
+<h3>Removed<a class="headerlink" href="#id36" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>hand-made XSD reference</p></li>
+<li><p>do not check option</p></li>
+<li><p>not literal IDs</p></li>
+</ul>
+</section>
+<section id="id37">
+<h3>Fixed<a class="headerlink" href="#id37" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>exact match functionality not outputting all desired properties (label and SKOS exact match)</p></li>
+<li><p>non-bunny-eared data type string output</p></li>
+<li><p>prefixes not being imported from file</p></li>
+</ul>
+</section>
+</section>
+<section id="id38">
+<h2>[0.8.4] - 2025-07-20<a class="headerlink" href="#id38" title="Link to this heading">#</a></h2>
+<p><strong>NOTE:</strong> The changes listed here are a catch-all between this version and all prior releases. We haven’t kept a good changelog until today, so we apologize for the broad statements to keep this document section brief.</p>
+<section id="id39">
+<h3>Added<a class="headerlink" href="#id39" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>application CLI</p></li>
+<li><p>support for converting directly to <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files from draw.io and vice versa</p></li>
+<li><p>support for literals and literal annotations (language and datatype)</p></li>
+<li><p>term matching via reference ontologies</p></li>
+<li><p>ability to add reference ontologies</p></li>
+<li><p>unique literal ID generation option</p></li>
+<li><p>support for annotation types</p></li>
+<li><p>classes-only option for drawing layouts</p></li>
+<li><p>ability to write prefixes</p></li>
+<li><p>tree-splitting for dealing with multiple inheritance</p></li>
+<li><p>stratified term category (includes definitions, annotations, etc.) for prioritizing in the layout</p></li>
+<li><p>match suppression with star keys</p></li>
+<li><p>alias support with parenthetic notation</p></li>
+<li><p>README instructions on CLI and scripting for new package implementation</p></li>
+</ul>
+</section>
+<section id="id40">
+<h3>Changed<a class="headerlink" href="#id40" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>programmming paradigm, from an clunky OOP-based approach to a hybrid functional approach</p></li>
+<li><p>File structure, adopting file conventions in functional programming</p></li>
+<li><p>all prior functionality implementations except those expressly mentioned in the remove section</p></li>
+<li><p>choosing more general category of terms to draw in the tree layout (stratified) versus just rank terms (subclass and type)</p></li>
+<li><p>shape definitions from native classes to dataclasses</p></li>
+<li><p>rendering shapes directly from dataclasses instead of through manual prop generation</p></li>
+<li><p>computing arrow directions dynamically based on shape angle instead of static case-based matching</p></li>
+<li><p>example scripts</p></li>
+</ul>
+</section>
+<section id="id41">
+<h3>Removed<a class="headerlink" href="#id41" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>All functions built under the OOP-based software</p></li>
+<li><p>shape-extent-based area diagram reading</p></li>
+<li><p>circle-based (organic) layouts</p></li>
+<li><p>straight-arrow and curve template files</p></li>
+<li><p>error detection in diagram reads</p></li>
+<li><p>defer-layout option</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="about.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">About</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#guide">[Guide]</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">[0.10.0] - 2025-08-11</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#added">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#changed">Changed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fixed">Fixed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">[0.9.6] - 2025-08-05</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Fixed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">[0.9.5] - 2025-08-05</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Fixed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">[0.9.4] - 2025-08-05</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Added</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">[0.9.3] - 2025-08-05</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Fixed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">[0.9.2] - 2025-08-04</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Fixed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">[0.9.1] - 2025-08-01</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Fixed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">[0.9.0] - 2025-08-01</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Changed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Fixed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">[0.8.9] - 2025-07-25</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">Changed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">Fixed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">[0.8.8] - 2025-07-25</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">Added</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">[0.8.7] - 2025-07-24</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">Changed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id29">Fixed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removed">Removed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id30">[0.8.6] - 2025-07-24</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id31">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id32">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id33">[0.8.5] - 2025-07-23</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id34">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id35">Changed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id36">Removed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id37">Fixed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id38">[0.8.4] - 2025-07-20</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id39">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id40">Changed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id41">Removed</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+        <div class="footer-item"><a href="https://www.flaticon.com/free-icons/concrete" title="concrete icons">Concrete icons created by smashingstocks - Flaticon</a></div>
+      
+    </div>
+  
+  
+    <div class="footer-items__center">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, CWRU SDLE-MDS3 Center of Excellence.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
