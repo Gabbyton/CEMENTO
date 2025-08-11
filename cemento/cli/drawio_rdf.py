@@ -1,4 +1,5 @@
 from cemento.rdf.drawio_to_rdf import convert_drawio_to_rdf
+from cemento.utils.constants import RDFFormat
 from cemento.utils.io import (
     get_default_defaults_folder,
     get_default_prefixes_file,
@@ -21,6 +22,14 @@ def register(subparsers):
         "output",
         help="the path to the desired output file.",
         metavar="output_file_path",
+    )
+    parser.add_argument(
+        "-f",
+        "--format",
+        choices=RDFFormat.get_valid_rdf_formats(),
+        default="turtle",
+        metavar="file_format",
+        help="the format which rdflib will use to parse the file (default: turtle)",
     )
     parser.add_argument(
         "-r",
@@ -70,9 +79,10 @@ def run(args):
     convert_drawio_to_rdf(
         args.input,
         args.output,
-        args.onto_ref_folder_path,
-        args.defaults_folder_path,
-        args.prefix_file_path,
+        file_format=args.format,
+        onto_ref_folder=args.onto_ref_folder_path,
+        defaults_folder=args.defaults_folder_path,
+        prefixes_path=args.prefix_file_path,
         check_errors=args.dont_check_errors,
         collect_domains_ranges=args.collect_domains_ranges,
         log_substitution_path=args.log_substitution_path,

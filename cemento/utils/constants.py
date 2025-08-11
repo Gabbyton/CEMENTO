@@ -58,6 +58,21 @@ class RDFFormat(Enum):
     def get_valid_file_extensions() -> list[str]:
         return [".ttl", ".xml", ".jsonld", ".nt", ".n3"]
 
+    @staticmethod
+    def get_valid_rdf_formats() -> list[str]:
+        return [
+            "turtle",
+            "ttl",
+            "turtle2",
+            "xml",
+            "pretty-xml",
+            "json-ld",
+            "ntriples",
+            "nt",
+            "nt11",
+            "n3",
+        ]
+
 
 class NullTermError(ValueError):
     pass
