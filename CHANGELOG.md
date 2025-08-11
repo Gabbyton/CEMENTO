@@ -28,6 +28,7 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - step for assigning nested edge label values to label in `extract_elements` as its own function
 - tests for diagram element parsing and reading into graphs
 - dynamic prefix generation for literal datatypes versus previous hard-coded `xsd`
+- support for imported non-`xsd` datatypes. Hand-coded datatypes not supported yet (issue with `rdflib`)
 
 ### Changed
 

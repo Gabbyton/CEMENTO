@@ -134,7 +134,7 @@ def convert_ttl_to_graph(
 
         display_set = all_classes
 
-        exempted_terms = {}
+        exempted_terms = set()
         if not classes_only:
             display_set = all_classes | all_instances | all_literals
             exempted_set = {
