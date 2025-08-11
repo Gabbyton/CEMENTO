@@ -18,7 +18,7 @@ from cemento.term_matching.constants import (
 from cemento.term_matching.io import (
     get_search_terms_from_defaults,
     get_search_terms_from_graph,
-    get_ttl_file_iter,
+    get_rdf_file_iter,
     read_prefixes_from_graph,
     read_prefixes_from_json,
 )
@@ -206,14 +206,14 @@ def get_prefixes(
 
     if onto_ref_folder:
         file_prefixes = map(
-            read_prefixes_from_graph, get_ttl_file_iter(onto_ref_folder)
+            read_prefixes_from_graph, get_rdf_file_iter(onto_ref_folder)
         )
         prefixes |= merge_dictionaries(file_prefixes)
         inv_prefixes = {value: key for key, value in prefixes.items()}
 
         residual_file_prefixes = map(
             partial(generate_residual_prefixes, inv_prefixes=inv_prefixes),
-            get_ttl_file_iter(onto_ref_folder),
+            get_rdf_file_iter(onto_ref_folder),
         )
         residual_file_prefixes = {
             key: value
@@ -237,7 +237,7 @@ def get_default_terms(defaults_folder: str | Path = None):
     if defaults_folder:
         default_terms_from_file = reduce(
             lambda acc, rdf_graph: acc | set(rdf_graph.all_nodes()),
-            get_ttl_file_iter(defaults_folder),
+            get_rdf_file_iter(defaults_folder),
             set(),
         )
         default_terms_from_lib |= default_terms_from_file
@@ -257,14 +257,14 @@ def get_search_terms(
     if defaults_folder:
         defaults_file_search_terms = map(
             partial(get_search_terms_from_graph, inv_prefixes=inv_prefixes),
-            get_ttl_file_iter(defaults_folder),
+            get_rdf_file_iter(defaults_folder),
         )
         search_terms |= merge_dictionaries(defaults_file_search_terms)
 
     if onto_ref_folder:
         file_search_terms = map(
             partial(get_search_terms_from_graph, inv_prefixes=inv_prefixes),
-            get_ttl_file_iter(onto_ref_folder),
+            get_rdf_file_iter(onto_ref_folder),
         )
         search_terms |= merge_dictionaries(file_search_terms)
 
@@ -297,7 +297,7 @@ def get_prop_family_from_defaults(
 ) -> Iterable[str]:
     prop_family = map(
         partial(get_prop_family, prop=prop),
-        get_ttl_file_iter(defaults_folder),
+        get_rdf_file_iter(defaults_folder),
     )
     prop_family = (prop for props in prop_family for prop in props)
     return prop_family
@@ -369,7 +369,7 @@ def get_strat_predicates(
         chain(
             *map(
                 partial(get_preds_in_ref, type_refs=type_refs),
-                get_ttl_file_iter(onto_ref_folder),
+                get_rdf_file_iter(onto_ref_folder),
             )
         )
     )
@@ -383,7 +383,7 @@ def get_strat_predicates_str(
     strat_preds = get_strat_predicates(onto_ref_folder, defaults_folder, inv_prefixes)
     stat_pred_aliases = (
         get_term_aliases_from_graph(graph, pred)
-        for graph in get_ttl_file_iter(onto_ref_folder)
+        for graph in get_rdf_file_iter(onto_ref_folder)
         for pred in strat_preds
     )
     stat_preds_str = map(

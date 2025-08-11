@@ -1,10 +1,10 @@
 from pathlib import Path
 
 from cemento.draw_io.read_diagram import read_drawio
-from cemento.rdf.graph_to_turtle import convert_graph_to_ttl
+from cemento.rdf.graph_to_rdf import convert_graph_to_rdf
 
 
-def convert_drawio_to_ttl(
+def convert_drawio_to_rdf(
     input_path: str | Path,
     output_path: str | Path,
     onto_ref_folder: str | Path = None,
@@ -21,7 +21,7 @@ def convert_drawio_to_ttl(
         defaults_folder=defaults_folder,
         check_errors=check_errors,
     )
-    convert_graph_to_ttl(
+    convert_graph_to_rdf(
         graph,
         output_path,
         onto_ref_folder=onto_ref_folder,

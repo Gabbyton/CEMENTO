@@ -2,8 +2,8 @@ import argparse
 import sys
 
 import cemento.cli.download as download
-import cemento.cli.drawio_ttl as drawio_ttl
-import cemento.cli.ttl_drawio as ttl_drawio
+import cemento.cli.drawio_rdf as drawio_rdf
+import cemento.cli.rdf_drawio as rdf_drawio
 from cemento.cli.constants import header
 
 def main():
@@ -14,8 +14,8 @@ def main():
     )
     subparsers.required = True
 
-    drawio_ttl.register(subparsers)
-    ttl_drawio.register(subparsers)
+    drawio_rdf.register(subparsers)
+    rdf_drawio.register(subparsers)
     download.register(subparsers)
 
     if len(sys.argv) <= 1:
