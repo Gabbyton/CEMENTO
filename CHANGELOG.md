@@ -26,11 +26,16 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - tests for diagram error checks
 - error and error check for bidirectional and inverted arrows
 - step for assigning nested edge label values to label in `extract_elements` as its own function
+- tests for diagram element parsing and reading into graphs
+- dynamic prefix generation for literal datatypes versus previous hard-coded `xsd`
 
 ### Changed
+
 - quote substitution in shape content to general html escape substitution
 - `parse_elements` implementation to be more functional
 - moved `parse_elements` post-processing steps and `parse_elements` into updated function
+- hard-coded `xsd` requirements for literal datatypes
+- changed from searching just `xsd` types to entire search term pool
 
 ### Fixed
 

@@ -155,14 +155,17 @@ def convert_graph_to_ttl(
         }
 
     inv_constructed_terms = {value: key for key, value in constructed_terms.items()}
-
-    xsd_terms = get_xsd_terms()
     constructed_terms.update(substitution_results)
+    print(constructed_terms)
+
+    # get datatypes in graph first
+    datatype_search_terms = get_xsd_terms()
+    datatype_search_terms.update(search_terms)
     constructed_literal_terms = {
         term: construct_literal(
             term,
             lang=get_literal_lang_annotation(term),
-            datatype=get_literal_data_type(term, xsd_terms),
+            datatype=get_literal_data_type(term, datatype_search_terms),
         )
         for term in literal_terms
     }
