@@ -1,6 +1,6 @@
 from importlib import resources
 from pathlib import Path
-
+from cemento.utils.constants import RDFFormat
 
 def get_default_path(rel_path: str | Path) -> Path:
     try:
@@ -19,3 +19,16 @@ def get_default_references_folder() -> Path:
 
 def get_default_prefixes_file() -> Path:
     return get_default_path("default_prefixes.json")
+
+def get_rdf_format(file_path: str | Path, file_format: str | RDFFormat = None) -> str:
+    file_path = Path(file_path)
+
+    rdf_format = None
+    if file_format is None:
+        file_ext = file_path.suffix
+        rdf_format = RDFFormat.from_ext(file_ext)
+    elif isinstance(file_format, str):
+        rdf_format = RDFFormat.from_input(file_format)
+
+    rdf_format = file_format.value if rdf_format is None else rdf_format
+    return rdf_format

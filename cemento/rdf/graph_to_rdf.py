@@ -6,7 +6,7 @@ from pathlib import Path
 import networkx as nx
 import rdflib
 from networkx import DiGraph
-from rdflib import OWL, RDF, RDFS
+from rdflib import OWL, RDF, RDFS, Graph
 
 from cemento.rdf.filters import term_in_search_results, term_not_in_default_namespace
 from cemento.rdf.io import (
@@ -48,18 +48,19 @@ from cemento.utils.io import (
     get_default_defaults_folder,
     get_default_prefixes_file,
     get_default_references_folder,
+    get_rdf_format,
 )
 from cemento.utils.utils import fst, get_abbrev_term, snd
 
 
-def convert_graph_to_rdf(
+def convert_graph_to_rdf_graph(
     graph: DiGraph,
     collect_domains_ranges: bool = False,
     onto_ref_folder: str | Path = None,
     defaults_folder: str | Path = None,
     prefixes_path: str | Path = None,
     log_substitution_path: str | Path = None,
-) -> None:
+) -> Graph:
     onto_ref_folder = (
         get_default_references_folder() if not onto_ref_folder else onto_ref_folder
     )
@@ -313,23 +314,15 @@ def convert_graph_to_rdf(
 def convert_graph_to_rdf_file(
     graph: DiGraph,
     output_path: str | Path,
-    input_format: str | RDFFormat = None,
+    file_format: str | RDFFormat = None,
     collect_domains_ranges: bool = False,
     onto_ref_folder: str | Path = None,
     defaults_folder: str | Path = None,
     prefixes_path: str | Path = None,
     log_substitution_path: str | Path = None,
 ):
-    output_path = Path(output_path)
-
-    rdf_format = None
-    if input_format is None:
-        file_ext = output_path.suffix
-        rdf_format = RDFFormat.from_ext(file_ext)
-    elif isinstance(input_format, str):
-        rdf_format = RDFFormat.from_input(input_format)
-
-    rdf_graph = convert_graph_to_rdf(
+    rdf_format = get_rdf_format(output_path, file_format=file_format)
+    rdf_graph = convert_graph_to_rdf_graph(
         graph,
         output_path,
         onto_ref_folder=onto_ref_folder,
@@ -337,6 +330,4 @@ def convert_graph_to_rdf_file(
         prefixes_path=prefixes_path,
         log_substitution_path=log_substitution_path,
     )
-
-    rdf_format = input_format.value if rdf_format is None else rdf_format
     rdf_graph.serialize(destination=output_path, format=rdf_format)

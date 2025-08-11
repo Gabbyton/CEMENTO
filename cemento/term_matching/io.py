@@ -6,28 +6,35 @@ from pathlib import Path
 
 from rdflib import RDFS, SKOS, Graph, Namespace, URIRef
 from rdflib.namespace import split_uri
-from cemento.utils.constants import RDFFormat
 
-def get_rdf_file_iter(folder_path: str | Path) -> Iterable[Graph]:
+from cemento.utils.constants import RDFFormat
+from cemento.utils.io import get_rdf_format
+
+
+def get_rdf_file_iter(
+    folder_path: str | Path, file_format: str | RDFFormat = None
+) -> Iterable[Graph]:
     # TODO: move to constants file
     valid_rdf_file_formats = {e for e in RDFFormat.get_valid_file_extensions()}
     return (
-        get_rdf_graph(file_path)
+        get_rdf_graph(file_path, file_format=file_format)
         for file in os.scandir(folder_path)
         if (file_path := Path(file.path)).suffix in valid_rdf_file_formats
     )
 
 
-def get_rdf_graph(file_path: str | Path) -> Graph | None:
-    with read_rdf(file_path) as graph:
+def get_rdf_graph(file_path: str | Path, file_format: str | RDFFormat) -> Graph | None:
+    with read_rdf(file_path, file_format=file_format) as graph:
         return graph
 
 
 @contextmanager
-def read_rdf(file_path: str | Path) -> Graph:
+def read_rdf(file_path: str | Path, file_format: str | RDFFormat) -> Graph:
     rdf_graph = Graph()
     try:
-        rdf_graph.parse(file_path, format="turtle")
+        rdf_graph.parse(
+            file_path, format=get_rdf_format(file_path, file_format=file_format)
+        )
         yield rdf_graph
     finally:
         rdf_graph.close()

@@ -26,6 +26,7 @@ from cemento.term_matching.transforms import (
     get_prop_family_from_defaults,
     get_strat_predicates,
 )
+from cemento.utils.constants import RDFFormat
 from cemento.utils.io import (
     get_default_defaults_folder,
     get_default_prefixes_file,
@@ -35,6 +36,7 @@ from cemento.utils.io import (
 
 def convert_rdf_to_graph(
     input_path: str | Path,
+    file_format: str | RDFFormat = None,
     classes_only: bool = False,
     onto_ref_folder: str | Path = None,
     defaults_folder: str | Path = None,
@@ -62,7 +64,7 @@ def convert_rdf_to_graph(
     ref_strat_preds.add(RDFS.subClassOf)
     ref_strat_preds.add(RDF.type)
 
-    with read_rdf(input_path) as rdf_graph:
+    with read_rdf(input_path, file_format=file_format) as rdf_graph:
         prefixes.update({key: value for key, value in rdf_graph.namespaces()})
         inv_prefixes.update({str(value): key for key, value in rdf_graph.namespaces()})
         print("retrieving terms...")
