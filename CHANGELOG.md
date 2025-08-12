@@ -32,6 +32,7 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - arguments for rdf and cli functions
 - function signature for graph conversion functions
 - file names referencing ttl into ones referencing rdf
+- updated and streamlined `README.md` for new features
 
 ### Removed
 
