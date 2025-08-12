@@ -26,6 +26,7 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - prefix inference from format input
 - RDF file format enum
 - specifying format for reading and writing output
+- added third party-licenses to repository and documentation
 
 ### Changed
 

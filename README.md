@@ -180,6 +180,10 @@ This package was designed with end-to-end conversion in mind. The package is sti
 
 This project was released under the BSD-3-Clause License. For more information about the license, please check the attached `LICENSE.md` file.
 
+## Third-party Licenses
+
+For information about third-party licenses for packages used in this project, please refer to the `THIRD_PARTY_LICENSES.txt` file or the [Licenses Page](https://cwru-sdle.github.io/CEMENTO/license-info/licenses.html) on the documentation.
+
 ## Contact Information
 
 If you have any questions or need further assistance, please open a GitHub issue and we can assist you there.
