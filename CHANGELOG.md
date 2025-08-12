@@ -18,6 +18,19 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
+## [0.11.0] - 2025-08-12
+
+### Added
+- support for other rdf-compliant datatypes supported by `rdflib`
+- prefix inference from format input
+- RDF file format enum
+- specifying format for reading and writing output
+
+### Changed
+
+- arguments for rdf and cli functions
+- function signature for graph conversion functions
+
 ## [0.10.0] - 2025-08-11
 
 ### Added
