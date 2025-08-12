@@ -154,7 +154,7 @@ if __name__ == "__main__":
         translate_x=0,
         translate_y=0,
         classes_only=False,
-        demarcate_boxes=True,
+        demarcate_boxes=False,
         horizontal_tree=False,
     )
 ```
