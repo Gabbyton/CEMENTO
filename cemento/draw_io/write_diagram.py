@@ -110,7 +110,17 @@ def draw_tree(
     if horizontal_tree:
         ranked_subtrees = map(invert_tree, ranked_subtrees)
 
-    ranked_subtrees = list(ranked_subtrees)
+    try:
+        ranked_subtrees = list(ranked_subtrees)
+    except KeyError as e:
+        offending_key = e.args[0]
+        if demarcate_boxes:
+            raise ValueError(
+                f"The key {offending_key} is missing from the graph. Are you drawing a tree directly from a graph? Consider dropping -db if you are using the CLI. If you are using functions, think about setting demarcate_boxes to False."
+            ) from KeyError
+        raise ValueError(
+            f"The input is lacking the key {offending_key} for an element. The graph may not have been processed completely."
+        ) from KeyError
     # flip the rank terms after position calculation
     ranked_subtrees = flip_edges_of_graphs(
         ranked_subtrees,
