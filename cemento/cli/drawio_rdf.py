@@ -27,7 +27,7 @@ def register(subparsers):
         "-f",
         "--format",
         choices=RDFFormat.get_valid_rdf_formats(),
-        default="turtle",
+        default=None,
         metavar="file_format",
         help="the format which rdflib will use to parse the file (default: turtle)",
     )

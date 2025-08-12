@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+   xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+>
+  <rdf:Description rdf:about="https://cwrusdle.bitbucket.io/mds/SpecialString">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Datatype"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://cwrusdle.bitbucket.io/mds/Golfer">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:subClassOf rdf:resource="https://www.commoncoreontologies.org/ont00001262"/>
+    <skos:definition>A person who plays golf</skos:definition>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://www.commoncoreontologies.org/ont00001262">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="en">Person</rdfs:label>
+    <skos:exactMatch rdf:resource="https://www.commoncoreontologies.org/ont00001262"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://cwrusdle.bitbucket.io/mds/HappyGilmore">
+    <rdf:type rdf:resource="https://cwrusdle.bitbucket.io/mds/Golfer"/>
+  </rdf:Description>
+</rdf:RDF>

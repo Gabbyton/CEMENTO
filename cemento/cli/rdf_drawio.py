@@ -1,4 +1,5 @@
 from cemento.rdf.rdf_to_drawio import convert_rdf_to_drawio
+from cemento.utils.constants import RDFFormat
 from cemento.utils.io import (
     get_default_defaults_folder,
     get_default_prefixes_file,
@@ -21,6 +22,14 @@ def register(subparsers):
         "output",
         help="the path to the desired output file.",
         metavar="output_file_path",
+    )
+    parser.add_argument(
+        "-f",
+        "--format",
+        choices=RDFFormat.get_valid_rdf_formats(),
+        default=None,
+        metavar="file_format",
+        help="the format which rdflib will use to parse the file (default: turtle)",
     )
     parser.add_argument(
         "-hz",
@@ -75,6 +84,7 @@ def run(args):
     convert_rdf_to_drawio(
         args.input,
         args.output,
+        file_format=args.format,
         horizontal_tree=args.horizontal_graph,
         classes_only=args.classes_only,
         demarcate_boxes=args.demarcate_boxes,
