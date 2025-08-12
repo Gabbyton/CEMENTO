@@ -80,7 +80,7 @@ We used a directed networkx graph (DiGraph) as an intermediary data structure th
             translate_x=0,
             translate_y=0,
             classes_only=False,
-            demarcate_boxes=True,
+            demarcate_boxes=False,
             horizontal_tree=False,
         )
 
