@@ -1,4 +1,4 @@
-from cemento.rdf.rdf_to_drawio import convert_rdf_to_drawio
+from cemento.rdf.drawio_to_rdf import convert_drawio_to_rdf
 from cemento.utils.constants import RDFFormat
 from cemento.utils.io import (
     get_default_defaults_folder,
@@ -9,8 +9,8 @@ from cemento.utils.io import (
 
 def register(subparsers):
     parser = subparsers.add_parser(
-        "ttl_drawio",
-        help="subcommand for converting rdf triples in the turtle format into drawio diagrams.",
+        "drawio_rdf",
+        help="subcommand for converting drawio files into rdf triples in the desired input format. Default is a .ttl file.",
     )
 
     parser.add_argument(
@@ -30,24 +30,6 @@ def register(subparsers):
         default=None,
         metavar="file_format",
         help="the format which rdflib will use to parse the file (default: turtle)",
-    )
-    parser.add_argument(
-        "-hz",
-        "--horizontal-graph",
-        help="set whether to make the tree horizontal or stay with the default vertical layout.",
-        action="store_true",
-    )
-    parser.add_argument(
-        "-co",
-        "--classes-only",
-        help="set whether to just display classes and instances (taxonomy tree).",
-        action="store_true",
-    )
-    parser.add_argument(
-        "-db",
-        "--demarcate-boxes",
-        help="set whether to divide the tree into A-Boxes and T-Boxes.",
-        action="store_true",
     )
     parser.add_argument(
         "-r",
@@ -71,25 +53,37 @@ def register(subparsers):
         metavar="prefix_file_path",
     )
     parser.add_argument(
-        "-ul",
-        "--unique-literals",
-        help="set whether to to append a unique id to each encountered literal term. Affects labels, definitions and any other literal values.",
+        "-lsp",
+        "--log-substitution-path",
+        help="the path to a csv file containing substitution results from term matching.",
+        default=None,
+        metavar="log_file_path",
+    )
+    parser.add_argument(
+        "-dce",
+        "--dont-check-errors",
+        help="Set whether to check for diagram errors and to generate a diagram with errors indicated.",
+        action="store_false",
+    )
+    parser.add_argument(
+        "-cdr",
+        "--collect-domains-ranges",
+        help="Set whether to aggregate instances that are in the domain and range of a custom object property (Class inference coming soon).",
         action="store_true",
     )
     parser.set_defaults(_handler=run)
 
 
 def run(args):
-    print(f"converting {args.input} into a drawio diagram at {args.output}...")
-    convert_rdf_to_drawio(
+    print(f"converting {args.input} into an RDF-compliant file at {args.output}...")
+    convert_drawio_to_rdf(
         args.input,
         args.output,
-        file_format="turtle",
-        horizontal_tree=args.horizontal_graph,
-        classes_only=args.classes_only,
-        demarcate_boxes=args.demarcate_boxes,
+        file_format=args.format,
         onto_ref_folder=args.onto_ref_folder_path,
         defaults_folder=args.defaults_folder_path,
         prefixes_path=args.prefix_file_path,
-        set_unique_literals=args.unique_literals,
+        check_errors=args.dont_check_errors,
+        collect_domains_ranges=args.collect_domains_ranges,
+        log_substitution_path=args.log_substitution_path,
     )

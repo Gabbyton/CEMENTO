@@ -9,8 +9,8 @@ from cemento.utils.io import (
 
 def register(subparsers):
     parser = subparsers.add_parser(
-        "ttl_drawio",
-        help="subcommand for converting rdf triples in the turtle format into drawio diagrams.",
+        "rdf_drawio",
+        help="subcommand for converting rdf triples in an RDF-compliant format into drawio diagrams.",
     )
 
     parser.add_argument(
@@ -84,7 +84,7 @@ def run(args):
     convert_rdf_to_drawio(
         args.input,
         args.output,
-        file_format="turtle",
+        file_format=args.format,
         horizontal_tree=args.horizontal_graph,
         classes_only=args.classes_only,
         demarcate_boxes=args.demarcate_boxes,

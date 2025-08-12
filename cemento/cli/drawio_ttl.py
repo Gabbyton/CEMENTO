@@ -1,4 +1,4 @@
-from cemento.rdf.drawio_to_turtle import convert_drawio_to_ttl
+from cemento.rdf.drawio_to_rdf import convert_drawio_to_rdf
 from cemento.utils.io import (
     get_default_defaults_folder,
     get_default_prefixes_file,
@@ -9,7 +9,7 @@ from cemento.utils.io import (
 def register(subparsers):
     parser = subparsers.add_parser(
         "drawio_ttl",
-        help="subcommand for converting drawio files into rdf triples in the ttl format.",
+        help="subcommand for converting drawio files into rdf triples in the turtle format.",
     )
 
     parser.add_argument(
@@ -19,7 +19,7 @@ def register(subparsers):
     )
     parser.add_argument(
         "output",
-        help="the path to the desired output .ttl file.",
+        help="the path to the desired output ttl file.",
         metavar="output_file_path",
     )
     parser.add_argument(
@@ -66,13 +66,14 @@ def register(subparsers):
 
 
 def run(args):
-    print(f"converting {args.input} into a ttl file at {args.output}...")
-    convert_drawio_to_ttl(
+    print(f"converting {args.input} into a turtle file at {args.output}...")
+    convert_drawio_to_rdf(
         args.input,
         args.output,
-        args.onto_ref_folder_path,
-        args.defaults_folder_path,
-        args.prefix_file_path,
+        file_format="turtle",
+        onto_ref_folder=args.onto_ref_folder_path,
+        defaults_folder=args.defaults_folder_path,
+        prefixes_path=args.prefix_file_path,
         check_errors=args.dont_check_errors,
         collect_domains_ranges=args.collect_domains_ranges,
         log_substitution_path=args.log_substitution_path,

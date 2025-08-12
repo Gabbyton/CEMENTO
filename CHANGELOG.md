@@ -18,6 +18,26 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
+## [0.11.0] - 2025-08-12
+
+### Added
+
+- support for other rdf-compliant datatypes supported by `rdflib`
+- prefix inference from format input
+- RDF file format enum
+- specifying format for reading and writing output
+
+### Changed
+
+- arguments for rdf and cli functions
+- function signature for graph conversion functions
+- file names referencing ttl into ones referencing rdf
+
+### Removed
+
+- file conversion functions: `convert_drawio_to_ttl`, `convert_ttl_to_drawio`
+- graph conversion functions: `convert_graph_to_ttl`, `convert_ttl_to_graph`
+
 ## [0.10.0] - 2025-08-11
 
 ### Added
@@ -37,6 +57,11 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - moved `parse_elements` post-processing steps and `parse_elements` into updated function
 - hard-coded `xsd` requirements for literal datatypes
 - changed from searching just `xsd` types to entire search term pool
+
+### Deprecated
+
+- file conversion functions: `convert_drawio_to_ttl`, `convert_ttl_to_drawio`
+- graph conversion functions: `convert_graph_to_ttl`, `convert_ttl_to_graph`
 
 ### Fixed
 

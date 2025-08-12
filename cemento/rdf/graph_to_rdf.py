@@ -6,7 +6,7 @@ from pathlib import Path
 import networkx as nx
 import rdflib
 from networkx import DiGraph
-from rdflib import OWL, RDF, RDFS
+from rdflib import OWL, RDF, RDFS, Graph
 
 from cemento.rdf.filters import term_in_search_results, term_not_in_default_namespace
 from cemento.rdf.io import (
@@ -34,7 +34,7 @@ from cemento.rdf.transforms import (
     substitute_term_multikey,
 )
 from cemento.term_matching.constants import get_default_namespace_prefixes
-from cemento.term_matching.io import get_ttl_file_iter
+from cemento.term_matching.io import get_rdf_file_iter
 from cemento.term_matching.transforms import (
     add_exact_matches,
     combine_graphs,
@@ -43,24 +43,24 @@ from cemento.term_matching.transforms import (
     get_term_search_keys,
     get_term_types,
 )
-from cemento.utils.constants import NullTermError
+from cemento.utils.constants import NullTermError, RDFFormat
 from cemento.utils.io import (
     get_default_defaults_folder,
     get_default_prefixes_file,
     get_default_references_folder,
+    get_rdf_format,
 )
 from cemento.utils.utils import fst, get_abbrev_term, snd
 
 
-def convert_graph_to_ttl(
+def convert_graph_to_rdf_graph(
     graph: DiGraph,
-    output_path: str | Path,
     collect_domains_ranges: bool = False,
     onto_ref_folder: str | Path = None,
     defaults_folder: str | Path = None,
     prefixes_path: str | Path = None,
     log_substitution_path: str | Path = None,
-) -> None:
+) -> Graph:
     onto_ref_folder = (
         get_default_references_folder() if not onto_ref_folder else onto_ref_folder
     )
@@ -202,7 +202,7 @@ def convert_graph_to_ttl(
     # if the term is a predicate and is not part of the default namespaces, add an object property type to the ttl file
     ref_graph = deepcopy(rdf_graph)
     if onto_ref_folder:
-        ref_graph += combine_graphs(get_ttl_file_iter(onto_ref_folder))
+        ref_graph += combine_graphs(get_rdf_file_iter(onto_ref_folder))
     term_types = get_term_types(ref_graph)
 
     term_not_in_default_namespace_filter = partial(
@@ -248,7 +248,7 @@ def convert_graph_to_ttl(
                     ),
                     all_terms,
                 ),
-                get_ttl_file_iter(onto_ref_folder),
+                get_rdf_file_iter(onto_ref_folder),
             )
             for term, value in result
         }
@@ -308,5 +308,26 @@ def convert_graph_to_ttl(
         rdf_graph,
     )
 
-    # serialize the output as a turtle file
-    rdf_graph.serialize(destination=output_path, format="turtle")
+    return rdf_graph
+
+
+def convert_graph_to_rdf_file(
+    graph: DiGraph,
+    output_path: str | Path,
+    file_format: str | RDFFormat = None,
+    collect_domains_ranges: bool = False,
+    onto_ref_folder: str | Path = None,
+    defaults_folder: str | Path = None,
+    prefixes_path: str | Path = None,
+    log_substitution_path: str | Path = None,
+):
+    rdf_format = get_rdf_format(output_path, file_format=file_format)
+    rdf_graph = convert_graph_to_rdf_graph(
+        graph,
+        output_path,
+        onto_ref_folder=onto_ref_folder,
+        defaults_folder=defaults_folder,
+        prefixes_path=prefixes_path,
+        log_substitution_path=log_substitution_path,
+    )
+    rdf_graph.serialize(destination=output_path, format=rdf_format)
