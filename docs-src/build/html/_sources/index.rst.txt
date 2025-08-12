@@ -35,7 +35,7 @@ CEMENTO
 
 
 
-``CEMENTO`` converts your draw.io ontology diagrams into turtle files, and vice versa. ``CEMENTO`` can also:
+``CEMENTO`` converts your draw.io ontology diagrams into RDF triple files, and vice versa.  ``CEMENTO`` can also:
 
 - Match and substitute for terms in ontologies YOU provide.
 - Create coherent tree-based layouts for visualizing ontology class and instance relationships (even with multiple inheritance).
@@ -43,6 +43,8 @@ CEMENTO
 - Collect domain and range instances as used in your ontology *(class inference coming soon)*.
 - Point you to your diagram errors by highlighting faulty entities. Your errors show all at once.
 - Support for multiple pages in a draw.io file, for when you want to organize terms your way.
+
+``CEMENTO`` supports draw.io diagrams, turtle, RDF/XML, JSON-LD, N-Triples, and Notation-3.
 
 .. grid:: 2
    

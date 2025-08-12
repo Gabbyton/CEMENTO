@@ -7,7 +7,7 @@ This guide provides an in-depth introduction to the CLI and some caveats that ar
 Command Line Interface
 ======================
 
-Once the package is installed, you will have access to a cemento CLI command for converting files. This CLI interface allows you to convert ``.ttl`` files into draw.io diagrams and vice versa. To do so:
+Once the package is installed, you will have access to a cemento CLI command for converting files. This CLI interface allows you to convert rdf triple files into draw.io diagrams and vice versa. To do convert from a turtle:
 
 .. code-block:: console
 
@@ -17,6 +17,29 @@ Once the package is installed, you will have access to a cemento CLI command for
     # converting from .drawio to .ttl
     (.venv) $ cemento drawio_ttl your_output_diagram.drawio your_triples.ttl
 
+To convert from any other format (including turtle), use cemento ``rdf_drawio``. You can either use the appropriate file extension, or specify the format using the ``-f`` flag:
+
+.. code-block:: console
+
+    # converting from .xml to drawio
+    (.venv) $ cemento rdf_drawio your_triples.xml your_output_diagram.drawio
+
+    # alternatively, specify the format
+    (.venv) $ cemento rdf_drawio -f xml your_triples.xml your_output_diagram.drawio
+
+To convert from drawio to rdf triples, use the inverse functions ``drawio_ttl`` or ``drawio_rdf``:
+
+.. code-block:: console
+
+    # converting from .drawio to .ttl
+    (.venv) $ cemento drawio_ttl your_output_diagram.drawio your_triples.ttl
+
+    # converting from .drawio to .xml
+    (.venv) $ cemento drawio_rdf your_output_diagram.drawio your_triples.xml
+
+    # alternatively, specify the format
+    # converting from .drawio to .xml
+    (.venv) $ cemento drawio_rdf -f xml your_output_diagram.drawio your_triples.xml
 
 It is that simple. In case you do need help, the CLI already comes with useful help pages. Just use the ``--help`` flag on the command or any of its subcommands:
 
@@ -25,6 +48,40 @@ It is that simple. In case you do need help, the CLI already comes with useful h
     (.venv) $ cemento --help
     (.venv) $ cemento drawio_ttl --help
     (.venv) $ cemento ttl_drawio --help
+    (.venv) $ cemento drawio_rdf --help
+    (.venv) $ cemento rdf_drawio --help
+
+.. _supported-formats:
+
+Supported Formats
+-------------------
+
+``CEMENTO`` uses ``rdflib`` under the hood so it supports any ``rdflib``-serializable format. Here is a table taken from the rdflib docs (v7.1.4). The **Keyword** column contains all your options for the ``-f`` flag:
+
+.. list-table:: CEMENTO-supported RDF File Formats. Retrieved from `rdflib docs <https://rdflib.readthedocs.io/en/stable/intro_to_parsing.html#saving-rdf>`_ (as of v7.1.4)
+   :name: cemento-supported-formats
+   :header-rows: 1
+
+   * - RDF Format
+     - Keyword
+     - Notes
+   * - Turtle
+     - turtle, ttl, or turtle2
+     - turtle2 is just turtle with more spacing & linebreaks
+   * - RDF/XML
+     - xml or pretty-xml
+     - Was the default format, rdflib \< 6.0.0
+   * - JSON-LD
+     - json-ld
+     - There are further options for compact syntax and other JSON-LD variants
+   * - N-Triples
+     - ntriples, nt, or nt11
+     - nt11 is exactly like nt, only utf8 encoded
+   * - Notation-3
+     - n3
+     - N3 is a superset of Turtle that also caters for rules and a few other things
+
+If the format flag ``-f`` is not provided, ``CEMENTO`` automatically infers the format based on the file extension. If you want to output a file with a different extension or specify a more specific format for the same file-type, please set the format explicitly with ``-f``.
 
 .. _term-matching:
 
@@ -72,14 +129,14 @@ These ontology files are used by CEMENTO for referencing terms and predicates. T
 Adding or Replacing Reference Ontologies
 =========================================
 
-The ``cemento ttl_drawio`` command has an argument called ``--onto-ref-folder-path`` which you can point to a folder containing ``.ttl`` files that contain the terms you want to reference. For example, you can download a ``.ttl`` file from the official CCO repo page and place it here to reference all CCO terms. Under the hood, this referencing is additive, which means you can add as many ``.ttl`` as you want to reference. By default, cemento will already come bundled with this folder, but it will currently only reference CCO.
+The ``cemento ttl_drawio`` and ``cemento rdf_drawio`` commands have an argument called ``--onto-ref-folder-path`` which you can point to a folder containing the RDF files that contain the terms you want to reference. For example, you can download a ``.ttl`` file from the official CCO repo page and place it here to reference all CCO terms. In the package implementation, this referencing is additive, which means you can add as many RDF files as you want to reference. By default, cemento will already come bundled with this folder, but it will currently only reference CCO.
 
-    | **CAUTION:** Repeated references are overwritten in the order the files are read by python (usually alphabetical order). If your reference files conflict with one another, please be advised and resolve those conflicts first by deleting the terms or modifying them in the ``.ttl`` files.
+    | **CAUTION:** Repeated references are overwritten in the order the files are read by python (usually alphabetical order). If your reference files conflict with one another, please be advised and resolve those conflicts first by deleting the terms or modifying them in the RDF files.
 
 Replacing Default Ontologies
 -----------------------------
 
-The schemas for RDF, XML, and RDFS contain the terms that all ontologies ought to understand by default. Thus, a lot of assumptions were made surrounding their standard use during the development of the package. You can, however, also specify a folder of choice through the ``--defaults-folder-path`` option for ``cemento ttl_drawio``. Replace it at your own risk.
+The schemas for RDF, XML, and RDFS contain the terms that all ontologies ought to understand by default. Thus, a lot of assumptions were made surrounding their standard use during the development of the package. You can, however, also specify a folder of choice through the ``--defaults-folder-path`` option for ``cemento ttl_drawio`` and ``cemento rdf_drawio``. Replace it at your own risk.
 
 .. _custom-terms-prefixes:
 
@@ -117,4 +174,4 @@ In order to use custom prefixes, you need to create a ``prefix.json`` file that 
 
 This file is just a python dictionary enclosed as a ``json`` object. Add yours by following the format (copy-paste a line, for example) and inserting it at the bottom of this file. Make sure your prefix is reasonably unique (i.e. don't copy one that is already in this file).
 
-After you are happy with your file, go ahead and set the ``--prefix_file_path`` when running cemento ``cemento drawio_ttl`` and **point it to the path to your file**. It should now read your custom prefixes and add the right namespace for your terms.
+After you are happy with your file, go ahead and set the ``--prefix_file_path`` when running cemento ``cemento drawio_ttl`` or ``cemento drawio_rdf``. **Point the argument it to the path to your file**. It should now read your custom prefixes and add the right namespace for your terms.

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>CLI Guide &#8212; CEMENTO 0.10.0 documentation</title>
+    <title>CLI Guide &#8212; CEMENTO 0.11.0 documentation</title>
   
   
   
@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=82662543"></script>
+    <script src="../_static/documentation_options.js?v=f3b36f1a"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
@@ -457,7 +457,7 @@
 <p>This guide provides an in-depth introduction to the CLI and some caveats that are important to note to take advantage of all the features <code class="docutils literal notranslate"><span class="pre">CEMENTO</span></code> offers. If you just want to convert files, go to <a class="reference internal" href="../quickstart.html"><span class="doc">Quick Start</span></a>.</p>
 <section id="command-line-interface">
 <h2>Command Line Interface<a class="headerlink" href="#command-line-interface" title="Link to this heading">#</a></h2>
-<p>Once the package is installed, you will have access to a cemento CLI command for converting files. This CLI interface allows you to convert <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files into draw.io diagrams and vice versa. To do so:</p>
+<p>Once the package is installed, you will have access to a cemento CLI command for converting files. This CLI interface allows you to convert rdf triple files into draw.io diagrams and vice versa. To do convert from a turtle:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>converting<span class="w"> </span>from<span class="w"> </span>.ttl<span class="w"> </span>to<span class="w"> </span>drawio
 <span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>ttl_drawio<span class="w"> </span>your_triples.ttl<span class="w"> </span>your_output_diagram.drawio
 
@@ -465,15 +465,74 @@
 <span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>drawio_ttl<span class="w"> </span>your_output_diagram.drawio<span class="w"> </span>your_triples.ttl
 </pre></div>
 </div>
+<p>To convert from any other format (including turtle), use cemento <code class="docutils literal notranslate"><span class="pre">rdf_drawio</span></code>. You can either use the appropriate file extension, or specify the format using the <code class="docutils literal notranslate"><span class="pre">-f</span></code> flag:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>converting<span class="w"> </span>from<span class="w"> </span>.xml<span class="w"> </span>to<span class="w"> </span>drawio
+<span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>rdf_drawio<span class="w"> </span>your_triples.xml<span class="w"> </span>your_output_diagram.drawio
+
+<span class="gp"># </span>alternatively,<span class="w"> </span>specify<span class="w"> </span>the<span class="w"> </span>format
+<span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>rdf_drawio<span class="w"> </span>-f<span class="w"> </span>xml<span class="w"> </span>your_triples.xml<span class="w"> </span>your_output_diagram.drawio
+</pre></div>
+</div>
+<p>To convert from drawio to rdf triples, use the inverse functions <code class="docutils literal notranslate"><span class="pre">drawio_ttl</span></code> or <code class="docutils literal notranslate"><span class="pre">drawio_rdf</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>converting<span class="w"> </span>from<span class="w"> </span>.drawio<span class="w"> </span>to<span class="w"> </span>.ttl
+<span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>drawio_ttl<span class="w"> </span>your_output_diagram.drawio<span class="w"> </span>your_triples.ttl
+
+<span class="gp"># </span>converting<span class="w"> </span>from<span class="w"> </span>.drawio<span class="w"> </span>to<span class="w"> </span>.xml
+<span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>drawio_rdf<span class="w"> </span>your_output_diagram.drawio<span class="w"> </span>your_triples.xml
+
+<span class="gp"># </span>alternatively,<span class="w"> </span>specify<span class="w"> </span>the<span class="w"> </span>format
+<span class="gp"># </span>converting<span class="w"> </span>from<span class="w"> </span>.drawio<span class="w"> </span>to<span class="w"> </span>.xml
+<span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>drawio_rdf<span class="w"> </span>-f<span class="w"> </span>xml<span class="w"> </span>your_output_diagram.drawio<span class="w"> </span>your_triples.xml
+</pre></div>
+</div>
 <p>It is that simple. In case you do need help, the CLI already comes with useful help pages. Just use the <code class="docutils literal notranslate"><span class="pre">--help</span></code> flag on the command or any of its subcommands:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>--help
 <span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>drawio_ttl<span class="w"> </span>--help
 <span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>ttl_drawio<span class="w"> </span>--help
+<span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>drawio_rdf<span class="w"> </span>--help
+<span class="gp gp-VirtualEnv">(.venv)</span> <span class="gp">$ </span>cemento<span class="w"> </span>rdf_drawio<span class="w"> </span>--help
 </pre></div>
 </div>
+<section id="supported-formats">
+<span id="id1"></span><h3>Supported Formats<a class="headerlink" href="#supported-formats" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">CEMENTO</span></code> uses <code class="docutils literal notranslate"><span class="pre">rdflib</span></code> under the hood so it supports any <code class="docutils literal notranslate"><span class="pre">rdflib</span></code>-serializable format. Here is a table taken from the rdflib docs (v7.1.4). The <strong>Keyword</strong> column contains all your options for the <code class="docutils literal notranslate"><span class="pre">-f</span></code> flag:</p>
+<div class="pst-scrollable-table-container"><table class="table" id="cemento-supported-formats">
+<caption><span class="caption-text">CEMENTO-supported RDF File Formats. Retrieved from <a class="reference external" href="https://rdflib.readthedocs.io/en/stable/intro_to_parsing.html#saving-rdf">rdflib docs</a> (as of v7.1.4)</span><a class="headerlink" href="#cemento-supported-formats" title="Link to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>RDF Format</p></th>
+<th class="head"><p>Keyword</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Turtle</p></td>
+<td><p>turtle, ttl, or turtle2</p></td>
+<td><p>turtle2 is just turtle with more spacing &amp; linebreaks</p></td>
+</tr>
+<tr class="row-odd"><td><p>RDF/XML</p></td>
+<td><p>xml or pretty-xml</p></td>
+<td><p>Was the default format, rdflib &lt; 6.0.0</p></td>
+</tr>
+<tr class="row-even"><td><p>JSON-LD</p></td>
+<td><p>json-ld</p></td>
+<td><p>There are further options for compact syntax and other JSON-LD variants</p></td>
+</tr>
+<tr class="row-odd"><td><p>N-Triples</p></td>
+<td><p>ntriples, nt, or nt11</p></td>
+<td><p>nt11 is exactly like nt, only utf8 encoded</p></td>
+</tr>
+<tr class="row-even"><td><p>Notation-3</p></td>
+<td><p>n3</p></td>
+<td><p>N3 is a superset of Turtle that also caters for rules and a few other things</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>If the format flag <code class="docutils literal notranslate"><span class="pre">-f</span></code> is not provided, <code class="docutils literal notranslate"><span class="pre">CEMENTO</span></code> automatically infers the format based on the file extension. If you want to output a file with a different extension or specify a more specific format for the same file-type, please set the format explicitly with <code class="docutils literal notranslate"><span class="pre">-f</span></code>.</p>
+</section>
 </section>
 <section id="term-matching">
-<span id="id1"></span><h2>Term Matching<a class="headerlink" href="#term-matching" title="Link to this heading">#</a></h2>
+<span id="id2"></span><h2>Term Matching<a class="headerlink" href="#term-matching" title="Link to this heading">#</a></h2>
 <p>When converting from draw.io to <code class="docutils literal notranslate"><span class="pre">.ttl</span></code>, your draw.io diagrams can have classes, instances, or predicates that can correspond with those in a reference ontology like CCO or PMDCO. To avoid redundancy, <code class="docutils literal notranslate"><span class="pre">CEMENTO</span></code> automatically matches them for you. This section describes how it does so, but only from the perspective of CLI use. If you want to learn more about diagram drawing, please refer to the <a class="reference internal" href="drawing-basics.html"><span class="doc">Drawing Basics Section</span></a>.</p>
 <section id="acceptable-format-for-term-matching">
 <h3>Acceptable Format for Term Matching<a class="headerlink" href="#acceptable-format-for-term-matching" title="Link to this heading">#</a></h3>
@@ -504,15 +563,15 @@
 </section>
 <section id="adding-or-replacing-reference-ontologies">
 <h2>Adding or Replacing Reference Ontologies<a class="headerlink" href="#adding-or-replacing-reference-ontologies" title="Link to this heading">#</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">cemento</span> <span class="pre">ttl_drawio</span></code> command has an argument called <code class="docutils literal notranslate"><span class="pre">--onto-ref-folder-path</span></code> which you can point to a folder containing <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files that contain the terms you want to reference. For example, you can download a <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> file from the official CCO repo page and place it here to reference all CCO terms. Under the hood, this referencing is additive, which means you can add as many <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> as you want to reference. By default, cemento will already come bundled with this folder, but it will currently only reference CCO.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">cemento</span> <span class="pre">ttl_drawio</span></code> and <code class="docutils literal notranslate"><span class="pre">cemento</span> <span class="pre">rdf_drawio</span></code> commands have an argument called <code class="docutils literal notranslate"><span class="pre">--onto-ref-folder-path</span></code> which you can point to a folder containing the RDF files that contain the terms you want to reference. For example, you can download a <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> file from the official CCO repo page and place it here to reference all CCO terms. In the package implementation, this referencing is additive, which means you can add as many RDF files as you want to reference. By default, cemento will already come bundled with this folder, but it will currently only reference CCO.</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><strong>CAUTION:</strong> Repeated references are overwritten in the order the files are read by python (usually alphabetical order). If your reference files conflict with one another, please be advised and resolve those conflicts first by deleting the terms or modifying them in the <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files.</div>
+<div class="line"><strong>CAUTION:</strong> Repeated references are overwritten in the order the files are read by python (usually alphabetical order). If your reference files conflict with one another, please be advised and resolve those conflicts first by deleting the terms or modifying them in the RDF files.</div>
 </div>
 </div></blockquote>
 <section id="replacing-default-ontologies">
 <h3>Replacing Default Ontologies<a class="headerlink" href="#replacing-default-ontologies" title="Link to this heading">#</a></h3>
-<p>The schemas for RDF, XML, and RDFS contain the terms that all ontologies ought to understand by default. Thus, a lot of assumptions were made surrounding their standard use during the development of the package. You can, however, also specify a folder of choice through the <code class="docutils literal notranslate"><span class="pre">--defaults-folder-path</span></code> option for <code class="docutils literal notranslate"><span class="pre">cemento</span> <span class="pre">ttl_drawio</span></code>. Replace it at your own risk.</p>
+<p>The schemas for RDF, XML, and RDFS contain the terms that all ontologies ought to understand by default. Thus, a lot of assumptions were made surrounding their standard use during the development of the package. You can, however, also specify a folder of choice through the <code class="docutils literal notranslate"><span class="pre">--defaults-folder-path</span></code> option for <code class="docutils literal notranslate"><span class="pre">cemento</span> <span class="pre">ttl_drawio</span></code> and <code class="docutils literal notranslate"><span class="pre">cemento</span> <span class="pre">rdf_drawio</span></code>. Replace it at your own risk.</p>
 </section>
 </section>
 <section id="custom-terms-and-prefixes">
@@ -547,7 +606,7 @@
 </pre></div>
 </div>
 <p>This file is just a python dictionary enclosed as a <code class="docutils literal notranslate"><span class="pre">json</span></code> object. Add yours by following the format (copy-paste a line, for example) and inserting it at the bottom of this file. Make sure your prefix is reasonably unique (i.e. don’t copy one that is already in this file).</p>
-<p>After you are happy with your file, go ahead and set the <code class="docutils literal notranslate"><span class="pre">--prefix_file_path</span></code> when running cemento <code class="docutils literal notranslate"><span class="pre">cemento</span> <span class="pre">drawio_ttl</span></code> and <strong>point it to the path to your file</strong>. It should now read your custom prefixes and add the right namespace for your terms.</p>
+<p>After you are happy with your file, go ahead and set the <code class="docutils literal notranslate"><span class="pre">--prefix_file_path</span></code> when running cemento <code class="docutils literal notranslate"><span class="pre">cemento</span> <span class="pre">drawio_ttl</span></code> or <code class="docutils literal notranslate"><span class="pre">cemento</span> <span class="pre">drawio_rdf</span></code>. <strong>Point the argument it to the path to your file</strong>. It should now read your custom prefixes and add the right namespace for your terms.</p>
 </section>
 </section>
 
@@ -598,7 +657,10 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#command-line-interface">Command Line Interface</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#command-line-interface">Command Line Interface</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#supported-formats">Supported Formats</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#term-matching">Term Matching</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#acceptable-format-for-term-matching">Acceptable Format for Term Matching</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#default-reference-ontologies">Default Reference Ontologies</a></li>

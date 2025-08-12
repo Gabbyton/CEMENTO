@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Drawing Basics &#8212; CEMENTO 0.10.0 documentation</title>
+    <title>Drawing Basics &#8212; CEMENTO 0.11.0 documentation</title>
   
   
   
@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=82662543"></script>
+    <script src="../_static/documentation_options.js?v=f3b36f1a"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
@@ -459,9 +459,10 @@
 <h2>Drawing with draw.io<a class="headerlink" href="#drawing-with-draw-io" title="Link to this heading">#</a></h2>
 <p>If you have not used draw.io before, please refer to their comprehensive tutorials <a class="reference external" href="https://drawio-app.com/tutorials/">here</a>. Where you draw your draw.io doesn’t really affect the package performance as long as <code class="docutils literal notranslate"><span class="pre">CEMENTO</span></code> has access to the output <code class="docutils literal notranslate"><span class="pre">.drawio</span></code> file. Once you are familiar with the basics of <code class="docutils literal notranslate"><span class="pre">.drawio</span></code>, there are a few additional things to note:</p>
 <ul class="simple">
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">.drawio</span></code> file extension for your diagram! This is to avoid ambiguity between RDF/XML files and your diagrams.</p></li>
 <li><p>You can use any <strong>simple</strong> shape for your classes, literals and instances. <strong>HOWEVER</strong>, any shape you put (including textboxes) will be considered a class, literal or instance.</p></li>
 <li><p>You draw predicates with arrows. Please make sure that your arrows actually connect to the shape and not just look as if it does.</p></li>
-<li><p>Your arrows must be drawn from source to target. <strong>We have not tested using ‘reverse’ or changing the start or end arrows to change arrow direction</strong>.</p></li>
+<li><p>Your arrows must be drawn from source to target. <strong>Your arrows must be end-arrow only.</strong></p></li>
 <li><p>Predicate labels must be done on the arrow itself. Putting a box on top of an arrow will not work. Only one label per arrow.</p></li>
 <li><p>Literals must come with double-quotes regardless of data type. Avoid using nested double-quotes.</p></li>
 <li><p>You can draw a shape with the text ‘A-Box’ or ‘T-Box’ and a line without a label for annotations. Everything else is treated as part of the ontology.</p></li>
@@ -478,7 +479,7 @@
 </section>
 <section id="in-case-you-missed-it">
 <h2>In Case You Missed It<a class="headerlink" href="#in-case-you-missed-it" title="Link to this heading">#</a></h2>
-<p>The diagram above goes through all that you need to know to start making diagrams you can convert to <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files (Isn’t that cool?); but in case it wasn’t obvious, here is a summary of features you can leverage that <code class="docutils literal notranslate"><span class="pre">CEMENTO</span></code> will understand:</p>
+<p>The diagram above goes through all that you need to know to start making diagrams you can convert to RDF files (Isn’t that cool?); but in case it wasn’t obvious, here is a summary of features you can leverage that <code class="docutils literal notranslate"><span class="pre">CEMENTO</span></code> will understand:</p>
 <ul>
 <li><dl class="simple">
 <dt><strong>Term matching.</strong></dt><dd><p>Any term and predicate you create will be matched with a term. Just make sure to use the right prefix. More details <a class="reference internal" href="cli-guide.html#term-matching"><span class="std std-ref">here</span></a>.</p>
@@ -504,7 +505,7 @@
 <dt><strong>Literal languages and data types.</strong></dt><dd><p>Just write your value the way you would write it in turtle, i.e. <code class="docutils literal notranslate"><span class="pre">&quot;Happy</span> <span class="pre">Gilmore&quot;^^xsd:string</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;Happy</span> <span class="pre">Gilmore&quot;&#64;en</span></code> to define datatypes and set a language respectively.</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><strong>NOTE:</strong> The package only currently support <a class="reference external" href="http://www.w3.org/2001/XMLSchema#">XSD datatypes</a> as is the standard practice for this notation.</div>
+<div class="line"><strong>NOTE:</strong> The package now supports imported datatypes! Locally defined (same-file) datatype definitions are not supported yet.</div>
 </div>
 </div></blockquote>
 </dd>

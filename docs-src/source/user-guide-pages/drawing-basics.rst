@@ -9,9 +9,10 @@ Drawing with draw.io
 
 If you have not used draw.io before, please refer to their comprehensive tutorials `here <https://drawio-app.com/tutorials/>`_. Where you draw your draw.io doesn't really affect the package performance as long as ``CEMENTO`` has access to the output ``.drawio`` file. Once you are familiar with the basics of ``.drawio``, there are a few additional things to note:
 
+* Use the ``.drawio`` file extension for your diagram! This is to avoid ambiguity between RDF/XML files and your diagrams.
 * You can use any **simple** shape for your classes, literals and instances. **HOWEVER**, any shape you put (including textboxes) will be considered a class, literal or instance.
 * You draw predicates with arrows. Please make sure that your arrows actually connect to the shape and not just look as if it does.
-* Your arrows must be drawn from source to target. **We have not tested using 'reverse' or changing the start or end arrows to change arrow direction**.
+* Your arrows must be drawn from source to target. **Your arrows must be end-arrow only.**
 * Predicate labels must be done on the arrow itself. Putting a box on top of an arrow will not work. Only one label per arrow.
 * Literals must come with double-quotes regardless of data type. Avoid using nested double-quotes.
 * You can draw a shape with the text 'A-Box' or 'T-Box' and a line without a label for annotations. Everything else is treated as part of the ontology.
@@ -31,7 +32,7 @@ Having trouble? Download the figure above as an :download:`svg image <https://ra
 In Case You Missed It
 =====================
 
-The diagram above goes through all that you need to know to start making diagrams you can convert to ``.ttl`` files (Isn't that cool?); but in case it wasn't obvious, here is a summary of features you can leverage that ``CEMENTO`` will understand:
+The diagram above goes through all that you need to know to start making diagrams you can convert to RDF files (Isn't that cool?); but in case it wasn't obvious, here is a summary of features you can leverage that ``CEMENTO`` will understand:
 
 * **Term matching.**
     Any term and predicate you create will be matched with a term. Just make sure to use the right prefix. More details :ref:`here <term-matching>`.
@@ -48,4 +49,4 @@ The diagram above goes through all that you need to know to start making diagram
 * **Literal languages and data types.**
     Just write your value the way you would write it in turtle, i.e. ``"Happy Gilmore"^^xsd:string`` or ``"Happy Gilmore"@en`` to define datatypes and set a language respectively.
 
-        | **NOTE:** The package only currently support `XSD datatypes <http://www.w3.org/2001/XMLSchema#>`_ as is the standard practice for this notation.
+        | **NOTE:** The package now supports imported datatypes! Locally defined (same-file) datatype definitions are not supported yet.

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; CEMENTO 0.10.0 documentation</title>
+    <title>Index &#8212; CEMENTO 0.11.0 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="_static/documentation_options.js?v=82662543"></script>
+    <script src="_static/documentation_options.js?v=f3b36f1a"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/design-tabs.js?v=f930bc37"></script>
@@ -417,6 +417,7 @@
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
@@ -519,10 +520,24 @@
 </li>
       </ul></li>
       <li>
+    cemento.cli.drawio_rdf
+
+      <ul>
+        <li><a href="api-pages/cemento.cli.html#module-cemento.cli.drawio_rdf">module</a>
+</li>
+      </ul></li>
+      <li>
     cemento.cli.drawio_ttl
 
       <ul>
         <li><a href="api-pages/cemento.cli.html#module-cemento.cli.drawio_ttl">module</a>
+</li>
+      </ul></li>
+      <li>
+    cemento.cli.rdf_drawio
+
+      <ul>
+        <li><a href="api-pages/cemento.cli.html#module-cemento.cli.rdf_drawio">module</a>
 </li>
       </ul></li>
       <li>
@@ -596,10 +611,10 @@
 </li>
       </ul></li>
       <li>
-    cemento.rdf.drawio_to_turtle
+    cemento.rdf.drawio_to_rdf
 
       <ul>
-        <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.drawio_to_turtle">module</a>
+        <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.drawio_to_rdf">module</a>
 </li>
       </ul></li>
       <li>
@@ -610,10 +625,10 @@
 </li>
       </ul></li>
       <li>
-    cemento.rdf.graph_to_turtle
+    cemento.rdf.graph_to_rdf
 
       <ul>
-        <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.graph_to_turtle">module</a>
+        <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.graph_to_rdf">module</a>
 </li>
       </ul></li>
       <li>
@@ -633,6 +648,20 @@
 </li>
       </ul></li>
       <li>
+    cemento.rdf.rdf_to_drawio
+
+      <ul>
+        <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.rdf_to_drawio">module</a>
+</li>
+      </ul></li>
+      <li>
+    cemento.rdf.rdf_to_graph
+
+      <ul>
+        <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.rdf_to_graph">module</a>
+</li>
+      </ul></li>
+      <li>
     cemento.rdf.transforms
 
       <ul>
@@ -640,24 +669,17 @@
 </li>
       </ul></li>
       <li>
-    cemento.rdf.turtle_to_drawio
-
-      <ul>
-        <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.turtle_to_drawio">module</a>
-</li>
-      </ul></li>
-      <li>
-    cemento.rdf.turtle_to_graph
-
-      <ul>
-        <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.turtle_to_graph">module</a>
-</li>
-      </ul></li>
-      <li>
     cemento.utils
 
       <ul>
         <li><a href="api-pages/cemento.utils.html#module-cemento.utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    cemento.utils.constants
+
+      <ul>
+        <li><a href="api-pages/cemento.utils.html#module-cemento.utils.constants">module</a>
 </li>
       </ul></li>
       <li>
@@ -714,13 +736,15 @@
 </li>
       <li><a href="api-pages/cemento.rdf.html#cemento.rdf.transforms.construct_term_uri">construct_term_uri() (in module cemento.rdf.transforms)</a>
 </li>
-      <li><a href="api-pages/cemento.rdf.html#cemento.rdf.drawio_to_turtle.convert_drawio_to_ttl">convert_drawio_to_ttl() (in module cemento.rdf.drawio_to_turtle)</a>
+      <li><a href="api-pages/cemento.rdf.html#cemento.rdf.drawio_to_rdf.convert_drawio_to_rdf">convert_drawio_to_rdf() (in module cemento.rdf.drawio_to_rdf)</a>
 </li>
-      <li><a href="api-pages/cemento.rdf.html#cemento.rdf.graph_to_turtle.convert_graph_to_ttl">convert_graph_to_ttl() (in module cemento.rdf.graph_to_turtle)</a>
+      <li><a href="api-pages/cemento.rdf.html#cemento.rdf.graph_to_rdf.convert_graph_to_rdf_file">convert_graph_to_rdf_file() (in module cemento.rdf.graph_to_rdf)</a>
 </li>
-      <li><a href="api-pages/cemento.rdf.html#cemento.rdf.turtle_to_drawio.convert_ttl_to_drawio">convert_ttl_to_drawio() (in module cemento.rdf.turtle_to_drawio)</a>
+      <li><a href="api-pages/cemento.rdf.html#cemento.rdf.graph_to_rdf.convert_graph_to_rdf_graph">convert_graph_to_rdf_graph() (in module cemento.rdf.graph_to_rdf)</a>
 </li>
-      <li><a href="api-pages/cemento.rdf.html#cemento.rdf.turtle_to_graph.convert_ttl_to_graph">convert_ttl_to_graph() (in module cemento.rdf.turtle_to_graph)</a>
+      <li><a href="api-pages/cemento.rdf.html#cemento.rdf.rdf_to_drawio.convert_rdf_to_drawio">convert_rdf_to_drawio() (in module cemento.rdf.rdf_to_drawio)</a>
+</li>
+      <li><a href="api-pages/cemento.rdf.html#cemento.rdf.rdf_to_graph.convert_rdf_to_graph">convert_rdf_to_graph() (in module cemento.rdf.rdf_to_graph)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -796,10 +820,10 @@
 </li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.preprocessing.find_shape_errors_diagram_content">find_shape_errors_diagram_content() (in module cemento.draw_io.preprocessing)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.transforms.flip_edges">flip_edges() (in module cemento.draw_io.transforms)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.transforms.flip_edges_of_graphs">flip_edges_of_graphs() (in module cemento.draw_io.transforms)</a>
 </li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.FloatingEdgeError">FloatingEdgeError</a>
@@ -807,6 +831,10 @@
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.TreeFolding.FOLD">FOLD (cemento.draw_io.constants.TreeFolding attribute)</a>
 </li>
       <li><a href="api-pages/cemento.rdf.html#cemento.rdf.preprocessing.format_literal">format_literal() (in module cemento.rdf.preprocessing)</a>
+</li>
+      <li><a href="api-pages/cemento.utils.html#cemento.utils.constants.RDFFormat.from_ext">from_ext() (cemento.utils.constants.RDFFormat class method)</a>
+</li>
+      <li><a href="api-pages/cemento.utils.html#cemento.utils.constants.RDFFormat.from_input">from_input() (cemento.utils.constants.RDFFormat class method)</a>
 </li>
       <li><a href="api-pages/cemento.utils.html#cemento.utils.utils.fst">fst() (in module cemento.utils.utils)</a>
 </li>
@@ -872,11 +900,13 @@
 </li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.transforms.get_rank_connectors_from_trees">get_rank_connectors_from_trees() (in module cemento.draw_io.transforms)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.transforms.get_rank_strat_connectors">get_rank_strat_connectors() (in module cemento.draw_io.transforms)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.transforms.get_ranked_subgraph">get_ranked_subgraph() (in module cemento.draw_io.transforms)</a>
+</li>
+      <li><a href="api-pages/cemento.utils.html#cemento.utils.io.get_rdf_format">get_rdf_format() (in module cemento.utils.io)</a>
 </li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.transforms.get_severed_link_connectors">get_severed_link_connectors() (in module cemento.draw_io.transforms)</a>
 </li>
@@ -917,6 +947,10 @@
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.transforms.get_tree_size">get_tree_size() (in module cemento.draw_io.transforms)</a>
 </li>
       <li><a href="api-pages/cemento.rdf.html#cemento.rdf.transforms.get_uuid">get_uuid() (in module cemento.rdf.transforms)</a>
+</li>
+      <li><a href="api-pages/cemento.utils.html#cemento.utils.constants.RDFFormat.get_valid_file_extensions">get_valid_file_extensions() (cemento.utils.constants.RDFFormat static method)</a>
+</li>
+      <li><a href="api-pages/cemento.utils.html#cemento.utils.constants.RDFFormat.get_valid_rdf_formats">get_valid_rdf_formats() (cemento.utils.constants.RDFFormat static method)</a>
 </li>
       <li><a href="api-pages/cemento.cli.html#cemento.cli.constants.get_version">get_version() (in module cemento.cli.constants)</a>
 </li>
@@ -959,6 +993,14 @@
 </li>
       </ul></li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.preprocessing.is_line">is_line() (in module cemento.draw_io.preprocessing)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-pages/cemento.utils.html#cemento.utils.constants.RDFFormat.JSONLD">JSONLD (cemento.utils.constants.RDFFormat attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1012,7 +1054,11 @@
 </li>
         <li><a href="api-pages/cemento.cli.html#module-cemento.cli.download">cemento.cli.download</a>
 </li>
+        <li><a href="api-pages/cemento.cli.html#module-cemento.cli.drawio_rdf">cemento.cli.drawio_rdf</a>
+</li>
         <li><a href="api-pages/cemento.cli.html#module-cemento.cli.drawio_ttl">cemento.cli.drawio_ttl</a>
+</li>
+        <li><a href="api-pages/cemento.cli.html#module-cemento.cli.rdf_drawio">cemento.cli.rdf_drawio</a>
 </li>
         <li><a href="api-pages/cemento.cli.html#module-cemento.cli.ttl_drawio">cemento.cli.ttl_drawio</a>
 </li>
@@ -1034,23 +1080,25 @@
 </li>
         <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf">cemento.rdf</a>
 </li>
-        <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.drawio_to_turtle">cemento.rdf.drawio_to_turtle</a>
+        <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.drawio_to_rdf">cemento.rdf.drawio_to_rdf</a>
 </li>
         <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.filters">cemento.rdf.filters</a>
 </li>
-        <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.graph_to_turtle">cemento.rdf.graph_to_turtle</a>
+        <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.graph_to_rdf">cemento.rdf.graph_to_rdf</a>
 </li>
         <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.io">cemento.rdf.io</a>
 </li>
         <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.preprocessing">cemento.rdf.preprocessing</a>
 </li>
+        <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.rdf_to_drawio">cemento.rdf.rdf_to_drawio</a>
+</li>
+        <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.rdf_to_graph">cemento.rdf.rdf_to_graph</a>
+</li>
         <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.transforms">cemento.rdf.transforms</a>
 </li>
-        <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.turtle_to_drawio">cemento.rdf.turtle_to_drawio</a>
-</li>
-        <li><a href="api-pages/cemento.rdf.html#module-cemento.rdf.turtle_to_graph">cemento.rdf.turtle_to_graph</a>
-</li>
         <li><a href="api-pages/cemento.utils.html#module-cemento.utils">cemento.utils</a>
+</li>
+        <li><a href="api-pages/cemento.utils.html#module-cemento.utils.constants">cemento.utils.constants</a>
 </li>
         <li><a href="api-pages/cemento.utils.html#module-cemento.utils.io">cemento.utils.io</a>
 </li>
@@ -1063,12 +1111,18 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-pages/cemento.utils.html#cemento.utils.constants.RDFFormat.N3">N3 (cemento.utils.constants.RDFFormat attribute)</a>
+</li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.TreeFolding.NO_FOLD">NO_FOLD (cemento.draw_io.constants.TreeFolding attribute)</a>
 </li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.transforms.no_instance_in_tree">no_instance_in_tree() (in module cemento.draw_io.transforms)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-pages/cemento.utils.html#cemento.utils.constants.RDFFormat.NT">NT (cemento.utils.constants.RDFFormat attribute)</a>
+</li>
+      <li><a href="api-pages/cemento.utils.html#cemento.utils.constants.NullTermError">NullTermError</a>
+</li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.NxEdge">NxEdge (class in cemento.draw_io.constants)</a>
 </li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.NxStringEdge">NxStringEdge (class in cemento.draw_io.constants)</a>
@@ -1109,12 +1163,20 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.ConnectorType.RANK_CONNECTOR">RANK_CONNECTOR (cemento.draw_io.constants.ConnectorType attribute)</a>
 </li>
+      <li><a href="api-pages/cemento.utils.html#cemento.utils.constants.RDFFormat">RDFFormat (class in cemento.utils.constants)</a>
+</li>
+      <li><a href="api-pages/cemento.utils.html#cemento.utils.constants.RDFFormatException">RDFFormatException</a>
+</li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.read_diagram.read_drawio">read_drawio() (in module cemento.draw_io.read_diagram)</a>
 </li>
       <li><a href="api-pages/cemento.cli.html#cemento.cli.download.register">register() (in module cemento.cli.download)</a>
 
       <ul>
+        <li><a href="api-pages/cemento.cli.html#cemento.cli.drawio_rdf.register">(in module cemento.cli.drawio_rdf)</a>
+</li>
         <li><a href="api-pages/cemento.cli.html#cemento.cli.drawio_ttl.register">(in module cemento.cli.drawio_ttl)</a>
+</li>
+        <li><a href="api-pages/cemento.cli.html#cemento.cli.rdf_drawio.register">(in module cemento.cli.rdf_drawio)</a>
 </li>
         <li><a href="api-pages/cemento.cli.html#cemento.cli.ttl_drawio.register">(in module cemento.cli.ttl_drawio)</a>
 </li>
@@ -1133,10 +1195,10 @@
 </li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.preprocessing.remove_literal_id">remove_literal_id() (in module cemento.draw_io.preprocessing)</a>
 </li>
-      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.preprocessing.remove_literal_shape_id">remove_literal_shape_id() (in module cemento.draw_io.preprocessing)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.preprocessing.remove_literal_shape_id">remove_literal_shape_id() (in module cemento.draw_io.preprocessing)</a>
+</li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.preprocessing.remove_predicate_quotes">remove_predicate_quotes() (in module cemento.draw_io.preprocessing)</a>
 </li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.preprocessing.remove_quotes">remove_quotes() (in module cemento.draw_io.preprocessing)</a>
@@ -1160,7 +1222,11 @@
       <li><a href="api-pages/cemento.cli.html#cemento.cli.download.run">run() (in module cemento.cli.download)</a>
 
       <ul>
+        <li><a href="api-pages/cemento.cli.html#cemento.cli.drawio_rdf.run">(in module cemento.cli.drawio_rdf)</a>
+</li>
         <li><a href="api-pages/cemento.cli.html#cemento.cli.drawio_ttl.run">(in module cemento.cli.drawio_ttl)</a>
+</li>
+        <li><a href="api-pages/cemento.cli.html#cemento.cli.rdf_drawio.run">(in module cemento.cli.rdf_drawio)</a>
 </li>
         <li><a href="api-pages/cemento.cli.html#cemento.cli.ttl_drawio.run">(in module cemento.cli.ttl_drawio)</a>
 </li>
@@ -1267,6 +1333,8 @@
       </ul></li>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.TreeFolding">TreeFolding (class in cemento.draw_io.constants)</a>
 </li>
+      <li><a href="api-pages/cemento.utils.html#cemento.utils.constants.RDFFormat.TURTLE">TURTLE (cemento.utils.constants.RDFFormat attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1294,6 +1362,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api-pages/cemento.draw_io.html#cemento.draw_io.constants.Shape.x_pos">x_pos (cemento.draw_io.constants.Shape attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api-pages/cemento.utils.html#cemento.utils.constants.RDFFormat.XML">XML (cemento.utils.constants.RDFFormat attribute)</a>
 </li>
   </ul></td>
 </tr></table>

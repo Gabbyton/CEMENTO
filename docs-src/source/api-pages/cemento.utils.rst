@@ -4,6 +4,14 @@ cemento.utils package
 Submodules
 ----------
 
+cemento.utils.constants module
+------------------------------
+
+.. automodule:: cemento.utils.constants
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 cemento.utils.io module
 -----------------------
 

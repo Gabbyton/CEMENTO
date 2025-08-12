@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>cemento.utils package &#8212; CEMENTO 0.10.0 documentation</title>
+    <title>cemento.utils package &#8212; CEMENTO 0.11.0 documentation</title>
   
   
   
@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=82662543"></script>
+    <script src="../_static/documentation_options.js?v=f3b36f1a"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
@@ -463,6 +463,72 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
 </section>
+<section id="module-cemento.utils.constants">
+<span id="cemento-utils-constants-module"></span><h2>cemento.utils.constants module<a class="headerlink" href="#module-cemento.utils.constants" title="Link to this heading">#</a></h2>
+<dl class="py exception">
+<dt class="sig sig-object py" id="cemento.utils.constants.NullTermError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cemento.utils.constants.</span></span><span class="sig-name descname"><span class="pre">NullTermError</span></span><a class="headerlink" href="#cemento.utils.constants.NullTermError" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cemento.utils.constants.RDFFormat">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cemento.utils.constants.</span></span><span class="sig-name descname"><span class="pre">RDFFormat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cemento.utils.constants.RDFFormat" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cemento.utils.constants.RDFFormat.JSONLD">
+<span class="sig-name descname"><span class="pre">JSONLD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'json-ld'</span></em><a class="headerlink" href="#cemento.utils.constants.RDFFormat.JSONLD" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cemento.utils.constants.RDFFormat.N3">
+<span class="sig-name descname"><span class="pre">N3</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'n3'</span></em><a class="headerlink" href="#cemento.utils.constants.RDFFormat.N3" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cemento.utils.constants.RDFFormat.NT">
+<span class="sig-name descname"><span class="pre">NT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nt'</span></em><a class="headerlink" href="#cemento.utils.constants.RDFFormat.NT" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cemento.utils.constants.RDFFormat.TURTLE">
+<span class="sig-name descname"><span class="pre">TURTLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'turtle'</span></em><a class="headerlink" href="#cemento.utils.constants.RDFFormat.TURTLE" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cemento.utils.constants.RDFFormat.XML">
+<span class="sig-name descname"><span class="pre">XML</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'xml'</span></em><a class="headerlink" href="#cemento.utils.constants.RDFFormat.XML" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cemento.utils.constants.RDFFormat.from_ext">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_ext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_ext</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#cemento.utils.constants.RDFFormat.from_ext" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cemento.utils.constants.RDFFormat.from_input">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#cemento.utils.constants.RDFFormat.from_input" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cemento.utils.constants.RDFFormat.get_valid_file_extensions">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_valid_file_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#cemento.utils.constants.RDFFormat.get_valid_file_extensions" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cemento.utils.constants.RDFFormat.get_valid_rdf_formats">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_valid_rdf_formats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#cemento.utils.constants.RDFFormat.get_valid_rdf_formats" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="cemento.utils.constants.RDFFormatException">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cemento.utils.constants.</span></span><span class="sig-name descname"><span class="pre">RDFFormatException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Error</span> <span class="pre">when</span> <span class="pre">parsing</span> <span class="pre">RDF</span> <span class="pre">format'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cemento.utils.constants.RDFFormatException" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseException</span></code></p>
+</dd></dl>
+
+</section>
 <section id="module-cemento.utils.io">
 <span id="cemento-utils-io-module"></span><h2>cemento.utils.io module<a class="headerlink" href="#module-cemento.utils.io" title="Link to this heading">#</a></h2>
 <dl class="py function">
@@ -483,6 +549,11 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="cemento.utils.io.get_default_references_folder">
 <span class="sig-prename descclassname"><span class="pre">cemento.utils.io.</span></span><span class="sig-name descname"><span class="pre">get_default_references_folder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#cemento.utils.io.get_default_references_folder" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cemento.utils.io.get_rdf_format">
+<span class="sig-prename descclassname"><span class="pre">cemento.utils.io.</span></span><span class="sig-name descname"><span class="pre">get_rdf_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#cemento.utils.constants.RDFFormat" title="cemento.utils.constants.RDFFormat"><span class="pre">RDFFormat</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#cemento.utils.io.get_rdf_format" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>
@@ -577,11 +648,29 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cemento.utils.constants">cemento.utils.constants module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.utils.constants.NullTermError"><code class="docutils literal notranslate"><span class="pre">NullTermError</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.utils.constants.RDFFormat"><code class="docutils literal notranslate"><span class="pre">RDFFormat</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.utils.constants.RDFFormat.JSONLD"><code class="docutils literal notranslate"><span class="pre">RDFFormat.JSONLD</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.utils.constants.RDFFormat.N3"><code class="docutils literal notranslate"><span class="pre">RDFFormat.N3</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.utils.constants.RDFFormat.NT"><code class="docutils literal notranslate"><span class="pre">RDFFormat.NT</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.utils.constants.RDFFormat.TURTLE"><code class="docutils literal notranslate"><span class="pre">RDFFormat.TURTLE</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.utils.constants.RDFFormat.XML"><code class="docutils literal notranslate"><span class="pre">RDFFormat.XML</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.utils.constants.RDFFormat.from_ext"><code class="docutils literal notranslate"><span class="pre">RDFFormat.from_ext()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.utils.constants.RDFFormat.from_input"><code class="docutils literal notranslate"><span class="pre">RDFFormat.from_input()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.utils.constants.RDFFormat.get_valid_file_extensions"><code class="docutils literal notranslate"><span class="pre">RDFFormat.get_valid_file_extensions()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.utils.constants.RDFFormat.get_valid_rdf_formats"><code class="docutils literal notranslate"><span class="pre">RDFFormat.get_valid_rdf_formats()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.utils.constants.RDFFormatException"><code class="docutils literal notranslate"><span class="pre">RDFFormatException</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cemento.utils.io">cemento.utils.io module</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.utils.io.get_default_defaults_folder"><code class="docutils literal notranslate"><span class="pre">get_default_defaults_folder()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.utils.io.get_default_path"><code class="docutils literal notranslate"><span class="pre">get_default_path()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.utils.io.get_default_prefixes_file"><code class="docutils literal notranslate"><span class="pre">get_default_prefixes_file()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.utils.io.get_default_references_folder"><code class="docutils literal notranslate"><span class="pre">get_default_references_folder()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cemento.utils.io.get_rdf_format"><code class="docutils literal notranslate"><span class="pre">get_rdf_format()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cemento.utils.utils">cemento.utils.utils module</a><ul class="nav section-nav flex-column">

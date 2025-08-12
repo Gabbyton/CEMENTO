@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>cemento package &#8212; CEMENTO 0.10.0 documentation</title>
+    <title>cemento package &#8212; CEMENTO 0.11.0 documentation</title>
   
   
   
@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=82662543"></script>
+    <script src="../_static/documentation_options.js?v=f3b36f1a"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
@@ -474,9 +474,19 @@
 <li class="toctree-l3"><a class="reference internal" href="cemento.cli.html#cemento.cli.download.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="cemento.cli.html#module-cemento.cli.drawio_rdf">cemento.cli.drawio_rdf module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cemento.cli.html#cemento.cli.drawio_rdf.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.cli.html#cemento.cli.drawio_rdf.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="cemento.cli.html#module-cemento.cli.drawio_ttl">cemento.cli.drawio_ttl module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cemento.cli.html#cemento.cli.drawio_ttl.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.cli.html#cemento.cli.drawio_ttl.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cemento.cli.html#module-cemento.cli.rdf_drawio">cemento.cli.rdf_drawio module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cemento.cli.html#cemento.cli.rdf_drawio.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.cli.html#cemento.cli.rdf_drawio.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cemento.cli.html#module-cemento.cli.ttl_drawio">cemento.cli.ttl_drawio module</a><ul>
@@ -705,8 +715,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cemento.rdf.html">cemento.rdf package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cemento.rdf.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cemento.rdf.html#module-cemento.rdf.drawio_to_turtle">cemento.rdf.drawio_to_turtle module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cemento.rdf.html#cemento.rdf.drawio_to_turtle.convert_drawio_to_ttl"><code class="docutils literal notranslate"><span class="pre">convert_drawio_to_ttl()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cemento.rdf.html#module-cemento.rdf.drawio_to_rdf">cemento.rdf.drawio_to_rdf module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cemento.rdf.html#cemento.rdf.drawio_to_rdf.convert_drawio_to_rdf"><code class="docutils literal notranslate"><span class="pre">convert_drawio_to_rdf()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cemento.rdf.html#module-cemento.rdf.filters">cemento.rdf.filters module</a><ul>
@@ -714,8 +724,9 @@
 <li class="toctree-l3"><a class="reference internal" href="cemento.rdf.html#cemento.rdf.filters.term_not_in_default_namespace"><code class="docutils literal notranslate"><span class="pre">term_not_in_default_namespace()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cemento.rdf.html#module-cemento.rdf.graph_to_turtle">cemento.rdf.graph_to_turtle module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cemento.rdf.html#cemento.rdf.graph_to_turtle.convert_graph_to_ttl"><code class="docutils literal notranslate"><span class="pre">convert_graph_to_ttl()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cemento.rdf.html#module-cemento.rdf.graph_to_rdf">cemento.rdf.graph_to_rdf module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cemento.rdf.html#cemento.rdf.graph_to_rdf.convert_graph_to_rdf_file"><code class="docutils literal notranslate"><span class="pre">convert_graph_to_rdf_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.rdf.html#cemento.rdf.graph_to_rdf.convert_graph_to_rdf_graph"><code class="docutils literal notranslate"><span class="pre">convert_graph_to_rdf_graph()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cemento.rdf.html#module-cemento.rdf.io">cemento.rdf.io module</a><ul>
@@ -729,6 +740,14 @@
 <li class="toctree-l3"><a class="reference internal" href="cemento.rdf.html#cemento.rdf.preprocessing.format_literal"><code class="docutils literal notranslate"><span class="pre">format_literal()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.rdf.html#cemento.rdf.preprocessing.get_term_aliases"><code class="docutils literal notranslate"><span class="pre">get_term_aliases()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.rdf.html#cemento.rdf.preprocessing.remove_suppression_key"><code class="docutils literal notranslate"><span class="pre">remove_suppression_key()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cemento.rdf.html#module-cemento.rdf.rdf_to_drawio">cemento.rdf.rdf_to_drawio module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cemento.rdf.html#cemento.rdf.rdf_to_drawio.convert_rdf_to_drawio"><code class="docutils literal notranslate"><span class="pre">convert_rdf_to_drawio()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cemento.rdf.html#module-cemento.rdf.rdf_to_graph">cemento.rdf.rdf_to_graph module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cemento.rdf.html#cemento.rdf.rdf_to_graph.convert_rdf_to_graph"><code class="docutils literal notranslate"><span class="pre">convert_rdf_to_graph()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cemento.rdf.html#module-cemento.rdf.transforms">cemento.rdf.transforms module</a><ul>
@@ -764,24 +783,34 @@
 <li class="toctree-l3"><a class="reference internal" href="cemento.rdf.html#cemento.rdf.transforms.rename_edges"><code class="docutils literal notranslate"><span class="pre">rename_edges()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cemento.rdf.html#module-cemento.rdf.turtle_to_drawio">cemento.rdf.turtle_to_drawio module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cemento.rdf.html#cemento.rdf.turtle_to_drawio.convert_ttl_to_drawio"><code class="docutils literal notranslate"><span class="pre">convert_ttl_to_drawio()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="cemento.rdf.html#module-cemento.rdf.turtle_to_graph">cemento.rdf.turtle_to_graph module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cemento.rdf.html#cemento.rdf.turtle_to_graph.convert_ttl_to_graph"><code class="docutils literal notranslate"><span class="pre">convert_ttl_to_graph()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="cemento.rdf.html#module-cemento.rdf">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cemento.utils.html">cemento.utils package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cemento.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cemento.utils.html#module-cemento.utils.constants">cemento.utils.constants module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cemento.utils.html#cemento.utils.constants.NullTermError"><code class="docutils literal notranslate"><span class="pre">NullTermError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.utils.html#cemento.utils.constants.RDFFormat"><code class="docutils literal notranslate"><span class="pre">RDFFormat</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cemento.utils.html#cemento.utils.constants.RDFFormat.JSONLD"><code class="docutils literal notranslate"><span class="pre">RDFFormat.JSONLD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cemento.utils.html#cemento.utils.constants.RDFFormat.N3"><code class="docutils literal notranslate"><span class="pre">RDFFormat.N3</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cemento.utils.html#cemento.utils.constants.RDFFormat.NT"><code class="docutils literal notranslate"><span class="pre">RDFFormat.NT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cemento.utils.html#cemento.utils.constants.RDFFormat.TURTLE"><code class="docutils literal notranslate"><span class="pre">RDFFormat.TURTLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cemento.utils.html#cemento.utils.constants.RDFFormat.XML"><code class="docutils literal notranslate"><span class="pre">RDFFormat.XML</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cemento.utils.html#cemento.utils.constants.RDFFormat.from_ext"><code class="docutils literal notranslate"><span class="pre">RDFFormat.from_ext()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cemento.utils.html#cemento.utils.constants.RDFFormat.from_input"><code class="docutils literal notranslate"><span class="pre">RDFFormat.from_input()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cemento.utils.html#cemento.utils.constants.RDFFormat.get_valid_file_extensions"><code class="docutils literal notranslate"><span class="pre">RDFFormat.get_valid_file_extensions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cemento.utils.html#cemento.utils.constants.RDFFormat.get_valid_rdf_formats"><code class="docutils literal notranslate"><span class="pre">RDFFormat.get_valid_rdf_formats()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.utils.html#cemento.utils.constants.RDFFormatException"><code class="docutils literal notranslate"><span class="pre">RDFFormatException</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="cemento.utils.html#module-cemento.utils.io">cemento.utils.io module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cemento.utils.html#cemento.utils.io.get_default_defaults_folder"><code class="docutils literal notranslate"><span class="pre">get_default_defaults_folder()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.utils.html#cemento.utils.io.get_default_path"><code class="docutils literal notranslate"><span class="pre">get_default_path()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.utils.html#cemento.utils.io.get_default_prefixes_file"><code class="docutils literal notranslate"><span class="pre">get_default_prefixes_file()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cemento.utils.html#cemento.utils.io.get_default_references_folder"><code class="docutils literal notranslate"><span class="pre">get_default_references_folder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cemento.utils.html#cemento.utils.io.get_rdf_format"><code class="docutils literal notranslate"><span class="pre">get_rdf_format()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cemento.utils.html#module-cemento.utils.utils">cemento.utils.utils module</a><ul>

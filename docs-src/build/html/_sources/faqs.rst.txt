@@ -28,9 +28,9 @@ Usage
 
 .. dropdown:: How do I convert my diagram into an RDF format that is not turtle?
 
-    We are planning to have this option in an upcoming release. For now, it's important to note that we use the ``rdflib`` library under the hood to perform operations. Thus, you can use ``rdflib`` to convert our turtle output into any other ``rdflib``-supported format.
+    Use the ``drawio_rdf`` and ``rdf_drawio`` subcommand when using the CLI and the ``convert_rdf_to_drawio`` and ``convert_drawio_to_rdf`` functions when scripting.
 
-.. dropdown:: I am using the CLI to convert my draw.io diagram to a turtle file but it gives me ``BadDiagramError``. How do I fix it?
+.. dropdown:: I am using the CLI to convert my draw.io diagram to an RDF file but it gives me ``BadDiagramError``. How do I fix it?
 
     This error means there are simple but critical errors that are related to how you draw your diagram. Please scroll up to see the list of errors. Incurring an error will also spit out a copy of your file with errors in red. The file will be saved in the same folder as your input with the ``error_check`` label added to the file name.
 
@@ -57,11 +57,11 @@ Usage
 Inaccurate outputs
 ====================
 
-.. dropdown:: Using the CLI, I managed to convert my diagram to turtle, but the output file contains unfamiliar terms that replaced my own. How do I prevent it from happening?
+.. dropdown:: Using the CLI, I managed to convert my diagram to an RDF file, but the output file contains unfamiliar terms that replaced my own. How do I prevent it from happening?
 
     Our package uses fuzzy search to perform term matching, and the term you used was too close to a preexisting term. For example, ``yourprefix:dateTime`` is still going to match with ``xsd:dateTime``. If you don't want this behavior, add an asterisk (*) to your term name. To track substitutions, use the ``-lsp`` option on the CLI command.
 
-.. dropdown:: I managed to convert my diagram to turtle, but I notice  some of my triples are inverted. How do I fix this?
+.. dropdown:: I managed to convert my diagram to an RDF file, but I notice some of my triples are inverted. How do I fix this?
 
     First of all, check that your diagram connects the right way. Second, check that the end and start arrows are set properly. Triple arrows are only supposed to have an end-arrow. To verify your arrow, click on it and open the Style tab on the right-hand pane. You must have the same arrow configuration as shown in the yellow box below. Sometimes, draw.io will just invert this automatically and the option to turn it off is not known to us. This aspect of draw.io is out of our control. Please register a feature suggestion or report a problem with the draw.io people if you wish.
 
@@ -69,19 +69,23 @@ Inaccurate outputs
         :width: 300
         :alt: Start arrow must be None (left), end arrow must be set
 
-.. dropdown:: I managed to convert my diagram to turtle, but the output file is listing instances as classes or vice versa. How do I avoid this?
+.. dropdown:: I managed to convert my diagram to an RDF file, but the output file is listing instances as classes or vice versa. How do I avoid this?
     
     This error is because you used the same exact instance name as your class name. We understand this may be common in tutorials (and most often, not standard practice), but unless you assign a custom prefix to your instance name, your class and your instance will resolve to the same IRI. Please consider renaming your terms to be distinct.
+
+.. dropdown:: I managed to convert my diagram to an RDF file, but I am seeing an ``InvalidOperation`` error on my console. Is that going to be a problem?
+
+    This error is because you attempted to use a string in lieu of using a number or another format which ``rdflib`` cannot parse into your desired format. You likely used a placeholder string like in ``"value"^^xsd:integer``. In this case, check that your ``xsd:decimal``, ``xsd:integer`` or any number-based datatype declaration is using an actual number (keep the quotes though).
 
 Documentation page issues
 ===========================
 
 
-.. dropdown:: I managed to convert my diagram to turtle, but the documentation I generate with `widoco <https://github.com/dgarijo/Widoco>`_ or `PyLode <https://github.com/RDFLib/pyLODE>`_ names my classes as instances. How is that so?
+.. dropdown:: I managed to convert my diagram to an RDF file, but the documentation I generate with `widoco <https://github.com/dgarijo/Widoco>`_ or `PyLode <https://github.com/RDFLib/pyLODE>`_ names my classes as instances. How is that so?
 
     This was a known internal issue at our lab. We found out this is because some class definitions get assigned object properties, or a referenced class had inverted ``rdf:subClassOf`` or ``rdf:type`` triples. If you think this is because of ``CEMENTO``, please open an issue. In any case, please proceed to move those triples to the appropriate subjects and objects.
 
-.. dropdown:: I managed to convert my diagram to turtle, but the documentation I generate with `widoco <https://github.com/dgarijo/Widoco>`_ or `PyLode <https://github.com/RDFLib/pyLODE>`_ names my reference terms as subclasses of my custom terms. What is going on?
+.. dropdown:: I managed to convert my diagram to an RDF file, but the documentation I generate with `widoco <https://github.com/dgarijo/Widoco>`_ or `PyLode <https://github.com/RDFLib/pyLODE>`_ names my reference terms as subclasses of my custom terms. What is going on?
 
     Check that your arrows are not inverted when declaring ``rdfs:subClassOf`` or ``rdf:type``. This, from our experience, is usually the issue.
 
@@ -97,7 +101,7 @@ Issues and Package Contributions
 
 .. dropdown:: How do I report an issue with the package?
 
-    Please refer to our official github issue tracker at `<https://github.com/cwru-sdle/CEMENTO/issues>`_. Please provide a detailed description of your error and your system information (if you think it's relevant). Attach your turtle or diagram file if possible, or a contrived example that reproduces your error. Please be respectful. Remember this package is free and open source.
+    Please refer to our official github issue tracker at `<https://github.com/cwru-sdle/CEMENTO/issues>`_. Please provide a detailed description of your error and your system information (if you think it's relevant). Attach your RDF file or diagram file if possible, or a contrived example that reproduces your error. Please be respectful. Remember this package is free and open source.
 
 .. dropdown:: I want to contribute to the package or make my own version. Do you have suggestions?
 

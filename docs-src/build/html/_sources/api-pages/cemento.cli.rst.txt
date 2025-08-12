@@ -20,10 +20,26 @@ cemento.cli.download module
    :show-inheritance:
    :undoc-members:
 
+cemento.cli.drawio\_rdf module
+------------------------------
+
+.. automodule:: cemento.cli.drawio_rdf
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 cemento.cli.drawio\_ttl module
 ------------------------------
 
 .. automodule:: cemento.cli.drawio_ttl
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+cemento.cli.rdf\_drawio module
+------------------------------
+
+.. automodule:: cemento.cli.rdf_drawio
    :members:
    :show-inheritance:
    :undoc-members:

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Scripting &#8212; CEMENTO 0.10.0 documentation</title>
+    <title>Scripting &#8212; CEMENTO 0.11.0 documentation</title>
   
   
   
@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=82662543"></script>
+    <script src="../_static/documentation_options.js?v=f3b36f1a"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
@@ -455,19 +455,20 @@
   <section id="scripting">
 <h1>Scripting<a class="headerlink" href="#scripting" title="Link to this heading">#</a></h1>
 <p>The package is composed of four main modules that can be imported into a python script. The following sections can show how to use the package for the its most common (and simplest) use-cases:</p>
-<section id="converting-draw-io-to-ttl-files">
-<h2>Converting draw.io to <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files<a class="headerlink" href="#converting-draw-io-to-ttl-files" title="Link to this heading">#</a></h2>
-<p>Using the actual function is as easy as importing and calling it in a python script. The function takes the exact same arguments that you can set in <code class="docutils literal notranslate"><span class="pre">cemento</span> <span class="pre">drawio_ttl</span></code>. In this case, the script needs to set those arguments explicitly.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cemento.rdf.drawio_to_turtle</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_drawio_to_ttl</span>
+<section id="converting-draw-io-to-rdf-files">
+<h2>Converting draw.io to RDF files<a class="headerlink" href="#converting-draw-io-to-rdf-files" title="Link to this heading">#</a></h2>
+<p>Using the actual function is as easy as importing and calling it in a python script. The function takes the exact same arguments that you can set in <code class="docutils literal notranslate"><span class="pre">cemento</span> <span class="pre">drawio_rdf</span></code> or <code class="docutils literal notranslate"><span class="pre">cemento</span> <span class="pre">drawio_ttl</span></code>. In this case, the script needs to set those arguments explicitly. For a list of supported file formats and keywords, check the <a class="reference internal" href="cli-guide.html#supported-formats"><span class="std std-ref">Supported Formats</span></a> section.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cemento.rdf.drawio_to_rdf</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_drawio_to_rdf</span>
 
 <span class="n">INPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;happy-example.drawio&quot;</span>
 <span class="n">OUTPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;sample.ttl&quot;</span>
-<span class="n">LOG_PATH</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">LOG_PATH</span> <span class="o">=</span> <span class="s2">&quot;substitution-log.csv&quot;</span>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">convert_drawio_to_ttl</span><span class="p">(</span>
+    <span class="n">convert_drawio_to_rdf</span><span class="p">(</span>
         <span class="n">INPUT_PATH</span><span class="p">,</span>
         <span class="n">OUTPUT_PATH</span><span class="p">,</span>
+        <span class="n">file_format</span><span class="o">=</span><span class="s2">&quot;turtle&quot;</span><span class="p">,</span> <span class="c1"># set the desired format for the rdf file output. The format is inferred if this is set to None</span>
         <span class="n">check_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># set whether to check for diagram errors prior to processing</span>
         <span class="n">log_substitution_path</span><span class="o">=</span><span class="n">LOG_PATH</span><span class="p">,</span> <span class="c1"># set where to save the substitution log for term fuzzy search</span>
         <span class="n">collect_domains_ranges</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># set whether to collect the instances within the domain and range of a custom object property</span>
@@ -475,10 +476,10 @@
 </pre></div>
 </div>
 </section>
-<section id="converting-ttl-files-to-draw-io-files">
-<h2>Converting <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files to draw.io files<a class="headerlink" href="#converting-ttl-files-to-draw-io-files" title="Link to this heading">#</a></h2>
-<p>This case is very similiar to the previous one. The <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> was assumed to contain the necessary information so you only need to set the <code class="docutils literal notranslate"><span class="pre">INPUT_PATH</span></code> and <code class="docutils literal notranslate"><span class="pre">OUTPUT_PATH</span></code>. The option and <code class="docutils literal notranslate"><span class="pre">set_unique_literals</span></code> determines whether tot treat literals with the same name as different things. <code class="docutils literal notranslate"><span class="pre">horizontal_tree</span></code>, on the other hand, sets whether to draw tree diagrams horizontally or vertically.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cemento.rdf.turtle_to_drawio</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_ttl_to_drawio</span>
+<section id="converting-rdf-files-to-draw-io-files">
+<h2>Converting RDF files to draw.io files<a class="headerlink" href="#converting-rdf-files-to-draw-io-files" title="Link to this heading">#</a></h2>
+<p>This case is very similiar to the previous one. The RDF was assumed to contain the necessary information so you only need to set the <code class="docutils literal notranslate"><span class="pre">INPUT_PATH</span></code> and <code class="docutils literal notranslate"><span class="pre">OUTPUT_PATH</span></code>. The other options are discussed below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cemento.rdf.rdf_to_drawio</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_rdf_to_drawio</span>
 
 <span class="n">INPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;your_onto.ttl&quot;</span>
 <span class="n">OUTPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;your_diagram.drawio&quot;</span>
@@ -487,6 +488,7 @@
     <span class="n">convert_ttl_to_drawio</span><span class="p">(</span>
         <span class="n">INPUT_PATH</span><span class="p">,</span>
         <span class="n">OUTPUT_PATH</span><span class="p">,</span>
+        <span class="n">file_format</span><span class="o">=</span><span class="s2">&quot;turtle&quot;</span><span class="p">,</span> <span class="c1"># set the desired format for the rdf input. The format is inferred if this is set to None</span>
         <span class="n">horizontal_tree</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1">#sets whether to display tree horizontally or vertically</span>
         <span class="n">set_unique_literals</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># sets whether to make literals with the same content, language and type unique</span>
         <span class="n">classes_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># sets whether to display classes only, useful for large turtles like CCO</span>
@@ -523,7 +525,7 @@
     <span class="p">)</span>
 </pre></div>
 </div>
-<p>In fact, the functions <code class="docutils literal notranslate"><span class="pre">read_drawio</span></code> and <code class="docutils literal notranslate"><span class="pre">convert_ttl_to_graph</span></code> are actually wrapped around to form the <code class="docutils literal notranslate"><span class="pre">convert_ttl_to_drawio</span></code> and <code class="docutils literal notranslate"><span class="pre">convert_drawio_to_ttl</span></code> functions. You are already using the former pair when using the latter.</p>
+<p>In fact, the functions <code class="docutils literal notranslate"><span class="pre">read_drawio</span></code> and <code class="docutils literal notranslate"><span class="pre">convert_rdf_to_graph</span></code> are actually wrapped around to form the <code class="docutils literal notranslate"><span class="pre">convert_rdf_to_drawio</span></code> and <code class="docutils literal notranslate"><span class="pre">convert_drawio_to_rdf</span></code> functions. You are already using the former pair when using the latter.</p>
 <section id="a-note-on-unique-literals">
 <h3>A Note on “Unique” Literals<a class="headerlink" href="#a-note-on-unique-literals" title="Link to this heading">#</a></h3>
 <p>By default, the package will not treat all literals as being unique from one another. Classes and instances, by design, have singular, unique IRIs so they are treated to be the same if drawn in multiple locations. By default, literals will be treated the same way even though they don’t have unique IRIs.</p>
@@ -546,7 +548,7 @@
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">cemento.rdf</span></code></dt><dd><p>This module handles the conversion of <code class="docutils literal notranslate"><span class="pre">draw.io</span></code> to <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> and vice versa. It bridges and orchestrates some functions in <code class="docutils literal notranslate"><span class="pre">cemento.draw_io</span></code> to do so.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">cemento.rdf</span></code></dt><dd><p>This module handles the conversion of draw.io diagrams to RDF files and vice versa. It bridges and orchestrates some functions in <code class="docutils literal notranslate"><span class="pre">cemento.draw_io</span></code> to do so.</p>
 </dd>
 </dl>
 </li>
@@ -619,8 +621,8 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-draw-io-to-ttl-files">Converting draw.io to <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-ttl-files-to-draw-io-files">Converting <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> files to draw.io files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-draw-io-to-rdf-files">Converting draw.io to RDF files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-rdf-files-to-draw-io-files">Converting RDF files to draw.io files</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-draw-io-to-a-networkx-digraph">Converting draw.io to a <code class="docutils literal notranslate"><span class="pre">networkx</span></code> DiGraph</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-note-on-unique-literals">A Note on “Unique” Literals</a></li>
 </ul>
