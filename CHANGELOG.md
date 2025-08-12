@@ -18,6 +18,16 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
+## [0.11.1] - 2025-08-12
+
+### Added
+
+- more contextual error message for converting graphs directly into trees
+
+### Fixed
+
+- example on the user-guide page in the documentation
+
 ## [0.11.0] - 2025-08-12
 
 ### Added
