@@ -182,7 +182,7 @@ This project was released under the BSD-3-Clause License. For more information a
 
 ## Third-party Licenses
 
-For information about third-party licenses for packages used in this project, please refer to the `THIRD_PARTY_LICENSES.txt` file or the Third Party Licenses Page on the documentation.
+For information about third-party licenses for packages used in this project, please refer to the `THIRD_PARTY_LICENSES.txt` file or the [Licenses Page](https://cwru-sdle.github.io/CEMENTO/license-info/licenses.html) on the documentation.
 
 ## Contact Information
 
