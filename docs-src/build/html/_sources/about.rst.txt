@@ -67,6 +67,12 @@ Project License
    .. include:: ../../LICENSE.md
     :parser: myst_parser.sphinx_
 
+.. dropdown:: Third Party Licenses
+    :color: secondary
+    :icon: key
+
+    For information about third-party licenses for packages used in this project, please refer to the `THIRD_PARTY_LICENSES.txt` file or the :doc:`Licenses Page </license-info/licenses>` on the documentation.
+
 Acknowledgements
 ================
 

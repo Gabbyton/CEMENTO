@@ -24,6 +24,7 @@ CEMENTO
    faqs
    about
    changelog
+   license-info/licenses
 
 **Version:** |release|
 
