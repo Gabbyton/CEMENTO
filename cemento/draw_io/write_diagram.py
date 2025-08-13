@@ -2,7 +2,7 @@ from itertools import chain
 from pathlib import Path
 from uuid import uuid4
 
-from networkx import DiGraph
+from networkx import DiGraph, selfloop_edges
 
 from cemento.draw_io.constants import Connector, DiagramObject, Shape
 from cemento.draw_io.preprocessing import (
@@ -76,6 +76,8 @@ def draw_tree(
     # replace quotes to match shape content
     # TODO: prioritize is_rank terms over non-rank predicates when cutting
     graph = replace_term_quotes(graph)
+    # remove graph cycles from the start
+    graph.remove_edges_from(selfloop_edges(graph))
     ranked_graph = get_ranked_subgraph(graph)
     ranked_graph = ranked_graph.reverse(copy=True)
 

@@ -413,7 +413,7 @@ def get_subgraphs(graph: DiGraph) -> list[DiGraph]:
 
 
 def get_graph_root_nodes(graph: DiGraph) -> list[any]:
-    return [node for node in graph.nodes if graph.in_degree(node) == 0]
+    return [node for node in graph.nodes if graph.in_degree(node) == 0 or len(graph.nodes) == 1]
 
 
 def split_multiple_inheritances(

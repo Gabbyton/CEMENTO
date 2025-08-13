@@ -16,13 +16,15 @@ from cemento.term_matching.constants import (
     get_default_namespace_prefixes,
 )
 from cemento.term_matching.io import (
+    get_rdf_file_iter,
+    get_rdf_graph,
     get_search_terms_from_defaults,
     get_search_terms_from_graph,
-    get_rdf_file_iter,
     read_prefixes_from_graph,
     read_prefixes_from_json,
 )
 from cemento.term_matching.preprocessing import merge_dictionaries
+from cemento.utils.constants import RDFFormat
 from cemento.utils.utils import get_abbrev_term, remove_term_names
 
 
@@ -158,7 +160,7 @@ def combine_graphs(graphs: Iterable[Graph]) -> Graph:
 
 def generate_residual_prefixes(
     rdf_graph: Graph, inv_prefixes: dict[Namespace | URIRef, str]
-):
+) -> dict[str, URIRef | Namespace]:
     new_prefixes = defaultdict(list)
     new_prefix_namespaces = set()
     for subj, pred, obj in rdf_graph:
@@ -194,7 +196,10 @@ def generate_residual_prefixes(
 
 
 def get_prefixes(
-    prefixes_path: str | Path, onto_ref_folder: str | Path
+    prefixes_path: str | Path,
+    onto_ref_folder: str | Path,
+    input_file: str | Path = None,
+    file_format: RDFFormat | str = None,
 ) -> tuple[dict[str, URIRef | Namespace], dict[URIRef | Namespace, str]]:
     prefixes = dict()
     if prefixes_path:
@@ -215,6 +220,14 @@ def get_prefixes(
             partial(generate_residual_prefixes, inv_prefixes=inv_prefixes),
             get_rdf_file_iter(onto_ref_folder),
         )
+        if input_file is not None:
+            residual_input_prefixes = generate_residual_prefixes(
+                get_rdf_graph(input_file, file_format),
+                inv_prefixes=inv_prefixes,
+            )
+            residual_file_prefixes = chain(
+                residual_file_prefixes, [residual_input_prefixes]
+            )
         residual_file_prefixes = {
             key: value
             for residual_prefixes in residual_file_prefixes
@@ -222,6 +235,7 @@ def get_prefixes(
         }
         prefixes.update(residual_file_prefixes)
         inv_prefixes = {value: key for key, value in prefixes.items()}
+        print(prefixes)
 
     return prefixes, inv_prefixes
 

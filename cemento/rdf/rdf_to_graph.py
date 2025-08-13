@@ -53,7 +53,7 @@ def convert_rdf_to_graph(
     print("retrieving reference data...")
     file_strat_preds = set()
     ref_strat_preds = set()
-    prefixes, inv_prefixes = get_prefixes(prefixes_path, onto_ref_folder)
+    prefixes, inv_prefixes = get_prefixes(prefixes_path, onto_ref_folder, input_file=input_path)
     default_terms = get_default_terms(defaults_folder)
 
     if not classes_only:
