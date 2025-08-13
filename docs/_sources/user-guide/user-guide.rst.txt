@@ -1,0 +1,51 @@
+User Guide
+==========
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+   quickstart
+   user-guide/user-guide
+
+Installation
+------------
+
+To use CEMENTO, first install it with pip:
+
+.. code-block:: console
+
+    (.venv) $ pip install cemento
+
+Ideally, you can create a python environment where `CEMENTO` will reside. This command will automatically install CEMENTO dependencies.
+
+Scripting
+----------
+
+Converting draw.io to ttl
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: cemento.rdf.drawio_to_turtle
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: cemento.rdf.turtle_to_drawio
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+In this page add:
+- how to install with a conda environment
+- installation prerequisites (Python version etc.)
+- how to download the source code
+- instructions on CLI with details at the same degree as README
+- instructions on scripting directly taken from README
+- information about the files in README (adding references, changing defaults)
+- information about flags, considerations when making diagrams
+- drawing guide with interactive image visual
+
+.. iframe:: https://viewer.diagrams.net?#Uhttps%3A%2F%2Fraw.githubusercontent.com%2FGabbyton%2FCEMENTO%2Frefs%2Fheads%2Fmaster%2Ffigures%2Fdo-not-input-this-happy-example-explainer.drawio
+    :height: auto
+    :width: 100%
+    :aspectratio: 1.77

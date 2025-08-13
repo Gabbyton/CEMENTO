@@ -5,8 +5,18 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="135.486mm" height="135.486mm"
      viewBox="0 0 512 512">
-  <path id="Selection"
-        fill="#000000" stroke="#000000" stroke-width="1"
+  
+  <defs>
+    <style>
+      .bg { fill: #000000; stroke: #000000 }
+      
+      @media (prefers-color-scheme: dark) {
+        .bg { fill: #ffffff; stroke: #ffffff }
+      }
+    </style>
+  </defs>
+  <path class="bg" id="Selection"
+        stroke-width="1"
         d="M 29.00,228.00
            C 29.00,228.00 113.00,179.42 113.00,179.42
              113.00,179.42 262.00,92.99 262.00,92.99
