@@ -35,7 +35,7 @@ from cemento.draw_io.preprocessing import (
 )
 from cemento.term_matching.constants import RANK_PROPS
 from cemento.term_matching.transforms import substitute_term
-from cemento.utils.utils import aggregate_defaultdict, filter_graph, fst, snd, trd
+from cemento.utils.utils import filter_graph, fst, snd, trd
 
 
 def clean_element_values(
@@ -257,109 +257,64 @@ def add_node_to_digraph(graph: DiGraph, node: tuple[any, dict[str, any]]) -> DiG
     return new_graph
 
 
-# TODO: add property definition to allow parsing container predicates as annotation types
-def parse_containers(
-    graph: DiGraph,
-    strat_terms: set[str] = None,
-    pred_symbol: str = "->",
-    root_id: str = "1",
-) -> DiGraph:
-    new_graph = graph.copy()
-    containers = (
-        data["parent"]
-        for term, data in graph.nodes(data=True)
-        if "parent" in data and data["parent"] is not None
-    )
-    containers = set(filter(lambda x: x != root_id, containers))
-    term_ids = {
-        value: key for key, value in nx.get_node_attributes(graph, "term_id").items()
-    }
-    container_terms = [term_ids[container_id] for container_id in containers]
+# function for generating container lists
+# just store the ids
+def parse_containers(elements: dict[str, dict[str, any]]):
+    containers = defaultdict(list)
+    for element, attr in elements.items():
+        if "parent" in attr and attr["parent"] not in {"0", "1"}:
+            containers[attr["parent"]].append(element)
+    return containers
 
-    container_child_pairs = (
-        (container_id, term)
-        for term, data in graph.nodes(data=True)
-        if "parent" in data
-        and (container_id := data["parent"]) is not None
-        and container_id in containers
-    )
-    container_children = reduce(
-        aggregate_defaultdict, container_child_pairs, defaultdict(list)
-    )
-    pred_terms, obj_terms = zip(
-        *map(partial(str.split, sep=pred_symbol), container_terms), strict=True
-    )
-    sub_strat_pred_terms, is_strats = list(
-        zip(
-            *map(
-                partial(substitute_term, search_terms=strat_terms, score_cutoff=95),
-                pred_terms,
-            ),
-            strict=True,
-        )
-    )
-    pred_terms = (
-        substitute_term
-        for substitute_term, _ in zip(sub_strat_pred_terms, pred_terms, strict=True)
-    )
-    pred_terms = list(pred_terms)
-    sub_rank_pred_terms, is_ranks = list(
-        zip(
-            *map(
-                partial(substitute_term, search_terms={"rdfs:subClassOf", "rdf:type"}),
-                pred_terms,
-            ),
-            strict=True,
-        )
-    )
-    pred_terms = (
-        substitute_term
-        for substitute_term, _ in zip(sub_rank_pred_terms, pred_terms, strict=True)
-    )
-    new_edge_data = {
-        container_id: {
-            "label": pred_term,
-            "pred_id": f"{container_id}-1",
-            "is_strat": is_strat,
-            "is_rank": is_rank,
-            "is_predicate": True,
-        }
-        for container_id, pred_term, is_strat, is_rank in zip(
-            containers,
-            pred_terms,
-            is_strats,
-            is_ranks,
-            strict=True,
-        )
-    }
-    obj_terms = list(obj_terms)
-    new_edge_objects = {
-        container_id: obj_term
-        for container_id, obj_term in zip(containers, obj_terms, strict=True)
-    }
-    obj_term_data = (
-        {
-            "term_id": f"{container_id}-2",
-            "label": obj_term,
-            "is_literal": ('"' in obj_term or "&quot;" in obj_term),
-            "parent": container_id,
-        }
-        for container_id, obj_term in zip(containers, obj_terms, strict=True)
-    )
-    obj_term_nodes = (
-        (obj_term, obj_term_data)
-        for obj_term, obj_term_data in zip(obj_terms, obj_term_data, strict=True)
-    )
-    new_graph.add_nodes_from(obj_term_nodes)
 
-    new_graph_triples = (
-        (child, new_edge_objects[container_id], new_edge_data[container_id])
-        for container_id, children in container_children.items()
-        for child in children
-    )
-    new_graph.add_edges_from(new_graph_triples)
-    new_graph.remove_nodes_from(container_terms)
-    return new_graph
+def get_container_values(
+    containers: dict[str, list[str]], elements: dict[str, dict[str, any]]
+) -> dict[str, str]:
+    return {
+        container_id: (
+            attrs["value"]
+            if (attrs := elements[container_id]) and "value" in attrs
+            else None
+        )
+        for container_id in containers.keys()
+    }
+
+
+def link_container_members(graph: DiGraph, containers: dict[str, list[str]]) -> DiGraph:
+    graph = graph.copy()
+    for container_id, items in containers.items():
+        for item in items:
+            graph.add_edge(container_id, item, label="mds:hasCollectionMember")
+    return graph
+
+
+def get_container_collection_types(
+    graph: DiGraph, container_labels: dict[str, str], containers: dict[str, list[str]]
+) -> dict[str, str]:
+    graph = graph.copy()
+    for container_id in containers:
+        container_type = container_labels[container_id]
+        if not container_type.strip():
+            container_type = "mds:tripleSugar"
+        else:
+            # TODO: move search terms to constants file
+            valid_collection_types = {
+                "owl:unionOf",
+                "owl:intersectionOf",
+                "owl:complementOf",
+            }
+            old_container_type = container_type
+            container_type = substitute_term(
+                container_type,
+                valid_collection_types,
+            )
+            # TODO: move to error check
+            if container_type == old_container_type:
+                raise ValueError(
+                    f"The provided collection header does not seem to match any of the valid collection types. Choose between: {valid_collection_types} or leaving the header blank."
+                )
+        graph.add_edge(container_type, container_id)
+    return graph
 
 
 def relabel_graph_nodes_with_node_attr(
@@ -367,7 +322,11 @@ def relabel_graph_nodes_with_node_attr(
 ) -> DiGraph:
     node_info = nx.get_node_attributes(graph, new_attr_label)
     relabel_mapping = {
-        current_node_label: node_info[current_node_label]
+        current_node_label: (
+            node_info[current_node_label]
+            if current_node_label in node_info
+            else current_node_label
+        )
         for current_node_label in graph.nodes
     }
     return nx.relabel_nodes(graph, relabel_mapping)

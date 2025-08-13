@@ -11,6 +11,10 @@ from cemento.draw_io.preprocessing import (
 from cemento.draw_io.transforms import (
     extract_elements,
     generate_graph,
+    get_container_collection_types,
+    get_container_values,
+    link_container_members,
+    parse_containers,
     parse_elements,
     relabel_graph_nodes_with_node_attr,
 )
@@ -40,6 +44,11 @@ def read_drawio(
     )
 
     elements = parse_elements(input_path)
+    containers = parse_containers(elements)
+    container_labels = get_container_values(containers, elements)
+    elements = dict(
+        filter(lambda item: item[0] not in containers.keys(), elements.items())
+    )
     term_ids, rel_ids = extract_elements(elements)
     strat_props = None
     prefixes, inv_prefixes = get_prefixes(prefixes_file, onto_ref_folder)
@@ -76,5 +85,8 @@ def read_drawio(
         exempted_elements=error_exemptions,
         inverted_rank_arrow=inverted_rank_arrow,
     )
+    graph = get_container_collection_types(graph, container_labels, containers)
+    graph = link_container_members(graph, containers)
     graph = relabel_graph_nodes_with_node_attr(graph, new_attr_label=relabel_key.value)
+    print(graph.edges(data=True))
     return graph

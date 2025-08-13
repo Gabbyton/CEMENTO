@@ -71,6 +71,8 @@ def convert_graph_to_rdf_graph(
     prefixes, inv_prefixes = get_prefixes(prefixes_path, onto_ref_folder)
     search_terms = get_search_terms(inv_prefixes, onto_ref_folder, defaults_folder)
 
+    collection_nodes = {"unionOf", "intersectionOf", "complementOf"}
+
     aliases = {
         term: aliases
         for term, aliases in map(
