@@ -18,6 +18,17 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
+## [0.11.2] - 2025-08-13
+
+### Added
+
+- processing file prefixes within the input file when converting to drawio
+
+### Fixed
+
+- `get_root_node` function not returning the only node in the graph if it has a self-referential edge
+- cycles in graphs getting processed alongside regular edges
+
 ## [0.11.1] - 2025-08-12
 
 ### Added
