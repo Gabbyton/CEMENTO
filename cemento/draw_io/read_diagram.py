@@ -88,5 +88,4 @@ def read_drawio(
     graph = get_container_collection_types(graph, container_labels, containers)
     graph = link_container_members(graph, containers)
     graph = relabel_graph_nodes_with_node_attr(graph, new_attr_label=relabel_key.value)
-    print(graph.edges(data=True))
     return graph

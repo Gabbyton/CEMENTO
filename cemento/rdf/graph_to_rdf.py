@@ -1,3 +1,4 @@
+from collections import defaultdict
 from copy import deepcopy
 from functools import partial, reduce
 from itertools import filterfalse
@@ -6,7 +7,8 @@ from pathlib import Path
 import networkx as nx
 import rdflib
 from networkx import DiGraph
-from rdflib import OWL, RDF, RDFS, Graph
+from rdflib import OWL, RDF, RDFS, BNode, Graph
+from rdflib.collection import Collection
 
 from cemento.rdf.filters import term_in_search_results, term_not_in_default_namespace
 from cemento.rdf.io import (
@@ -28,6 +30,7 @@ from cemento.rdf.transforms import (
     get_domains_ranges,
     get_literal_data_type,
     get_literal_lang_annotation,
+    get_term_collection_triples,
     get_term_value,
     get_xsd_terms,
     remove_generic_property,
@@ -71,7 +74,25 @@ def convert_graph_to_rdf_graph(
     prefixes, inv_prefixes = get_prefixes(prefixes_path, onto_ref_folder)
     search_terms = get_search_terms(inv_prefixes, onto_ref_folder, defaults_folder)
 
-    collection_nodes = {"unionOf", "intersectionOf", "complementOf"}
+    # TODO: reference from constants file once moved
+    # TODO: replace with proper-cased terms once substitute issue is resolved
+    valid_collection_types = {
+        "owl:unionof",
+        "owl:intersectionof",
+        "owl:complementof",
+        "mds:triplesugar",
+    }
+    collections_in_graph = filter(lambda x: x in graph.nodes, valid_collection_types)
+    collection_nodes = {
+        node: collection_type
+        for collection_type in collections_in_graph
+        for node in graph.neighbors(collection_type)
+    }
+    collection_links = [
+        (node, member) for node in collection_nodes for member in graph.neighbors(node)
+    ]
+    graph.remove_edges_from(collection_links)
+    graph.remove_nodes_from(list(collection_nodes.keys() | valid_collection_types))
 
     aliases = {
         term: aliases
@@ -200,6 +221,25 @@ def convert_graph_to_rdf_graph(
     rdf_graph = add_rdf_triples(
         rdf_graph, ((term, RDF.type, OWL.Class) for term in class_terms)
     )
+
+    # create RDF collections from collection triples
+    print(collection_nodes)
+    print(collection_links)
+
+    collection_members = defaultdict(list)
+    for head, member in collection_links:
+        collection_members[head].append(member)
+    for head, members in collection_members.items():
+        members = map(
+            lambda x: constructed_terms[x] if x in constructed_terms else x, members
+        )
+        collection_node, collection_class = BNode(), BNode()
+        Collection(rdf_graph, collection_node, members)
+        rdf_graph.add((collection_class, RDF.type, OWL.Class))
+        member_rel = collection_nodes[head]
+        rdf_graph.add((collection_class, member_rel, collection_node))
+        for subj, _, data in graph.in_edges(head, data=True):
+            rdf_graph.append((subj, data["label"], collection_class))
 
     # if the term is a predicate and is not part of the default namespaces, add an object property type to the ttl file
     ref_graph = deepcopy(rdf_graph)

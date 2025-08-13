@@ -125,7 +125,7 @@ def get_domains_ranges(
 
 def get_term_collection_triples(
     rdf_graph: Graph,
-    head_term: Iterable[URIRef],
+    head_term: URIRef,
     member_terms: Iterable[URIRef],
     member_rel: URIRef,
     term_collection_rel: URIRef,
