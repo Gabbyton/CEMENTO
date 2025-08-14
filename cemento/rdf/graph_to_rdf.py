@@ -1,3 +1,4 @@
+from collections import defaultdict
 from copy import deepcopy
 from functools import partial, reduce
 from itertools import chain, filterfalse
@@ -15,7 +16,6 @@ from cemento.rdf.io import (
     get_diagram_terms_iter_with_pred,
     save_substitute_log,
 )
-from pprint import pprint
 from cemento.rdf.preprocessing import (
     get_term_aliases,
 )
@@ -30,7 +30,6 @@ from cemento.rdf.transforms import (
     get_domains_ranges,
     get_literal_data_type,
     get_literal_lang_annotation,
-    get_term_value,
     get_xsd_terms,
     remove_generic_property,
     substitute_term_multikey,
@@ -52,7 +51,12 @@ from cemento.utils.io import (
     get_default_references_folder,
     get_rdf_format,
 )
-from cemento.utils.utils import fst, get_abbrev_term, snd
+from cemento.utils.utils import (
+    chain_filter,
+    fst,
+    get_abbrev_term,
+    snd,
+)
 
 
 def convert_graph_to_rdf_graph(
@@ -105,7 +109,7 @@ def convert_graph_to_rdf_graph(
         )
     )
     collection_in_edges_preds_with_pred = list(
-        map(lambda x: (x, True), collection_in_edges_preds)
+        map(lambda x: (x, False), collection_in_edges_preds)
     )
     collection_subgraph = graph.subgraph(
         collection_node_refs | collection_members
@@ -280,8 +284,6 @@ def convert_graph_to_rdf_graph(
             for key in (subj, obj, pred)
         )
         output_graph.add_edge(subj, obj, label=pred)
-    print(output_graph.edges(data=True))
-    pprint(constructed_terms)
     class_terms = get_class_terms(output_graph)
     predicate_terms = {data["label"] for _, _, data in output_graph.edges(data=True)}
     literal_terms = set(constructed_literal_terms.values())
@@ -334,34 +336,32 @@ def convert_graph_to_rdf_graph(
     )
 
     if onto_ref_folder:
-        exact_match_property_predicates = [RDF.value, RDFS.label]
-        exact_match_properties = {
-            term: {prop: value}
-            for prop in exact_match_property_predicates
-            for result in map(
-                lambda rdf_graph, prop=prop: map(
-                    lambda graph_term: (
-                        graph_term,
-                        get_term_value(
-                            subj=graph_term, pred=prop, ref_rdf_graph=ref_graph
-                        ),
-                    ),
-                    all_terms,
-                ),
-                get_rdf_file_iter(onto_ref_folder),
+        exact_match_property_predicates = [RDF.type, RDFS.label]
+        exact_match_candidates = list(
+            chain_filter(
+                all_terms,
+                term_in_search_results_filter,
+                term_not_in_default_namespace_filter,
             )
-            for term, value in result
+        )
+        print(exact_match_candidates)
+        exact_match_property_tuples = {
+            (term, prop, value)
+            for term in exact_match_candidates
+            for prop in exact_match_property_predicates
+            for value in list(ref_graph.objects(term, prop))
         }
+        exact_match_properties = defaultdict(dict)
+        for key, prop, value in exact_match_property_tuples:
+            exact_match_properties[key][prop] = value
+
         rdf_graph = reduce(
             lambda rdf_graph, graph_term: add_exact_matches(
                 term=graph_term,
                 match_properties=exact_match_properties[graph_term],
                 rdf_graph=rdf_graph,
             ),
-            filter(
-                term_in_search_results_filter,
-                filter(term_not_in_default_namespace_filter, all_terms),
-            ),
+            exact_match_candidates,
             rdf_graph,
         )
     rdf_graph = reduce(

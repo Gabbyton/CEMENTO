@@ -15,7 +15,7 @@ def get_diagram_terms_iter_with_pred(graph: DiGraph) -> Iterable[str, bool]:
         for term in (subj, data["label"], obj)
         if term
     )
-    diagram_terms_from_nodes = ((node, True) for node in graph.nodes)
+    diagram_terms_from_nodes = ((node, False) for node in graph.nodes)
     return unique_everseen(chain(diagram_terms_from_edges, diagram_terms_from_nodes))
 
 
