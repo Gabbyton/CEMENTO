@@ -18,6 +18,16 @@ _[Unreleased]_ section for tracking changes prior to binning to versions.
 
 _[X.X.X] - YYYY-MM-YY_ for version-date header
 
+## [Unreleased] - 2025-08-14
+
+### Added
+
+- custom scorer for `substitute_term`
+
+### Fixed
+
+- `substitute_term` replacing the matched result with a lowercased string.
+
 ## [0.11.2] - 2025-08-13
 
 ### Added
