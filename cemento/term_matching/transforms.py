@@ -46,14 +46,17 @@ def search_similar_terms_multikey(
     ]
 
 
+def compare_lower_terms(string1, string2, **kwargs):
+    return fuzz.ratio(string1.lower(), string2.lower())
+
 def get_term_matches(
     term: str, search_pool: Container[str], score_cutoff: int = None
 ) -> tuple[str, int]:
-    # FIXME: return the original non-lowered match instead of lowered match
     return process.extractOne(
-        term.lower(),
-        [search_term.lower() for search_term in search_pool],
+        term,
+        search_pool,
         score_cutoff=score_cutoff,
+        scorer=compare_lower_terms,
     )
 
 

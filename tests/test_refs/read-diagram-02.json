@@ -54,7 +54,7 @@
             "mds:Employee",
             "cco:Person",
             {
-                "label": "rdfs:subclassof",
+                "label": "rdfs:subClassOf",
                 "pred_id": "yE1NTkxh-0s1ADCfzDLe-7",
                 "is_strat": true,
                 "is_rank": true,
@@ -76,7 +76,7 @@
             "mds:Student",
             "cco:Person",
             {
-                "label": "rdfs:subclassof",
+                "label": "rdfs:subClassOf",
                 "pred_id": "yE1NTkxh-0s1ADCfzDLe-2",
                 "is_strat": true,
                 "is_rank": true,
@@ -98,7 +98,7 @@
             "mds:Teenager",
             "cco:Person",
             {
-                "label": "rdfs:subclassof",
+                "label": "rdfs:subClassOf",
                 "pred_id": "yE1NTkxh-0s1ADCfzDLe-11",
                 "is_strat": true,
                 "is_rank": true,
@@ -109,7 +109,7 @@
             "mds:Teenager",
             "cco:Phase",
             {
-                "label": "rdfs:subclassof",
+                "label": "rdfs:subClassOf",
                 "pred_id": "yE1NTkxh-0s1ADCfzDLe-15",
                 "is_strat": true,
                 "is_rank": true,
