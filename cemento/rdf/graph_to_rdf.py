@@ -7,7 +7,7 @@ from pathlib import Path
 import networkx as nx
 import rdflib
 from networkx import DiGraph
-from rdflib import OWL, RDF, RDFS, BNode, Graph
+from rdflib import OWL, RDF, RDFS, BNode, Graph, Literal, URIRef
 from rdflib.collection import Collection
 
 from cemento.rdf.filters import term_in_search_results, term_not_in_default_namespace
@@ -252,19 +252,37 @@ def convert_graph_to_rdf_graph(
             container_refs[member] if member in container_refs else member
             for member in members
         ]
-        collection_type = collection_type_map[collection_nodes[collection_id]]
-        collection_node = BNode()
-        Collection(rdf_graph, collection_node, members)
-        collection_class = BNode()
-        collection_triples.append((collection_class, collection_type, collection_node))
-        container_refs[collection_id] = collection_class
+        collection_type_str = collection_nodes[collection_id]
+        collection_type = (
+            collection_type_map[collection_type_str]
+            if collection_type_str in collection_type_map
+            else None
+        )
+        # create the collection and refer to the node
+        if collection_type:
+            collection_node = BNode()
+            Collection(rdf_graph, collection_node, members)
+            collection_class = BNode()
+            collection_triples.append(
+                (collection_class, collection_type, collection_node)
+            )
+            container_refs[collection_id] = collection_class
+        else:
+            # assign the members to directly map as a flat collection
+            container_refs[collection_id] = members
 
     for subj, obj, data in collection_in_edges:
-        graph.add_edge(
-            subj,
-            container_refs[obj],
-            label=data["label"],
-        )
+        # if the reference is a list of more than one element, just use flat mapping
+        if isinstance(container_refs[obj], list):
+            members = container_refs[obj]
+            for member in members:
+                graph.add_edge(subj, member, label=data["label"])
+        else:
+            graph.add_edge(
+                subj,
+                container_refs[obj],
+                label=data["label"],
+            )
 
     for triple in collection_triples:
         rdf_graph.add(triple)
@@ -279,7 +297,7 @@ def convert_graph_to_rdf_graph(
             )
             continue
         subj, obj, pred = tuple(
-            constructed_terms[key] if not isinstance(key, BNode) else key
+            constructed_terms[key] if type(key) not in {URIRef, Literal, BNode} else key
             for key in (subj, obj, pred)
         )
         output_graph.add_edge(subj, obj, label=pred)
