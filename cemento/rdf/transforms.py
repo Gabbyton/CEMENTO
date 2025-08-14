@@ -17,6 +17,7 @@ from cemento.rdf.preprocessing import (
 )
 from cemento.term_matching.constants import RANK_PROPS
 from cemento.term_matching.transforms import substitute_term_multikey
+from cemento.utils.constants import valid_collection_types
 from cemento.utils.utils import filter_graph, fst, snd
 
 
@@ -337,3 +338,122 @@ def assign_literal_ids(
 
 def get_uuid():
     return str(uuid4()).split("-")[-1]
+
+
+def get_collection_nodes(graph: DiGraph) -> dict[str, str]:
+    collections_in_graph = filter(lambda x: x in graph.nodes, valid_collection_types)
+    collection_nodes = {
+        node: collection_type
+        for collection_type in collections_in_graph
+        for node in graph.neighbors(collection_type)
+    }
+    return collection_nodes
+
+
+def get_collection_subgraph(collection_nodes: set[str], graph: DiGraph):
+    collection_node_refs = collection_nodes | valid_collection_types
+    collection_members = {
+        member for node in collection_nodes for member in graph.neighbors(node)
+    }
+    return graph.subgraph(collection_node_refs | collection_members).copy()
+
+
+def get_collection_in_edges(
+    collection_nodes: set[str], graph: DiGraph
+) -> list[tuple[str, str, dict[str, str | bool]]]:
+    return [
+        (subj, obj, attr)
+        for collection_id in collection_nodes
+        for (subj, obj, attr) in graph.in_edges(collection_id, data=True)
+        if subj not in valid_collection_types
+        and ("label" not in attr or attr["label"] != "mds:hasCollectionMember")
+    ]
+
+
+def get_collection_members(
+    collection_subgraph: DiGraph,
+    collection_id: str,
+    term_mapping: dict[str, URIRef | Literal],
+) -> Iterable[str]:
+    return (
+        term_mapping[member] if member in term_mapping else member
+        for _, member in collection_subgraph.out_edges(collection_id)
+    )
+
+
+def get_collection_nodes_iter(
+    collection_subgraph: DiGraph, collection_nodes: set[str]
+) -> Iterable[str]:
+    collection_subgraph_postorder_nodes = nx.dfs_postorder_nodes(collection_subgraph)
+    return filter(lambda x: x in collection_nodes, collection_subgraph_postorder_nodes)
+
+
+# TODO: decouple this function even further, ideally with one for each current output
+def get_collection_triples_and_targets(
+    collection_nodes: dict[str, str],
+    collection_subgraph: DiGraph,
+    rdf_graph: Graph,
+    term_mapping: dict[str, URIRef | Literal],
+):
+    container_refs = dict()
+    collection_triples = []
+    collection_type_map = {
+        "owl:unionOf": OWL.unionOf,
+        "owl:intersectionOf": OWL.intersectionOf,
+        "owl:complementOf": OWL.complementOf,
+    }
+    collection_nodes_iter = get_collection_nodes_iter(
+        collection_subgraph, collection_nodes
+    )
+    for collection_id in collection_nodes_iter:
+        # swap out string id with the corresponding constructed term
+        # return the same member if not in the constructed term dict, especially for ids
+        members = get_collection_members(
+            collection_subgraph, collection_id, term_mapping
+        )
+        # swap out collection members for their constructed BNode
+        members = [
+            container_refs[member] if member in container_refs else member
+            for member in members
+        ]
+        collection_type_str = collection_nodes[collection_id]
+        collection_type = (
+            collection_type_map[collection_type_str]
+            if collection_type_str in collection_type_map
+            else None
+        )
+        # create the collection and refer to the node
+        if collection_type:
+            collection_node = BNode()
+            Collection(rdf_graph, collection_node, members)
+            collection_class = BNode()
+            collection_triples.append(
+                (collection_class, collection_type, collection_node)
+            )
+            container_refs[collection_id] = collection_class
+        else:
+            # assign the members to directly map as a flat collection
+            container_refs[collection_id] = members
+
+    return collection_triples, container_refs
+
+
+def add_collection_links_to_graph(
+    collection_in_edges: list[tuple[str, str, dict[str, str | bool]]],
+    collection_targets: dict[str, list[URIRef | Literal] | BNode],
+    graph: DiGraph,
+):
+    graph = graph.copy()
+    for subj, obj, data in collection_in_edges:
+        # if the reference is a list of more than one element, just use flat mapping
+        if isinstance(collection_targets[obj], list):
+            members = collection_targets[obj]
+            for member in members:
+                graph.add_edge(subj, member, label=data["label"])
+        else:
+            graph.add_edge(
+                subj,
+                collection_targets[obj],
+                label=data["label"],
+            )
+    return graph

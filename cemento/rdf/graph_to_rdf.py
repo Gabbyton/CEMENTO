@@ -8,7 +8,6 @@ import networkx as nx
 import rdflib
 from networkx import DiGraph
 from rdflib import OWL, RDF, RDFS, BNode, Graph, Literal, URIRef
-from rdflib.collection import Collection
 
 from cemento.rdf.filters import term_in_search_results, term_not_in_default_namespace
 from cemento.rdf.io import (
@@ -20,6 +19,7 @@ from cemento.rdf.preprocessing import (
     get_term_aliases,
 )
 from cemento.rdf.transforms import (
+    add_collection_links_to_graph,
     add_domains_ranges,
     add_labels,
     add_rdf_triples,
@@ -27,6 +27,10 @@ from cemento.rdf.transforms import (
     construct_literal,
     construct_term_uri,
     get_class_terms,
+    get_collection_in_edges,
+    get_collection_nodes,
+    get_collection_subgraph,
+    get_collection_triples_and_targets,
     get_domains_ranges,
     get_literal_data_type,
     get_literal_lang_annotation,
@@ -44,7 +48,7 @@ from cemento.term_matching.transforms import (
     get_term_search_keys,
     get_term_types,
 )
-from cemento.utils.constants import NullTermError, RDFFormat
+from cemento.utils.constants import NullTermError, RDFFormat, valid_collection_types
 from cemento.utils.io import (
     get_default_defaults_folder,
     get_default_prefixes_file,
@@ -79,47 +83,26 @@ def convert_graph_to_rdf_graph(
 
     # TODO: reference from constants file once moved
     # TODO: replace with proper-cased terms once substitute issue is resolved
-    valid_collection_types = {
-        "owl:unionOf",
-        "owl:intersectionOf",
-        "owl:complementOf",
-        "mds:tripleSyntaxSugar",
-    }
-    collections_in_graph = filter(lambda x: x in graph.nodes, valid_collection_types)
-    collection_nodes = {
-        node: collection_type
-        for collection_type in collections_in_graph
-        for node in graph.neighbors(collection_type)
-    }
-    collection_node_refs = set(collection_nodes.keys()) | valid_collection_types
-    collection_members = {
-        member for node in collection_nodes for member in graph.neighbors(node)
-    }
-    collection_in_edges = [
-        (subj, obj, attr)
-        for collection_id in collection_nodes.keys()
-        for (subj, obj, attr) in graph.in_edges(collection_id, data=True)
-        if subj not in valid_collection_types
-        and ("label" not in attr or attr["label"] != "mds:hasCollectionMember")
-    ]
-    collection_in_edges_preds = list(
+    collection_nodes = get_collection_nodes(graph)
+    collection_in_edges = get_collection_in_edges(collection_nodes.keys(), graph)
+    collection_in_edge_labels = list(
         map(
             lambda x: x[2]["label"],
             filter(lambda x: "label" in x[2], collection_in_edges),
         )
     )
-    collection_in_edges_preds_with_pred = list(
-        map(lambda x: (x, False), collection_in_edges_preds)
+    collection_in_edge_labels_iter = map(
+        lambda x: (x, False), collection_in_edge_labels
     )
-    collection_subgraph = graph.subgraph(
-        collection_node_refs | collection_members
-    ).copy()
-    graph.remove_nodes_from(collection_node_refs)
+    nodes_to_remove = set(collection_nodes.keys()) | valid_collection_types
+    collection_subgraph = get_collection_subgraph(set(collection_nodes.keys()), graph)
+    graph.remove_nodes_from(nodes_to_remove)
+
     aliases = {
         term: aliases
         for term, aliases in map(
             lambda term: (term, get_term_aliases(term)),
-            chain(get_diagram_terms_iter(graph), collection_in_edges_preds),
+            chain(get_diagram_terms_iter(graph), collection_in_edge_labels),
         )
     }
 
@@ -128,7 +111,7 @@ def convert_graph_to_rdf_graph(
         term
         for term in filter(
             lambda term: ('"' in term),
-            chain(get_diagram_terms_iter(graph), collection_in_edges_preds),
+            chain(get_diagram_terms_iter(graph), collection_in_edge_labels),
         )
     }
     try:
@@ -146,7 +129,7 @@ def convert_graph_to_rdf_graph(
                     lambda term_info: fst(term_info) not in literal_terms,
                     chain(
                         get_diagram_terms_iter_with_pred(graph),
-                        collection_in_edges_preds_with_pred,
+                        collection_in_edge_labels_iter,
                     ),
                 ),
             )
@@ -174,7 +157,7 @@ def convert_graph_to_rdf_graph(
         term: search_key
         for term, search_key in map(
             lambda term: (term, get_term_search_keys(term, inv_prefixes)),
-            chain(get_diagram_terms_iter(graph), collection_in_edges_preds),
+            chain(get_diagram_terms_iter(graph), collection_in_edge_labels),
         )
     }
     substitution_results = {
@@ -188,7 +171,7 @@ def convert_graph_to_rdf_graph(
                     log_results=bool(log_substitution_path),
                 ),
             ),
-            chain(get_diagram_terms_iter(graph), collection_in_edges_preds),
+            chain(get_diagram_terms_iter(graph), collection_in_edge_labels),
         )
         if substituted_value is not None
     }
@@ -229,63 +212,16 @@ def convert_graph_to_rdf_graph(
 
     # create rdf triples from the collections
     # sort the collection via dfs postorder to start with innermost collection
-    collection_subgraph_postorder_nodes = nx.dfs_postorder_nodes(collection_subgraph)
-    collection_nodes_iter = filter(
-        lambda x: x in collection_nodes, collection_subgraph_postorder_nodes
+    collection_triples, collection_targets = get_collection_triples_and_targets(
+        collection_nodes, collection_subgraph, rdf_graph, constructed_terms
     )
-    container_refs = dict()
-    collection_triples = []
-    collection_type_map = {
-        "owl:unionOf": OWL.unionOf,
-        "owl:intersectionOf": OWL.intersectionOf,
-        "owl:complementOf": OWL.complementOf,
-    }
-    for collection_id in collection_nodes_iter:
-        # swap out string id with the corresponding constructed term
-        # return the same member if not in the constructed term dict, especially for ids
-        members = (
-            constructed_terms[member] if member in constructed_terms else member
-            for _, member in collection_subgraph.out_edges(collection_id)
-        )
-        # swap out collection members for their constructed BNode
-        members = [
-            container_refs[member] if member in container_refs else member
-            for member in members
-        ]
-        collection_type_str = collection_nodes[collection_id]
-        collection_type = (
-            collection_type_map[collection_type_str]
-            if collection_type_str in collection_type_map
-            else None
-        )
-        # create the collection and refer to the node
-        if collection_type:
-            collection_node = BNode()
-            Collection(rdf_graph, collection_node, members)
-            collection_class = BNode()
-            collection_triples.append(
-                (collection_class, collection_type, collection_node)
-            )
-            container_refs[collection_id] = collection_class
-        else:
-            # assign the members to directly map as a flat collection
-            container_refs[collection_id] = members
-
-    for subj, obj, data in collection_in_edges:
-        # if the reference is a list of more than one element, just use flat mapping
-        if isinstance(container_refs[obj], list):
-            members = container_refs[obj]
-            for member in members:
-                graph.add_edge(subj, member, label=data["label"])
-        else:
-            graph.add_edge(
-                subj,
-                container_refs[obj],
-                label=data["label"],
-            )
 
     for triple in collection_triples:
         rdf_graph.add(triple)
+
+    graph = add_collection_links_to_graph(
+        collection_in_edges, collection_targets, graph
+    )
 
     # filter for valid triples and add to output graph
     for subj, obj, data in graph.edges(data=True):
