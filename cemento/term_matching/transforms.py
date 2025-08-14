@@ -49,6 +49,7 @@ def search_similar_terms_multikey(
 def compare_lower_terms(string1, string2, **kwargs):
     return fuzz.ratio(string1.lower(), string2.lower())
 
+
 def get_term_matches(
     term: str, search_pool: Container[str], score_cutoff: int = None
 ) -> tuple[str, int]:
@@ -239,7 +240,6 @@ def get_prefixes(
         }
         prefixes.update(residual_file_prefixes)
         inv_prefixes = {value: key for key, value in prefixes.items()}
-        print(prefixes)
 
     return prefixes, inv_prefixes
 
