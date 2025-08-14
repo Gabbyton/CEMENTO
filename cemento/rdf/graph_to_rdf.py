@@ -234,7 +234,7 @@ def convert_graph_to_rdf_graph(
         lambda x: x in collection_nodes, collection_subgraph_postorder_nodes
     )
     container_refs = dict()
-    triples = []
+    collection_triples = []
     collection_type_map = {
         "owl:unionOf": OWL.unionOf,
         "owl:intersectionOf": OWL.intersectionOf,
@@ -256,12 +256,8 @@ def convert_graph_to_rdf_graph(
         collection_node = BNode()
         Collection(rdf_graph, collection_node, members)
         collection_class = BNode()
-        triples.append((collection_class, RDF.type, OWL.Class))
-        triples.append((collection_class, collection_type, collection_node))
+        collection_triples.append((collection_class, collection_type, collection_node))
         container_refs[collection_id] = collection_class
-
-    for triple in triples:
-        rdf_graph.add(triple)
 
     for subj, obj, data in collection_in_edges:
         graph.add_edge(
@@ -269,6 +265,9 @@ def convert_graph_to_rdf_graph(
             container_refs[obj],
             label=data["label"],
         )
+
+    for triple in collection_triples:
+        rdf_graph.add(triple)
 
     # filter for valid triples and add to output graph
     for subj, obj, data in graph.edges(data=True):
@@ -306,7 +305,6 @@ def convert_graph_to_rdf_graph(
     if onto_ref_folder:
         ref_graph += combine_graphs(get_rdf_file_iter(onto_ref_folder))
     term_types = get_term_types(ref_graph)
-
     term_not_in_default_namespace_filter = partial(
         term_not_in_default_namespace,
         inv_prefixes=inv_prefixes,
@@ -344,7 +342,6 @@ def convert_graph_to_rdf_graph(
                 term_not_in_default_namespace_filter,
             )
         )
-        print(exact_match_candidates)
         exact_match_property_tuples = {
             (term, prop, value)
             for term in exact_match_candidates
