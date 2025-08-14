@@ -23,6 +23,12 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 ### Added
 
 - custom scorer for `substitute_term`
+- support for collection reading and writing as objects to RDF triples
+- error checks for diagrams with containers
+
+### Changed
+
+- variable in `read_diagram` for elements to distinguish container and non-container elements
 
 ### Fixed
 

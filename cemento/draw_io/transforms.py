@@ -259,7 +259,7 @@ def add_node_to_digraph(graph: DiGraph, node: tuple[any, dict[str, any]]) -> DiG
 
 # function for generating container lists
 # just store the ids
-def parse_containers(elements: dict[str, dict[str, any]]):
+def parse_containers(elements: dict[str, dict[str, any]]) -> dict[str, list[str]]:
     containers = defaultdict(list)
     for element, attr in elements.items():
         if "parent" in attr and attr["parent"] not in {"0", "1"}:
@@ -372,7 +372,11 @@ def get_subgraphs(graph: DiGraph) -> list[DiGraph]:
 
 
 def get_graph_root_nodes(graph: DiGraph) -> list[any]:
-    return [node for node in graph.nodes if graph.in_degree(node) == 0 or len(graph.nodes) == 1]
+    return [
+        node
+        for node in graph.nodes
+        if graph.in_degree(node) == 0 or len(graph.nodes) == 1
+    ]
 
 
 def split_multiple_inheritances(

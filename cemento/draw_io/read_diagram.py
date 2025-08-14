@@ -1,3 +1,4 @@
+from itertools import chain
 from pathlib import Path
 
 from networkx import DiGraph
@@ -45,18 +46,19 @@ def read_drawio(
 
     elements = parse_elements(input_path)
     containers = parse_containers(elements)
+    container_content = set(chain(*containers.values()))
     container_labels = get_container_values(containers, elements)
-    elements = dict(
+    non_container_elements = dict(
         filter(lambda item: item[0] not in containers.keys(), elements.items())
     )
-    term_ids, rel_ids = extract_elements(elements)
+    term_ids, rel_ids = extract_elements(non_container_elements)
     strat_props = None
     prefixes, inv_prefixes = get_prefixes(prefixes_file, onto_ref_folder)
     strat_props = get_strat_predicates_str(
         onto_ref_folder, defaults_folder, inv_prefixes
     )
 
-    error_exemptions = get_diagram_error_exemptions(elements)
+    error_exemptions = get_diagram_error_exemptions(non_container_elements)
 
     if check_errors:
         print("Checking for diagram errors...")
@@ -65,6 +67,7 @@ def read_drawio(
             term_ids,
             rel_ids,
             serious_only=True,
+            container_content=container_content,
             error_exemptions=error_exemptions,
         )
         if errors:
@@ -78,7 +81,7 @@ def read_drawio(
 
     print("generating graph...")
     graph = generate_graph(
-        elements,
+        non_container_elements,
         term_ids,
         rel_ids,
         strat_terms=strat_props,
