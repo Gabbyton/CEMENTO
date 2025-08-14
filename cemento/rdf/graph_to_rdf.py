@@ -1,7 +1,6 @@
-from collections import defaultdict
 from copy import deepcopy
 from functools import partial, reduce
-from itertools import filterfalse
+from itertools import chain, filterfalse
 from pathlib import Path
 
 import networkx as nx
@@ -16,6 +15,7 @@ from cemento.rdf.io import (
     get_diagram_terms_iter_with_pred,
     save_substitute_log,
 )
+from pprint import pprint
 from cemento.rdf.preprocessing import (
     get_term_aliases,
 )
@@ -91,22 +91,41 @@ def convert_graph_to_rdf_graph(
     collection_members = {
         member for node in collection_nodes for member in graph.neighbors(node)
     }
+    collection_in_edges = [
+        (subj, obj, attr)
+        for collection_id in collection_nodes.keys()
+        for (subj, obj, attr) in graph.in_edges(collection_id, data=True)
+        if subj not in valid_collection_types
+        and ("label" not in attr or attr["label"] != "mds:hasCollectionMember")
+    ]
+    collection_in_edges_preds = list(
+        map(
+            lambda x: x[2]["label"],
+            filter(lambda x: "label" in x[2], collection_in_edges),
+        )
+    )
+    collection_in_edges_preds_with_pred = list(
+        map(lambda x: (x, True), collection_in_edges_preds)
+    )
     collection_subgraph = graph.subgraph(
         collection_node_refs | collection_members
     ).copy()
     graph.remove_nodes_from(collection_node_refs)
-
     aliases = {
         term: aliases
         for term, aliases in map(
-            lambda term: (term, get_term_aliases(term)), get_diagram_terms_iter(graph)
+            lambda term: (term, get_term_aliases(term)),
+            chain(get_diagram_terms_iter(graph), collection_in_edges_preds),
         )
     }
 
     # TODO: assign literal terms IDs so identical values get treated separately
     literal_terms = {
         term
-        for term in filter(lambda term: ('"' in term), get_diagram_terms_iter(graph))
+        for term in filter(
+            lambda term: ('"' in term),
+            chain(get_diagram_terms_iter(graph), collection_in_edges_preds),
+        )
     }
     try:
         constructed_terms = {
@@ -121,7 +140,10 @@ def convert_graph_to_rdf_graph(
                 ),
                 filter(
                     lambda term_info: fst(term_info) not in literal_terms,
-                    get_diagram_terms_iter_with_pred(graph),
+                    chain(
+                        get_diagram_terms_iter_with_pred(graph),
+                        collection_in_edges_preds_with_pred,
+                    ),
                 ),
             )
         }
@@ -148,7 +170,7 @@ def convert_graph_to_rdf_graph(
         term: search_key
         for term, search_key in map(
             lambda term: (term, get_term_search_keys(term, inv_prefixes)),
-            get_diagram_terms_iter(graph),
+            chain(get_diagram_terms_iter(graph), collection_in_edges_preds),
         )
     }
     substitution_results = {
@@ -162,7 +184,7 @@ def convert_graph_to_rdf_graph(
                     log_results=bool(log_substitution_path),
                 ),
             ),
-            get_diagram_terms_iter(graph),
+            chain(get_diagram_terms_iter(graph), collection_in_edges_preds),
         )
         if substituted_value is not None
     }
@@ -195,7 +217,56 @@ def convert_graph_to_rdf_graph(
     }
     constructed_terms.update(constructed_literal_terms)
 
+    # # create the rdf graph to store the ttl output
+    rdf_graph = rdflib.Graph()
+
+    # create the output graph to store valid graph triples
     output_graph = nx.DiGraph()
+
+    # create rdf triples from the collections
+    # sort the collection via dfs postorder to start with innermost collection
+    collection_subgraph_postorder_nodes = nx.dfs_postorder_nodes(collection_subgraph)
+    collection_nodes_iter = filter(
+        lambda x: x in collection_nodes, collection_subgraph_postorder_nodes
+    )
+    container_refs = dict()
+    triples = []
+    collection_type_map = {
+        "owl:unionOf": OWL.unionOf,
+        "owl:intersectionOf": OWL.intersectionOf,
+        "owl:complementOf": OWL.complementOf,
+    }
+    for collection_id in collection_nodes_iter:
+        # swap out string id with the corresponding constructed term
+        # return the same member if not in the constructed term dict, especially for ids
+        members = (
+            constructed_terms[member] if member in constructed_terms else member
+            for _, member in collection_subgraph.out_edges(collection_id)
+        )
+        # swap out collection members for their constructed BNode
+        members = [
+            container_refs[member] if member in container_refs else member
+            for member in members
+        ]
+        collection_type = collection_type_map[collection_nodes[collection_id]]
+        collection_node = BNode()
+        Collection(rdf_graph, collection_node, members)
+        collection_class = BNode()
+        triples.append((collection_class, RDF.type, OWL.Class))
+        triples.append((collection_class, collection_type, collection_node))
+        container_refs[collection_id] = collection_class
+
+    for triple in triples:
+        rdf_graph.add(triple)
+
+    for subj, obj, data in collection_in_edges:
+        graph.add_edge(
+            subj,
+            container_refs[obj],
+            label=data["label"],
+        )
+
+    # filter for valid triples and add to output graph
     for subj, obj, data in graph.edges(data=True):
         pred = data["label"]
         # do final null check on triples to add
@@ -204,17 +275,21 @@ def convert_graph_to_rdf_graph(
                 f"[WARNING] the triple ({subj}, {pred}, {obj}) had null values that passed through diagram checks. Not adding to the graph..."
             )
             continue
-        subj, obj, pred = tuple(constructed_terms[key] for key in (subj, obj, pred))
+        subj, obj, pred = tuple(
+            constructed_terms[key] if not isinstance(key, BNode) else key
+            for key in (subj, obj, pred)
+        )
         output_graph.add_edge(subj, obj, label=pred)
-
+    print(output_graph.edges(data=True))
+    pprint(constructed_terms)
     class_terms = get_class_terms(output_graph)
     predicate_terms = {data["label"] for _, _, data in output_graph.edges(data=True)}
     literal_terms = set(constructed_literal_terms.values())
     class_terms -= predicate_terms
-    all_terms = (output_graph.nodes() | predicate_terms) - literal_terms
-
-    # # create the rdf graph to store the ttl output
-    rdf_graph = rdflib.Graph()
+    output_graph_nodes = set(
+        filter(lambda x: not isinstance(x, BNode), output_graph.nodes)
+    )
+    all_terms = (output_graph_nodes | predicate_terms) - literal_terms
 
     # bind prefixes to namespaces for the rdf graph
     rdf_graph = bind_prefixes(rdf_graph, prefixes)
