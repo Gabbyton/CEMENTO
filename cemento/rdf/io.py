@@ -1,27 +1,32 @@
 from collections.abc import Iterable
+from itertools import chain
 from pathlib import Path
 
 import pandas as pd
+from more_itertools import unique_everseen
 from networkx import DiGraph
 from rdflib import URIRef
 
 
 def get_diagram_terms_iter_with_pred(graph: DiGraph) -> Iterable[str, bool]:
-    return (
+    diagram_terms_from_edges = (
         (term, term == data["label"])
         for subj, obj, data in graph.edges(data=True)
         for term in (subj, data["label"], obj)
         if term
     )
+    diagram_terms_from_nodes = ((node, True) for node in graph.nodes)
+    return unique_everseen(chain(diagram_terms_from_edges, diagram_terms_from_nodes))
 
 
 def get_diagram_terms_iter(graph: DiGraph) -> Iterable[str]:
-    return (
+    diagram_terms_from_edges = (
         term
         for subj, obj, data in graph.edges(data=True)
         for term in (subj, data["label"], obj)
         if term
     )
+    return unique_everseen(chain(diagram_terms_from_edges, graph.nodes))
 
 
 def save_substitute_log(
