@@ -4,7 +4,7 @@
 
 [![Homepage](https://img.shields.io/badge/cemento-docs-blue)](https://cwru-sdle.github.io/CEMENTO/)
 [![Version](https://img.shields.io/pypi/v/cemento)](https://pypi.org/project/cemento/)
-[![GitHub Stars](https://img.shields.io/github/stars/cwru-sdle/CEMENTO)](https://github.com/cwru-sdle/CEMENTO/)
+[![GitHub Stars](https://img.shields.io/github/stars/cwru-sdle/CEMENTO)](https://github.com/cwru-sdle/CEMENTO/stargazers/)
 
 `CEMENTO` is a component python package of the larger SDLE FAIR application suite of tools for creating scientific ontologies more efficiently. This package provides functional interfaces for converting draw.io diagrams of ontologies into RDF triple file formats and vice versa. This package is able to provide term matching between reference ontology files and terms used in draw.io diagrams allowing for faster ontology deployment while maintaining robust cross-references.
 
