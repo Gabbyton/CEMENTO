@@ -1,5 +1,6 @@
 import re
 from collections import Counter
+from itertools import chain
 from os import scandir
 from pathlib import Path
 from pprint import pprint
@@ -8,11 +9,14 @@ from cemento.draw_io.constants import (
     BidirectionalEdgeError,
     BlankEdgeLabelError,
     BlankTermLabelError,
+    ContainerSubjectError,
     DisconnectedTermError,
+    FloatingContainerError,
     FloatingEdgeError,
     InvertedEdgeError,
     MissingChildEdgeError,
     MissingParentEdgeError,
+    NestedSyntaxSugarError,
 )
 from cemento.draw_io.preprocessing import (
     find_errors_diagram_content,
@@ -20,6 +24,7 @@ from cemento.draw_io.preprocessing import (
 )
 from cemento.draw_io.transforms import (
     extract_elements,
+    parse_containers,
     parse_elements,
 )
 
@@ -33,15 +38,22 @@ diagram_test_files = sorted(diagram_test_files)
 
 def get_diagram_errors(input_path: str | Path, with_exemptions=True):
     elements = parse_elements(input_path)
-    term_ids, rel_ids = extract_elements(elements)
+    containers = parse_containers(elements)
+    container_content = set(chain(*containers.values()))
+    non_container_elements = dict(
+        filter(lambda item: item[0] not in containers.keys(), elements.items())
+    )
+    term_ids, rel_ids = extract_elements(non_container_elements)
     error_exemptions = None
     if with_exemptions:
-        error_exemptions = get_diagram_error_exemptions(elements)
+        error_exemptions = get_diagram_error_exemptions(non_container_elements)
     return find_errors_diagram_content(
         elements,
         term_ids,
         rel_ids,
         serious_only=True,
+        containers=containers,
+        container_content=container_content,
         error_exemptions=error_exemptions,
     )
 
@@ -157,5 +169,16 @@ def test_null_values():
         FloatingEdgeError: 7,
         BlankTermLabelError: 6,
         BlankEdgeLabelError: 7,
+    }
+    check_errors_by_count(errors, expected_error_types)
+
+
+def test_container_errors():
+    errors = get_diagram_errors(input_path=diagram_test_files[10])
+    expected_error_types = {
+        MissingChildEdgeError: 1,
+        NestedSyntaxSugarError: 1,
+        ContainerSubjectError: 1,
+        FloatingContainerError: 2,
     }
     check_errors_by_count(errors, expected_error_types)

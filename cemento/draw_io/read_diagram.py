@@ -67,6 +67,7 @@ def read_drawio(
             term_ids,
             rel_ids,
             serious_only=True,
+            containers=containers,
             container_content=container_content,
             error_exemptions=error_exemptions,
         )

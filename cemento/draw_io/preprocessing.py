@@ -12,11 +12,14 @@ from cemento.draw_io.constants import (
     BlankTermLabelError,
     CircularEdgeError,
     Connector,
+    ContainerSubjectError,
     DisconnectedTermError,
+    FloatingContainerError,
     FloatingEdgeError,
     InvertedEdgeError,
     MissingChildEdgeError,
     MissingParentEdgeError,
+    NestedSyntaxSugarError,
     NxEdge,
     Shape,
 )
@@ -250,21 +253,25 @@ def find_edge_errors_diagram_content(
     return errors
 
 
-def find_shape_errors_diagram_content(
-    elements: dict[str, dict[str, any]],
-    term_ids: set[str],
-    rel_ids: set[str],
-    container_content: Container[str] = None,
-) -> list[tuple[str, BaseException]]:
-    connected_terms = {
+# TODO: memoize
+def get_connected_terms(elements: dict[str, dict[str, any]], rel_ids: set[str]):
+    return {
         term
         for rel_id in rel_ids
         for term in (
             elements[rel_id].get("source", None),
             elements[rel_id].get("target", None),
         )
-    }
-    connected_terms -= {None, ""}
+    } - {None, ""}
+
+
+def find_shape_errors_diagram_content(
+    elements: dict[str, dict[str, any]],
+    term_ids: set[str],
+    rel_ids: set[str],
+    container_content: Container[str] = None,
+) -> list[tuple[str, BaseException]]:
+    connected_terms = get_connected_terms(elements, rel_ids)
 
     errors = []
     for term_id in term_ids:
@@ -278,17 +285,101 @@ def find_shape_errors_diagram_content(
     return errors
 
 
+def map_element_values(
+    elements: dict[str, dict[str, any]], element_ids: Iterable[str]
+) -> Iterable[str]:
+    return (
+        (
+            element_attr["value"]
+            if "value" in (element_attr := elements[element_id])
+            else None
+        )
+        for element_id in element_ids
+    )
+
+
+def find_container_errors_diagram_content(
+    elements: dict[str, dict[str, any]],
+    containers: dict[str, list[str]],
+    rel_ids: set[str],
+) -> list[tuple[str, BaseException]]:
+    errors = []
+    for container_id, members in containers.items():
+        for member_id in members:
+            member = elements[member_id].get("value", None)
+            if member is None or not member.strip():
+                errors.append((container_id, NestedSyntaxSugarError))
+
+    collection_subject_rels = list(
+        filter(
+            lambda x: "source" in elements[x] and elements[x]["source"] in containers,
+            rel_ids,
+        )
+    )
+    for rel_id in collection_subject_rels:
+        container_id = elements[rel_id]["source"]
+        errors.append((container_id, ContainerSubjectError))
+
+    connected_containers = set()
+    for rel_id in rel_ids:
+        source = elements[rel_id].get("source", None)
+        target = elements[rel_id].get("target", None)
+        if source in containers or target in containers:
+            connected_containers.add(source)
+            connected_containers.add(target)
+
+    connected_containers -= {None, ""}
+
+    nested_containers = set()
+    for members in containers.values():
+        for member in members:
+            if member in containers:
+                nested_containers.add(member)
+    floating_containers = (
+        set(containers.keys()) - connected_containers - nested_containers
+    )
+
+    for container_id in floating_containers:
+        errors.append((container_id, FloatingContainerError))
+
+    submit_errors = []
+    for container_id, ErrorType in errors:
+        members = list(
+            map(
+                lambda member_id: (member_id, elements[member_id].get("value", None)),
+                containers[container_id],
+            )
+        )
+        member_ids, member_values = zip(*members, strict=True)
+        container_value = elements[container_id].get("value", None)
+        submit_errors.append(
+            (
+                container_id,
+                ErrorType(
+                    container_id, container_value, list(member_ids), list(member_values)
+                ),
+            )
+        )
+
+    return submit_errors
+
+
 def find_errors_diagram_content(
     elements: dict[str, dict[str, any]],
     term_ids: set[str],
     rel_ids: set[str],
     serious_only: bool = False,
+    containers: dict[str, list[str]] = None,
     container_content: Container[str] = None,
     error_exemptions: set[str] = None,
 ) -> list[tuple[str, BaseException]]:
-    errors = find_shape_errors_diagram_content(
-        elements, term_ids, rel_ids, container_content
-    ) + find_edge_errors_diagram_content(elements, serious_only=serious_only)
+    errors = (
+        find_shape_errors_diagram_content(
+            elements, term_ids, rel_ids, container_content
+        )
+        + find_edge_errors_diagram_content(elements, serious_only=serious_only)
+        + find_container_errors_diagram_content(elements, containers, rel_ids)
+    )
     if error_exemptions is not None:
         errors = list(
             filter(lambda error_info: fst(error_info) not in error_exemptions, errors)

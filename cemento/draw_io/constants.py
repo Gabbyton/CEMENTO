@@ -333,3 +333,29 @@ class BlankEdgeLabelError(BlankLabelError):
         else:
             self.message = f"Edge with id: {edge_id}, connected to {' and '.join(connected_terms)}, does not have a label."
         super().__init__(self.message)
+
+
+class BaseContainerError(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+
+
+class NestedSyntaxSugarError(BaseContainerError):
+    def __init__(self, container_id, container_value, member_ids, member_values):
+        self.header = f"The container with id: {container_id} and content: {container_value} and members with ids: {member_ids} and corresponding values: {member_values}"
+        self.message = f"{self.header} nested an unlabelled collection which resolves to an undefined collection type."
+        super().__init__(self.message)
+
+
+class ContainerSubjectError(BaseContainerError):
+    def __init__(self, container_id, container_value, member_ids, member_values):
+        self.header = f"The container with id: {container_id} and content: {container_value} and members with ids: {member_ids} and corresponding values: {member_values}"
+        self.message = f"{self.header} is used as a subject! Container subjects are not supported yet."
+        super().__init__(self.message)
+
+
+class FloatingContainerError(BaseContainerError):
+    def __init__(self, container_id, container_value, member_ids, member_values):
+        self.header = f"The container with id: {container_id} and content: {container_value} and members with ids: {member_ids} and corresponding values: {member_values}"
+        self.message = f"{self.header} does not have any connections."
+        super().__init__(self.message)

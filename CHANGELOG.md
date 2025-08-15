@@ -25,6 +25,8 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - custom scorer for `substitute_term`
 - support for collection reading and writing as objects to RDF triples
 - error checks for diagrams with containers
+- identifying errors for floating containers, containers used as subjects, and nested unlabelled containers
+- container and container content input into diagram error checks
 
 ### Changed
 
