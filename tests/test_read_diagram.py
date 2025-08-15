@@ -7,6 +7,7 @@ from pathlib import Path
 from pprint import pprint
 
 import rdflib
+from rdflib.compare import isomorphic
 
 from cemento.draw_io.read_diagram import read_drawio
 from cemento.draw_io.transforms import (
@@ -154,4 +155,15 @@ def test_rdf_graph_generation():
 
     ref_rdf_graph = rdflib.Graph()
     ref_rdf_graph.parse(ref_path, format="turtle")
-    assert set(rdf_graph) == set(ref_rdf_graph)
+    assert isomorphic(rdf_graph, ref_rdf_graph)
+
+
+def test_container_rdf_graph_generation():
+    graph = read_drawio(diagram_test_files[3], check_errors=True)
+    ref_path = get_corresponding_ref_file(diagram_test_files[3])["ttl"]
+
+    rdf_graph = convert_graph_to_rdf_graph(graph)
+
+    ref_rdf_graph = rdflib.Graph()
+    ref_rdf_graph.parse(ref_path, format="turtle")
+    assert isomorphic(rdf_graph, ref_rdf_graph)
