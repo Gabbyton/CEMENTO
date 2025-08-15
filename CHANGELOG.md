@@ -34,6 +34,7 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - variable in `read_diagram` for elements to distinguish container and non-container elements
 - condition for strict camel case. It now adds lowercase for capitalized abbreviated predicate terms
 - diagram term iteration scheme to ensure unique terms
+- `inv_constructed_terms` into `preferred_alias_keyed_inv_constructed_terms`
 
 ### Fixed
 
@@ -42,6 +43,7 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - wrong capitalizations on predicate terms
 - error in iterating over predicate terms
 - diagram iteration overwriting predicate status of a term due to ducktyped class redefinitions
+- unstable label assignment due to duplicates overwriting alias keys
 
 ## [0.11.2] - 2025-08-13
 

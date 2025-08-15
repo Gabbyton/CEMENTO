@@ -201,7 +201,11 @@ def convert_graph_to_rdf_graph(
             if matched_term is not None
         }
 
-    inv_constructed_terms = {value: key for key, value in constructed_terms.items()}
+    preferred_alias_keyed_inv_constructed_terms = dict()
+    for key, value in constructed_terms.items():
+        compare_value = preferred_alias_keyed_inv_constructed_terms.get(value, "")
+        preferred_alias_keyed_inv_constructed_terms[value] = max(compare_value, key, key=len)
+
     constructed_terms.update(substitution_results)
 
     # get datatypes in graph first
@@ -328,10 +332,11 @@ def convert_graph_to_rdf_graph(
             exact_match_candidates,
             rdf_graph,
         )
+
     rdf_graph = reduce(
         lambda rdf_graph, graph_term: add_labels(
             term=graph_term,
-            labels=aliases[inv_constructed_terms[graph_term]],
+            labels=aliases[preferred_alias_keyed_inv_constructed_terms[graph_term]],
             rdf_graph=rdf_graph,
         ),
         filter(
