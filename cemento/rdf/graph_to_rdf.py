@@ -9,7 +9,7 @@ import rdflib
 from more_itertools import unique_everseen
 from networkx import DiGraph
 from rdflib import OWL, RDF, RDFS, BNode, Graph, Literal, URIRef
-
+from rdflib.namespace import split_uri
 from cemento.rdf.filters import term_in_search_results, term_not_in_default_namespace
 from cemento.rdf.io import (
     get_diagram_terms_iter,
@@ -44,6 +44,8 @@ from cemento.term_matching.io import get_rdf_file_iter
 from cemento.term_matching.transforms import (
     add_exact_matches,
     combine_graphs,
+    detect_lineage,
+    get_entire_prop_family,
     get_prefixes,
     get_search_terms,
     get_term_search_keys,
@@ -204,7 +206,9 @@ def convert_graph_to_rdf_graph(
     preferred_alias_keyed_inv_constructed_terms = dict()
     for key, value in constructed_terms.items():
         compare_value = preferred_alias_keyed_inv_constructed_terms.get(value, "")
-        preferred_alias_keyed_inv_constructed_terms[value] = max(compare_value, key, key=len)
+        preferred_alias_keyed_inv_constructed_terms[value] = max(
+            compare_value, key, key=len
+        )
 
     constructed_terms.update(substitution_results)
 
@@ -376,6 +380,24 @@ def convert_graph_to_rdf_graph(
         redundant_default_triples,
         rdf_graph,
     )
+
+    entire_prop_family = get_entire_prop_family(defaults_folder, inv_prefixes)
+    to_remove = []
+    to_replace = []
+    for subj, pred, obj in rdf_graph:
+        for idx, term in enumerate((subj, pred, obj)):
+            if detect_lineage(ref_graph, entire_prop_family, term):
+                new_triple = [subj, pred, obj]
+                ns, abbrev_term = split_uri(term)
+                new_term = URIRef(f"{ns}{enforce_camel_case(abbrev_term)}")
+                new_triple[idx] = new_term
+                to_remove.append((subj, pred, obj))
+                to_replace.append(tuple(new_triple))
+                break
+    for triple in to_remove:
+        rdf_graph.remove(triple)
+    for triple in to_replace:
+        rdf_graph.add(triple)
 
     return rdf_graph
 

@@ -6,6 +6,7 @@ from itertools import chain
 from pathlib import Path
 
 import tldextract
+from more_itertools import unique_everseen
 from rdflib import OWL, RDF, RDFS, SKOS, Graph, Literal, Namespace, URIRef
 from rdflib.namespace import split_uri
 from thefuzz import fuzz, process
@@ -306,6 +307,36 @@ def get_abbrev_uri(
 def get_abbrev_uri_with_prefix(term: URIRef, prefix: str) -> str:
     ns, abbrev_term = split_uri(term)
     return f"{prefix}:{abbrev_term.strip()}"
+
+
+# TODO: memoize
+def get_entire_prop_family(
+    defaults_folder: str | Path, inv_prefixes: dict[URIRef | Namespace, str]
+) -> set[URIRef]:
+    # TODO: move prop_family to constants
+    prop_parents = {
+        OWL.ObjectProperty,
+        OWL.AnnotationProperty,
+        OWL.DatatypeProperty,
+    }
+    return reduce(
+        lambda acc, prop: acc
+        | set(get_prop_family_from_defaults(prop, defaults_folder, inv_prefixes)),
+        prop_parents,
+        set(),
+    )
+
+
+def detect_lineage(ref_graph: Graph, term_family: set[URIRef], term: URIRef) -> bool:
+    ancestors = unique_everseen(
+        chain(
+            ref_graph.transitive_subjects(RDF.type, term),
+            ref_graph.transitive_subjects(RDFS.subClassOf, term),
+        )
+    )
+    if any([ancestor in term_family for ancestor in ancestors]):
+        return True
+    return False
 
 
 def get_prop_family_from_defaults(

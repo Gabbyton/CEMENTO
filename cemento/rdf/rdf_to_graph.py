@@ -22,8 +22,8 @@ from cemento.term_matching.io import read_rdf
 from cemento.term_matching.transforms import (
     get_aliases,
     get_default_terms,
+    get_entire_prop_family,
     get_prefixes,
-    get_prop_family_from_defaults,
     get_strat_predicates,
 )
 from cemento.utils.constants import RDFFormat
@@ -53,7 +53,9 @@ def convert_rdf_to_graph(
     print("retrieving reference data...")
     file_strat_preds = set()
     ref_strat_preds = set()
-    prefixes, inv_prefixes = get_prefixes(prefixes_path, onto_ref_folder, input_file=input_path)
+    prefixes, inv_prefixes = get_prefixes(
+        prefixes_path, onto_ref_folder, input_file=input_path
+    )
     default_terms = get_default_terms(defaults_folder)
 
     if not classes_only:
@@ -139,19 +141,7 @@ def convert_rdf_to_graph(
         exempted_terms = set()
         if not classes_only:
             display_set = all_classes | all_instances | all_literals
-            exempted_set = {
-                OWL.ObjectProperty,
-                OWL.AnnotationProperty,
-                OWL.DatatypeProperty,
-            }
-            exempted_terms = reduce(
-                lambda acc, prop: acc
-                | set(
-                    get_prop_family_from_defaults(prop, defaults_folder, inv_prefixes)
-                ),
-                exempted_set,
-                set(),
-            )
+            exempted_terms = get_entire_prop_family(defaults_folder, inv_prefixes)
 
         # TODO: find a better solution for exemptions, possible include all transitive objects for rdf:subClassOf
         display_set.update(exempted_terms)
