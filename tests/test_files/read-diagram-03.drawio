@@ -4,181 +4,181 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-6" value="rdfs:subClassOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-5" target="GFoEZNSDL_4xpxpBIgon-37">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-6" value="rdfs:subClassOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-5" target="GFoEZNSDL_4xpxpBIgon-37" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="340" y="170" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-55" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-5" target="GFoEZNSDL_4xpxpBIgon-56">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-55" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-5" target="GFoEZNSDL_4xpxpBIgon-56" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="550" y="280" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-5" value="lotr:RationalBeing (Rational Being)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-5" value="lotr:RationalBeing (Rational Being)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="280" y="250" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-16" value="rdfs:subClassOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-11" target="GFoEZNSDL_4xpxpBIgon-5">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-16" value="rdfs:subClassOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-11" target="GFoEZNSDL_4xpxpBIgon-5" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-58" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-11" target="GFoEZNSDL_4xpxpBIgon-57">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-58" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-11" target="GFoEZNSDL_4xpxpBIgon-57" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-11" value="lotr:Wizard (Wizard)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-11" value="lotr:Wizard (Wizard)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-50" y="420" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-15" value="rdfs:subClassOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-13" target="GFoEZNSDL_4xpxpBIgon-5">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-15" value="rdfs:subClassOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-13" target="GFoEZNSDL_4xpxpBIgon-5" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-60" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-13" target="GFoEZNSDL_4xpxpBIgon-59">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-60" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-13" target="GFoEZNSDL_4xpxpBIgon-59" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-171" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-152" target="GFoEZNSDL_4xpxpBIgon-13">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-171" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-152" target="GFoEZNSDL_4xpxpBIgon-13" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-13" value="lotr:Elf (Elf)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-13" value="lotr:Elf (Elf)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="280" y="430" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-24" value="rdfs:subClassOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-18" target="GFoEZNSDL_4xpxpBIgon-5">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-24" value="rdfs:subClassOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-18" target="GFoEZNSDL_4xpxpBIgon-5" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-62" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-18" target="GFoEZNSDL_4xpxpBIgon-61">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-62" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-18" target="GFoEZNSDL_4xpxpBIgon-61" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-18" value="lotr:Dwarf (Dwarf)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-18" value="lotr:Dwarf (Dwarf)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="580" y="430" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-25" value="rdfs:subClassOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-19" target="GFoEZNSDL_4xpxpBIgon-5">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-25" value="rdfs:subClassOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-19" target="GFoEZNSDL_4xpxpBIgon-5" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-66" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-19" target="GFoEZNSDL_4xpxpBIgon-63">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-66" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-19" target="GFoEZNSDL_4xpxpBIgon-63" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-173" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-138" target="GFoEZNSDL_4xpxpBIgon-19">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-173" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-138" target="GFoEZNSDL_4xpxpBIgon-19" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-19" value="lotr:Man (Man)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-19" value="lotr:Man (Man)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="940" y="430" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-40" value="rdfs:subClassOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-20" target="GFoEZNSDL_4xpxpBIgon-39">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-40" value="rdfs:subClassOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-20" target="GFoEZNSDL_4xpxpBIgon-39" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-72" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-20" target="GFoEZNSDL_4xpxpBIgon-70">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-72" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-20" target="GFoEZNSDL_4xpxpBIgon-70" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-164" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-163" target="GFoEZNSDL_4xpxpBIgon-20">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-164" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-163" target="GFoEZNSDL_4xpxpBIgon-20" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-20" value="lotr:Fellowship (Fellowship)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-20" value="lotr:Fellowship (Fellowship)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-525" y="740" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-42" value="rdfs:subClassOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-21" target="GFoEZNSDL_4xpxpBIgon-41">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-42" value="rdfs:subClassOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-21" target="GFoEZNSDL_4xpxpBIgon-41" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-74" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-21" target="GFoEZNSDL_4xpxpBIgon-73">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-74" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-21" target="GFoEZNSDL_4xpxpBIgon-73" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-21" value="lotr:MagicalArtifact (Magical Artifact)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-21" value="lotr:MagicalArtifact (Magical Artifact)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-240" y="730" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-85" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-26" target="GFoEZNSDL_4xpxpBIgon-84">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-85" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-26" target="GFoEZNSDL_4xpxpBIgon-84" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-107" value="rdfs:range" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-26" target="GFoEZNSDL_4xpxpBIgon-106">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-107" value="rdfs:range" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-26" target="GFoEZNSDL_4xpxpBIgon-106" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-108" value="rdfs:domain" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-26" target="GFoEZNSDL_4xpxpBIgon-105">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-108" value="rdfs:domain" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-26" target="GFoEZNSDL_4xpxpBIgon-105" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-110" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-26" target="GFoEZNSDL_4xpxpBIgon-27">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-110" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-26" target="GFoEZNSDL_4xpxpBIgon-27" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-26" value="lotr:hasAge" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-26" value="lotr:hasAge" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-780" y="330" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-27" value="owl:DatatypeProperrty" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-27" value="owl:DatatypePropertyy" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-590" y="140" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-30" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-29" target="GFoEZNSDL_4xpxpBIgon-27">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-30" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-29" target="GFoEZNSDL_4xpxpBIgon-27" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-95" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-29" target="GFoEZNSDL_4xpxpBIgon-90">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-95" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-29" target="GFoEZNSDL_4xpxpBIgon-90" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-102" value="rdfs:domain" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-29" target="GFoEZNSDL_4xpxpBIgon-100">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-102" value="rdfs:domain" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-29" target="GFoEZNSDL_4xpxpBIgon-100" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-104" value="rdfs:range" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-29" target="GFoEZNSDL_4xpxpBIgon-103">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-104" value="rdfs:range" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-29" target="GFoEZNSDL_4xpxpBIgon-103" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-29" value="lotr:hasHeight" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-29" value="lotr:hasHeight" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-1280" y="320" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-32" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-31" target="GFoEZNSDL_4xpxpBIgon-27">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-32" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-31" target="GFoEZNSDL_4xpxpBIgon-27" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-97" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-31" target="GFoEZNSDL_4xpxpBIgon-91">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-97" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-31" target="GFoEZNSDL_4xpxpBIgon-91" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-112" value="rdfs:range" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-31" target="GFoEZNSDL_4xpxpBIgon-111">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-112" value="rdfs:range" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-31" target="GFoEZNSDL_4xpxpBIgon-111" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-114" value="rdfs:domain" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-31" target="GFoEZNSDL_4xpxpBIgon-113">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-114" value="rdfs:domain" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-31" target="GFoEZNSDL_4xpxpBIgon-113" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-31" value="lotr:speaks" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-31" value="lotr:speaks" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-370" y="330" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-35" value="owl:ObjectProperty" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-35" value="owl:ObjectProperty" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-1765" y="180" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-37" value="cco:Object" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-37" value="cco:Object" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="280" y="80" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-39" value="cco:ObjectAggregate" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-39" value="cco:ObjectAggregate" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-525" y="600" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-41" value="cco:Artifact" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-41" value="cco:Artifact" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-240" y="590" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-44" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-43" target="GFoEZNSDL_4xpxpBIgon-35">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-44" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-43" target="GFoEZNSDL_4xpxpBIgon-35" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-94" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-43" target="GFoEZNSDL_4xpxpBIgon-93">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-94" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-43" target="GFoEZNSDL_4xpxpBIgon-93" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-116" value="rdfs:domain" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-43" target="GFoEZNSDL_4xpxpBIgon-115">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-116" value="rdfs:domain" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-43" target="GFoEZNSDL_4xpxpBIgon-115" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-118" value="rdfs:range" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-43" target="GFoEZNSDL_4xpxpBIgon-117">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-118" value="rdfs:range" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-43" target="GFoEZNSDL_4xpxpBIgon-117" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-43" value="lotr:rulerOf" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-43" value="lotr:rulerOf" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-1765" y="320" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-47" value="rdfs:subClassOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-45" target="GFoEZNSDL_4xpxpBIgon-5">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-47" value="rdfs:subClassOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-45" target="GFoEZNSDL_4xpxpBIgon-5" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-68" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-45" target="GFoEZNSDL_4xpxpBIgon-67">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-68" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-45" target="GFoEZNSDL_4xpxpBIgon-67" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-45" value="lotr:Hobbit (Hobbit)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-45" value="lotr:Hobbit (Hobbit)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1320" y="430" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-50" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-48" target="GFoEZNSDL_4xpxpBIgon-45">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-50" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-48" target="GFoEZNSDL_4xpxpBIgon-45" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-122" value="lotr:hasAge" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-48" target="GFoEZNSDL_4xpxpBIgon-121">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-122" value="lotr:hasAge" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-48" target="GFoEZNSDL_4xpxpBIgon-121" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-124" value="lotr:hasHeight" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-48" target="GFoEZNSDL_4xpxpBIgon-125">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-124" value="lotr:hasHeight" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-48" target="GFoEZNSDL_4xpxpBIgon-125" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="1380" y="830" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-127" value="lotr:speaks" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-48" target="GFoEZNSDL_4xpxpBIgon-126">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-127" value="lotr:speaks" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-48" target="GFoEZNSDL_4xpxpBIgon-126" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-179" value="obo:member part of" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-48" target="GFoEZNSDL_4xpxpBIgon-163">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-179" value="obo:member part of" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-48" target="GFoEZNSDL_4xpxpBIgon-163" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="-120" y="1240" as="targetPoint" />
             <Array as="points">
@@ -188,115 +188,115 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-48" value="lotr:Frodo" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-48" value="lotr:Frodo" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1320" y="690" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-56" value="&quot;A continuant that is characterized by the capacity for reasoning, linguistic communication, and moral agency within Middle Earth.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-56" value="&quot;A continuant that is characterized by the capacity for reasoning, linguistic communication, and moral agency within Middle Earth.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="580" y="220" width="120" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-57" value="&quot;A continuant that bears the role of wielding arcane knowledge and supernatural powers, typically manifested through staff-based focus and incantational processes.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-57" value="&quot;A continuant that bears the role of wielding arcane knowledge and supernatural powers, typically manifested through staff-based focus and incantational processes.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="90" y="510" width="120" height="170" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-59" value="&quot;「延長された時間的持続、強化された感覚の鋭敏さ、そして自然のプロセスと美的美しさとの固有のつながりを特徴とする継続体。」&quot;@jp" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-59" value="&quot;「延長された時間的持続、強化された感覚の鋭敏さ、そして自然のプロセスと美的美しさとの固有のつながりを特徴とする継続体。」&quot;@jp" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="410" y="530" width="120" height="140" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-61" value="&quot;Un continuador que se distingue por su robusta constitución física, afinidad por los ambientes subterráneos y competencia especializada en artesanías metalúrgicas y líticas&quot;.@es" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-61" value="&quot;Un continuador que se distingue por su robusta constitución física, afinidad por los ambientes subterráneos y competencia especializada en artesanías metalúrgicas y líticas&quot;.@es" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="710" y="520" width="120" height="150" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-63" value="&quot;A continuant that exemplifies mortality combined with capacity for both nobility and corruption, characterized by relatively brief but potentially significant temporal existence.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-63" value="&quot;A continuant that exemplifies mortality combined with capacity for both nobility and corruption, characterized by relatively brief but potentially significant temporal existence.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1070" y="520" width="120" height="150" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-67" value="&quot;A continuant that instantiates the specific natural kind characterized by diminutive stature, distinctive pedal morphology, and disposition toward pastoral existence.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-67" value="&quot;A continuant that instantiates the specific natural kind characterized by diminutive stature, distinctive pedal morphology, and disposition toward pastoral existence.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1490" y="520" width="120" height="150" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-70" value="&quot;A social collective that exists as a temporally bounded organization of rational beings united by shared purpose and mutual commitment.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-70" value="&quot;A social collective that exists as a temporally bounded organization of rational beings united by shared purpose and mutual commitment.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-645" y="830" width="120" height="140" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-73" value="&quot;A material entity that bears supernatural qualities or powers, typically crafted through processes involving arcane knowledge or divine intervention.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-73" value="&quot;A material entity that bears supernatural qualities or powers, typically crafted through processes involving arcane knowledge or divine intervention.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-350" y="850" width="120" height="150" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-75" value="cco:SpatialRegion" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-75" value="cco:SpatialRegion" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-810" y="600" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-77" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-76" target="GFoEZNSDL_4xpxpBIgon-75">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-77" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-76" target="GFoEZNSDL_4xpxpBIgon-75" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-78" value="rdfs:subClassOf" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="GFoEZNSDL_4xpxpBIgon-77">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-78" value="rdfs:subClassOf" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="GFoEZNSDL_4xpxpBIgon-77" vertex="1" connectable="0">
           <mxGeometry x="-0.3" y="2" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-80" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-76" target="GFoEZNSDL_4xpxpBIgon-81">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-80" value="skos:definition" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-76" target="GFoEZNSDL_4xpxpBIgon-81" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="-860" y="850" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-168" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-165" target="GFoEZNSDL_4xpxpBIgon-76">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-168" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-165" target="GFoEZNSDL_4xpxpBIgon-76" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-76" value="lotr:Realm" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-76" value="lotr:Realm" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-810" y="740" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-81" value="&quot;A spatial region that constitutes a geopolitical unity characterized by defined boundaries, governance structures, and cultural identity.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-81" value="&quot;A spatial region that constitutes a geopolitical unity characterized by defined boundaries, governance structures, and cultural identity.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-930" y="830" width="120" height="170" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-84" value="&quot;A relation between a rational being and a numerical value representing their temporal duration of existence.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-84" value="&quot;A relation between a rational being and a numerical value representing their temporal duration of existence.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-630" y="400" width="120" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-90" value="&quot;A relation between a rational being and a decimal measurement representing their vertical spatial extension.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-90" value="&quot;A relation between a rational being and a decimal measurement representing their vertical spatial extension.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-1130" y="420" width="120" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-91" value="&quot;A relation between a rational being and a linguistic system they utilize for communication.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-91" value="&quot;A relation between a rational being and a linguistic system they utilize for communication.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-230" y="440" width="120" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-93" value="&quot;A relation obtaining between a rational being and a realm over which they exercise governing authority.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-93" value="&quot;A relation obtaining between a rational being and a realm over which they exercise governing authority.&quot;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-1600" y="430" width="120" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-100" value="lotr:RationalBeing" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-100" value="lotr:RationalBeing" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-1430" y="460" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-103" value="xsd:decimal" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-103" value="xsd:decimal" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-1280" y="460" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-105" value="lotr:RationalBeing" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-105" value="lotr:RationalBeing" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-920" y="440" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-106" value="xsd:integer" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-106" value="xsd:integer" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-780" y="440" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-111" value="xsd:string" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-111" value="xsd:string" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-370" y="470" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-113" value="lotr:RationalBeing" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-113" value="lotr:RationalBeing" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-500" y="470" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-115" value="lotr:RationalBeing" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-115" value="lotr:RationalBeing" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-1910" y="460" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-117" value="lotr:Fellowship" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-117" value="lotr:Fellowship" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-1765" y="460" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-121" value="&quot;50&quot;^^xsd:decimal" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-121" value="&quot;50&quot;^^xsd:decimal" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1170" y="830" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-125" value="&quot;3.5&quot;^^xsd:integer" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-125" value="&quot;3.5&quot;^^xsd:integer" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1320" y="830" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-126" value="&quot;Westron&quot;^^xsd:string" style="rounded=1;whiteSpace=wrap;html=1;arcSize=0;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-126" value="&quot;Westron&quot;^^xsd:string" style="rounded=1;whiteSpace=wrap;html=1;arcSize=0;" parent="1" vertex="1">
           <mxGeometry x="1470" y="830" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-135" value="lotr:hasAge" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-138" target="GFoEZNSDL_4xpxpBIgon-139">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-135" value="lotr:hasAge" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-138" target="GFoEZNSDL_4xpxpBIgon-139" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-136" value="lotr:hasHeight" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-138" target="GFoEZNSDL_4xpxpBIgon-140">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-136" value="lotr:hasHeight" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-138" target="GFoEZNSDL_4xpxpBIgon-140" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="990" y="1060" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-137" value="lotr:speaks" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-138" target="GFoEZNSDL_4xpxpBIgon-141">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-137" value="lotr:speaks" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-138" target="GFoEZNSDL_4xpxpBIgon-141" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-175" value="lotr:rulerOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-138" target="GFoEZNSDL_4xpxpBIgon-165">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-175" value="lotr:rulerOf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-138" target="GFoEZNSDL_4xpxpBIgon-165" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="-580" y="1310" as="targetPoint" />
             <Array as="points">
@@ -307,7 +307,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-178" value="obo:member part of" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-138" target="GFoEZNSDL_4xpxpBIgon-163">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-178" value="obo:member part of" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-138" target="GFoEZNSDL_4xpxpBIgon-163" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="-120" y="1250" as="targetPoint" />
             <Array as="points">
@@ -317,30 +317,30 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-138" value="lotr:Aragorn" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-138" value="lotr:Aragorn" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="930" y="920" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-139" value="&quot;87&quot;^^xsd:decimal" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-139" value="&quot;87&quot;^^xsd:decimal" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="780" y="1060" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-140" value="&quot;6.6&quot;^^xsd:integer" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-140" value="&quot;6.6&quot;^^xsd:integer" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="930" y="1060" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-141" value="&quot;Westron&quot;^^xsd:string" style="rounded=1;whiteSpace=wrap;html=1;arcSize=0;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-141" value="&quot;Westron&quot;^^xsd:string" style="rounded=1;whiteSpace=wrap;html=1;arcSize=0;" parent="1" vertex="1">
           <mxGeometry x="1080" y="1060" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-149" value="lotr:hasAge" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-152" target="GFoEZNSDL_4xpxpBIgon-153">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-149" value="lotr:hasAge" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-152" target="GFoEZNSDL_4xpxpBIgon-153" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-150" value="lotr:hasHeight" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-152" target="GFoEZNSDL_4xpxpBIgon-154">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-150" value="lotr:hasHeight" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-152" target="GFoEZNSDL_4xpxpBIgon-154" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="350" y="1090" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-151" value="lotr:speaks" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-152" target="GFoEZNSDL_4xpxpBIgon-155">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-151" value="lotr:speaks" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-152" target="GFoEZNSDL_4xpxpBIgon-155" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-177" value="obo:member part of" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-152" target="GFoEZNSDL_4xpxpBIgon-163">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-177" value="obo:member part of" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-152" target="GFoEZNSDL_4xpxpBIgon-163" edge="1">
           <mxGeometry x="-0.3846" relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="90" y="980" />
@@ -349,33 +349,33 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-152" value="lotr:Legolas (Legolas)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-152" value="lotr:Legolas (Legolas)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="290" y="950" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-153" value="&quot;2931&quot;^^xsd:decimal" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-153" value="&quot;2931&quot;^^xsd:decimal" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="140" y="1090" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-154" value="&quot;6.0&quot;^^xsd:integer" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-154" value="&quot;6.0&quot;^^xsd:integer" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="290" y="1090" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-155" value="&quot;Sindarin&quot;^^xsd:string" style="rounded=1;whiteSpace=wrap;html=1;arcSize=0;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-155" value="&quot;Sindarin&quot;^^xsd:string" style="rounded=1;whiteSpace=wrap;html=1;arcSize=0;" parent="1" vertex="1">
           <mxGeometry x="440" y="1090" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-156" value="lotr:hasAge" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-159" target="GFoEZNSDL_4xpxpBIgon-160">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-156" value="lotr:hasAge" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-159" target="GFoEZNSDL_4xpxpBIgon-160" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-157" value="lotr:hasHeight" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-159" target="GFoEZNSDL_4xpxpBIgon-161">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-157" value="lotr:hasHeight" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-159" target="GFoEZNSDL_4xpxpBIgon-161" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="80" y="870" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-158" value="lotr:speaks" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-159" target="GFoEZNSDL_4xpxpBIgon-162">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-158" value="lotr:speaks" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="GFoEZNSDL_4xpxpBIgon-159" target="GFoEZNSDL_4xpxpBIgon-162" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-170" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-159" target="GFoEZNSDL_4xpxpBIgon-11">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-170" value="rdf:type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-159" target="GFoEZNSDL_4xpxpBIgon-11" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-176" value="obo:member part of" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="GFoEZNSDL_4xpxpBIgon-159" target="GFoEZNSDL_4xpxpBIgon-163">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-176" value="obo:member part of" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="GFoEZNSDL_4xpxpBIgon-159" target="GFoEZNSDL_4xpxpBIgon-163" edge="1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint y="760" />
@@ -383,22 +383,22 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-159" value="lotr:Gandalf (Gandalf)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-159" value="lotr:Gandalf (Gandalf)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="20" y="730" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-160" value="&quot;50&quot;^^xsd:decimal" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-160" value="&quot;50&quot;^^xsd:decimal" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-130" y="870" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-161" value="&quot;3.5&quot;^^xsd:integer" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-161" value="&quot;3.5&quot;^^xsd:integer" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="20" y="870" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-162" value="&quot;Westron&quot;^^xsd:string" style="rounded=1;whiteSpace=wrap;html=1;arcSize=0;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-162" value="&quot;Westron&quot;^^xsd:string" style="rounded=1;whiteSpace=wrap;html=1;arcSize=0;" parent="1" vertex="1">
           <mxGeometry x="170" y="870" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-163" value="lotr:FellowshipOfTheRing (Fellowship of the Ring)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-163" value="lotr:FellowshipOfTheRing (Fellowship of the Ring)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-525" y="1100" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-165" value="lotr:Gondor (Gondor)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-165" value="lotr:Gondor (Gondor)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-810" y="1100" width="120" height="60" as="geometry" />
         </mxCell>
       </root>

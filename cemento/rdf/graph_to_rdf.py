@@ -121,7 +121,7 @@ def convert_graph_to_rdf_graph(
                 lambda term_info: (
                     fst(term_info),
                     construct_term_uri(
-                        *get_abbrev_term(fst(term_info), snd(term_info)),
+                        *get_abbrev_term(fst(term_info), is_predicate=snd(term_info)),
                         prefixes=prefixes,
                     ),
                 ),

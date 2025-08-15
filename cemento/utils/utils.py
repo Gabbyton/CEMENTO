@@ -60,7 +60,7 @@ def get_abbrev_term(
 
     if is_predicate:
         abbrev_term = abbrev_term.replace("_", " ")
-        strict_camel_case = not strict_camel_case
+        strict_camel_case = True
 
     # if the term is a class, use upper camel case / Pascal case
     abbrev_term = "".join(
@@ -70,7 +70,7 @@ def get_abbrev_term(
         ]
     )
 
-    if strict_camel_case and term[0].islower():
+    if strict_camel_case and abbrev_term[0].isupper():
         abbrev_term = (
             f"{abbrev_term[0].lower()}{abbrev_term[1:] if len(abbrev_term) > 1 else ''}"
         )

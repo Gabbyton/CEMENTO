@@ -31,10 +31,14 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 ### Changed
 
 - variable in `read_diagram` for elements to distinguish container and non-container elements
+- condition for strict camel case. It now adds lowercase for capitalized abbreviated predicate terms
 
 ### Fixed
 
-- `substitute_term` replacing the matched result with a lowercased string.
+- `substitute_term` replacing the matched result with a lowercased string
+- domain range and collection option being activated by false function signature
+- wrong capitalizations on predicate terms
+- error in iterating over predicate terms
 
 ## [0.11.2] - 2025-08-13
 

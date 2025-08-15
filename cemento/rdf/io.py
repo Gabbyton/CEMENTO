@@ -7,6 +7,8 @@ from more_itertools import unique_everseen
 from networkx import DiGraph
 from rdflib import URIRef
 
+from cemento.utils.utils import fst
+
 
 def get_diagram_terms_iter_with_pred(graph: DiGraph) -> Iterable[str, bool]:
     diagram_terms_from_edges = (
@@ -16,7 +18,9 @@ def get_diagram_terms_iter_with_pred(graph: DiGraph) -> Iterable[str, bool]:
         if term
     )
     diagram_terms_from_nodes = ((node, False) for node in graph.nodes)
-    return unique_everseen(chain(diagram_terms_from_edges, diagram_terms_from_nodes))
+    return unique_everseen(
+        chain(diagram_terms_from_edges, diagram_terms_from_nodes), key=lambda x: fst(x)
+    )
 
 
 def get_diagram_terms_iter(graph: DiGraph) -> Iterable[str]:
