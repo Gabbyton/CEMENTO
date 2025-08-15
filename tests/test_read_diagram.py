@@ -6,11 +6,14 @@ from os import scandir
 from pathlib import Path
 from pprint import pprint
 
+import rdflib
+
 from cemento.draw_io.read_diagram import read_drawio
 from cemento.draw_io.transforms import (
     extract_elements,
     parse_elements,
 )
+from cemento.rdf.graph_to_rdf import convert_graph_to_rdf_graph
 from cemento.utils.utils import fst
 
 diagram_test_files = [
@@ -143,4 +146,12 @@ def test_graph_generation_advanced():
 
 
 def test_rdf_graph_generation():
-    pass
+    graph = read_drawio(diagram_test_files[2], check_errors=True)
+    ref_path = get_corresponding_ref_file(diagram_test_files[2])["ttl"]
+    prefixes_path = Path(ref_path).parent / "prefixes.json"
+
+    rdf_graph = convert_graph_to_rdf_graph(graph, prefixes_path=prefixes_path)
+
+    ref_rdf_graph = rdflib.Graph()
+    ref_rdf_graph.parse(ref_path, format="turtle")
+    assert set(rdf_graph) == set(ref_rdf_graph)
