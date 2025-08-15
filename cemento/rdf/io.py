@@ -11,12 +11,13 @@ from cemento.utils.utils import fst
 
 
 def get_diagram_terms_iter_with_pred(graph: DiGraph) -> Iterable[str, bool]:
-    diagram_terms_from_edges = (
-        (term, term == data["label"])
-        for subj, obj, data in graph.edges(data=True)
-        for term in (subj, data["label"], obj)
-        if term
-    )
+    diagram_terms_from_edges = dict()
+    for subj, obj, data in graph.edges(data=True):
+        diagram_terms_from_edges[subj] = diagram_terms_from_edges.get(subj) or False
+        diagram_terms_from_edges[obj] = diagram_terms_from_edges.get(obj) or False
+        diagram_terms_from_edges[data["label"]] = True
+
+    diagram_terms_from_edges = diagram_terms_from_edges.items()
     diagram_terms_from_nodes = ((node, False) for node in graph.nodes)
     return unique_everseen(
         chain(diagram_terms_from_edges, diagram_terms_from_nodes), key=lambda x: fst(x)
