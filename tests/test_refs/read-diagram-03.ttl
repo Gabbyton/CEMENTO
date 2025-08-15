@@ -95,6 +95,7 @@ obo:BFO_0000129 a owl:ObjectProperty ;
     skos:exactMatch obo:BFO_0000129 .
 
 lotr:Fellowship a owl:Class ;
+    rdfs:label "Fellowship" ;
     rdfs:subClassOf obo:BFO_0000027 ;
     skos:definition "A social collective that exists as a temporally bounded organization of rational beings united by shared purpose and mutual commitment." .
 
@@ -122,6 +123,7 @@ lotr:FellowshipOfTheRing a lotr:Fellowship ;
     rdfs:label "Fellowship of the Ring" .
 
 lotr:RationalBeing a owl:Class ;
+    rdfs:label "Rational Being" ;
     rdfs:subClassOf cco:ont00000476 ;
     skos:definition "A continuant that is characterized by the capacity for reasoning, linguistic communication, and moral agency within Middle Earth." .
 
