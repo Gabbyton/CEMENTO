@@ -27,11 +27,13 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - error checks for diagrams with containers
 - identifying errors for floating containers, containers used as subjects, and nested unlabelled containers
 - container and container content input into diagram error checks
+- rdf_graph output testing
 
 ### Changed
 
 - variable in `read_diagram` for elements to distinguish container and non-container elements
 - condition for strict camel case. It now adds lowercase for capitalized abbreviated predicate terms
+- diagram term iteration scheme to ensure unique terms
 
 ### Fixed
 
@@ -39,6 +41,7 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - domain range and collection option being activated by false function signature
 - wrong capitalizations on predicate terms
 - error in iterating over predicate terms
+- diagram iteration overwriting predicate status of a term due to ducktyped class redefinitions
 
 ## [0.11.2] - 2025-08-13
 

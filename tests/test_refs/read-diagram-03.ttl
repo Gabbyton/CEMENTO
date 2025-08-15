@@ -7,10 +7,10 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 lotr:Aragorn a lotr:Man ;
-    lotr:Speaks "Westron"^^xsd:string ;
-    lotr:hasAge 87.0 ;
-    lotr:hasHeight "6.6"^^xsd:integer ;
+    lotr:hasAge 87 ;
+    lotr:hasHeight 6.6 ;
     lotr:rulerOf lotr:Gondor ;
+    lotr:speaks "Westron"^^xsd:string ;
     obo:BFO_0000129 lotr:FellowshipOfTheRing .
 
 lotr:Dwarf a owl:Class ;
@@ -19,34 +19,29 @@ lotr:Dwarf a owl:Class ;
     skos:definition "Un continuador que se distingue por su robusta constitución física, afinidad por los ambientes subterráneos y competencia especializada en artesanías metalúrgicas y líticas."@es .
 
 lotr:Frodo a lotr:Hobbit ;
-    lotr:Speaks "Westron"^^xsd:string ;
-    lotr:hasAge 50.0 ;
-    lotr:hasHeight "3.5"^^xsd:integer ;
+    lotr:hasAge 50 ;
+    lotr:hasHeight 3.5 ;
+    lotr:speaks "Westron"^^xsd:string ;
     obo:BFO_0000129 lotr:FellowshipOfTheRing .
 
 lotr:Gandalf a lotr:Wizard ;
     rdfs:label "Gandalf" ;
-    lotr:Speaks "Westron"^^xsd:string ;
-    lotr:hasAge 50.0 ;
-    lotr:hasHeight "3.5"^^xsd:integer ;
+    lotr:hasAge 50 ;
+    lotr:hasHeight 3.5 ;
+    lotr:speaks "Westron"^^xsd:string ;
     obo:BFO_0000129 lotr:FellowshipOfTheRing .
 
 lotr:Legolas a lotr:Elf ;
     rdfs:label "Legolas" ;
-    lotr:Speaks "Sindarin"^^xsd:string ;
-    lotr:hasAge 2931.0 ;
-    lotr:hasHeight "6.0"^^xsd:integer ;
+    lotr:hasAge 2931 ;
+    lotr:hasHeight 6.0 ;
+    lotr:speaks "Sindarin"^^xsd:string ;
     obo:BFO_0000129 lotr:FellowshipOfTheRing .
 
 lotr:MagicalArtifact a owl:Class ;
     rdfs:label "Magical Artifact" ;
     rdfs:subClassOf cco:ont00001045 ;
     skos:definition "A material entity that bears supernatural qualities or powers, typically crafted through processes involving arcane knowledge or divine intervention." .
-
-lotr:Speaks a owl:DatatypeProperty ;
-    rdfs:domain lotr:RationalBeing ;
-    rdfs:range xsd:String ;
-    skos:definition "A relation between a rational being and a linguistic system they utilize for communication." .
 
 lotr:hasAge a owl:DatatypeProperty ;
     rdfs:domain lotr:RationalBeing ;
@@ -62,6 +57,11 @@ lotr:rulerOf a owl:ObjectProperty ;
     rdfs:domain lotr:RationalBeing ;
     rdfs:range lotr:Fellowship ;
     skos:definition "A relation obtaining between a rational being and a realm over which they exercise governing authority." .
+
+lotr:speaks a owl:DatatypeProperty ;
+    rdfs:domain lotr:RationalBeing ;
+    rdfs:range xsd:String ;
+    skos:definition "A relation between a rational being and a linguistic system they utilize for communication." .
 
 lotr:Elf a owl:Class ;
     rdfs:label "Elf" ;

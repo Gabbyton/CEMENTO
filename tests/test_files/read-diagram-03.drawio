@@ -276,10 +276,10 @@
         <mxCell id="GFoEZNSDL_4xpxpBIgon-117" value="lotr:Fellowship" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-1765" y="460" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-121" value="&quot;50&quot;^^xsd:decimal" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-121" value="&quot;50&quot;^^xsd:integer" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1170" y="830" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-125" value="&quot;3.5&quot;^^xsd:integer" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-125" value="&quot;3.5&quot;^^xsd:decimal" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1320" y="830" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="GFoEZNSDL_4xpxpBIgon-126" value="&quot;Westron&quot;^^xsd:string" style="rounded=1;whiteSpace=wrap;html=1;arcSize=0;" parent="1" vertex="1">
@@ -320,10 +320,10 @@
         <mxCell id="GFoEZNSDL_4xpxpBIgon-138" value="lotr:Aragorn" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="930" y="920" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-139" value="&quot;87&quot;^^xsd:decimal" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-139" value="&quot;87&quot;^^xsd:integer" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="780" y="1060" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-140" value="&quot;6.6&quot;^^xsd:integer" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-140" value="&quot;6.6&quot;^^xsd:decimal" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="930" y="1060" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="GFoEZNSDL_4xpxpBIgon-141" value="&quot;Westron&quot;^^xsd:string" style="rounded=1;whiteSpace=wrap;html=1;arcSize=0;" parent="1" vertex="1">
@@ -352,10 +352,10 @@
         <mxCell id="GFoEZNSDL_4xpxpBIgon-152" value="lotr:Legolas (Legolas)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="290" y="950" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-153" value="&quot;2931&quot;^^xsd:decimal" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-153" value="&quot;2931&quot;^^xsd:integer" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="140" y="1090" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-154" value="&quot;6.0&quot;^^xsd:integer" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-154" value="&quot;6.0&quot;^^xsd:decimal" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="290" y="1090" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="GFoEZNSDL_4xpxpBIgon-155" value="&quot;Sindarin&quot;^^xsd:string" style="rounded=1;whiteSpace=wrap;html=1;arcSize=0;" parent="1" vertex="1">
@@ -386,10 +386,10 @@
         <mxCell id="GFoEZNSDL_4xpxpBIgon-159" value="lotr:Gandalf (Gandalf)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="20" y="730" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-160" value="&quot;50&quot;^^xsd:decimal" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-160" value="&quot;50&quot;^^xsd:integer" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-130" y="870" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GFoEZNSDL_4xpxpBIgon-161" value="&quot;3.5&quot;^^xsd:integer" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="GFoEZNSDL_4xpxpBIgon-161" value="&quot;3.5&quot;^^xsd:decimal" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="20" y="870" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="GFoEZNSDL_4xpxpBIgon-162" value="&quot;Westron&quot;^^xsd:string" style="rounded=1;whiteSpace=wrap;html=1;arcSize=0;" parent="1" vertex="1">
