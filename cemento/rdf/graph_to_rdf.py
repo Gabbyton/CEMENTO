@@ -375,7 +375,6 @@ def convert_graph_to_rdf_file(
     rdf_format = get_rdf_format(output_path, file_format=file_format)
     rdf_graph = convert_graph_to_rdf_graph(
         graph,
-        output_path,
         onto_ref_folder=onto_ref_folder,
         defaults_folder=defaults_folder,
         prefixes_path=prefixes_path,
