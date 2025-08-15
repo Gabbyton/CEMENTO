@@ -304,6 +304,9 @@ def find_container_errors_diagram_content(
     rel_ids: set[str],
 ) -> list[tuple[str, BaseException]]:
     errors = []
+    if containers is None:
+        return errors
+
     for container_id, members in containers.items():
         for member_id in members:
             member = elements[member_id].get("value", None)
