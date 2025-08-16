@@ -3,6 +3,7 @@ from datetime import datetime
 from enum import Enum
 from math import atan2, pi
 from typing import NamedTuple
+from uuid import uuid4
 
 
 class DiagramKey(Enum):
@@ -39,6 +40,10 @@ class DiagramObject:
     pass
 
 
+def gen_uuid():
+    return str(uuid4()).split("-")[-1]
+
+
 @dataclass
 class DiagramInfo(DiagramObject):
     diagram_name: int
@@ -49,7 +54,9 @@ class DiagramInfo(DiagramObject):
     grid_size: int = 10
     page_width: int = 1100
     page_height: int = 850
-    diagram_content: int = None
+    diagram_content: str = None
+    axiom_page_id: str = field(default_factory=gen_uuid)
+    axiom_page_content: str = ""
     template_key: str = "scaffold"
 
 
