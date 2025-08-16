@@ -14,6 +14,7 @@ from cemento.rdf.filters import term_in_search_results, term_not_in_default_name
 from cemento.rdf.io import (
     get_diagram_terms_iter,
     get_diagram_terms_iter_with_pred,
+    get_properties_in_file,
     save_substitute_log,
 )
 from cemento.rdf.preprocessing import (
@@ -27,7 +28,6 @@ from cemento.rdf.transforms import (
     bind_prefixes,
     construct_literal,
     construct_term_uri,
-    enforce_camel_case_in_rdf_graph,
     get_class_terms,
     get_collection_in_edges,
     get_collection_nodes,
@@ -38,17 +38,15 @@ from cemento.rdf.transforms import (
     get_literal_lang_annotation,
     get_xsd_terms,
     remove_generic_property,
-    substitute_term_multikey,
 )
 from cemento.term_matching.constants import get_default_namespace_prefixes
 from cemento.term_matching.io import get_rdf_file_iter
 from cemento.term_matching.transforms import (
     add_exact_matches,
     combine_graphs,
-    detect_lineage,
-    get_entire_prop_family,
     get_prefixes,
     get_search_terms,
+    get_substitute_mapping,
     get_term_search_keys,
     get_term_types,
 )
@@ -123,11 +121,34 @@ def convert_graph_to_rdf_graph(
             ),
         )
     }
+
+    # process search keys now for partial substitution and full substitution later on
+    search_keys = {
+        term: search_key
+        for term, search_key in map(
+            lambda term: (term, get_term_search_keys(term, inv_prefixes)),
+            unique_everseen(
+                chain(get_diagram_terms_iter(graph), collection_in_edge_labels)
+            ),
+        )
+    }
+
+    # retrieve list of property terms in file to enforce camel case appropriately
+    # TODO: determine if user can toggle camel case enforcement for their term
+    property_terms = get_properties_in_file(
+        search_keys,
+        chain(get_diagram_terms_iter(graph), collection_in_edge_labels),
+        graph,
+        defaults_folder,
+        inv_prefixes,
+    )
+
+    # get the list of terms from which to consruct URIRefs and Literals and create them
     construct_term_inputs = list(
         filter(
             lambda x: fst(x) not in literal_terms,
             chain(
-                get_diagram_terms_iter_with_pred(graph),
+                get_diagram_terms_iter_with_pred(graph, property_terms),
                 collection_in_edge_labels_iter,
             ),
         )
@@ -165,32 +186,13 @@ def convert_graph_to_rdf_graph(
         raise NullTermError(
             "A null term has been detected. Please make sure all your arrows and shapes are labelled properly."
         ) from NullTermError
-    search_keys = {
-        term: search_key
-        for term, search_key in map(
-            lambda term: (term, get_term_search_keys(term, inv_prefixes)),
-            unique_everseen(
-                chain(get_diagram_terms_iter(graph), collection_in_edge_labels)
-            ),
-        )
-    }
-    substitution_results = {
-        term: substituted_value
-        for term, substituted_value in map(
-            lambda term: (
-                term,
-                substitute_term_multikey(
-                    search_keys[term],
-                    search_terms,
-                    log_results=bool(log_substitution_path),
-                ),
-            ),
-            unique_everseen(
-                chain(get_diagram_terms_iter(graph), collection_in_edge_labels)
-            ),
-        )
-        if substituted_value is not None
-    }
+
+    substitution_results = get_substitute_mapping(
+        search_keys,
+        search_terms,
+        chain(get_diagram_terms_iter(graph), collection_in_edge_labels),
+        log_results=bool(log_substitution_path),
+    )
 
     if log_substitution_path:
         save_substitute_log(substitution_results, log_substitution_path)
@@ -381,19 +383,6 @@ def convert_graph_to_rdf_graph(
         redundant_default_triples,
         rdf_graph,
     )
-
-    # TODO: decide how to tell algorithm to stop camel case enforcement
-    # enforce camel case for object properties that slipped through
-    entire_prop_family = get_entire_prop_family(defaults_folder, inv_prefixes)
-    terms_to_replace = set(
-        (
-            term
-            for (subj, pred, obj) in rdf_graph
-            for term in (subj, pred, obj)
-            if detect_lineage(rdf_graph, entire_prop_family, term)
-        )
-    )
-    rdf_graph = enforce_camel_case_in_rdf_graph(rdf_graph, terms_to_replace)
 
     return rdf_graph
 

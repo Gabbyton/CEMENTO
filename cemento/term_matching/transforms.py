@@ -102,6 +102,27 @@ def substitute_term_multikey(
     return term_substitute
 
 
+def get_substitute_mapping(
+    search_keys: dict[str, list[str]],
+    search_pool: dict[str, URIRef],
+    terms: Iterable[str],
+    log_results: bool = False,
+):
+    return {
+        term: substituted_value
+        for term, substituted_value in map(
+            lambda term: (
+                term,
+                substitute_term_multikey(
+                    search_keys[term], search_pool, log_results=log_results
+                ),
+            ),
+            unique_everseen(terms),
+        )
+        if substituted_value is not None
+    }
+
+
 def get_term_search_keys(term: str, inv_prefix: dict[URIRef, str]) -> list[str]:
     prefix, abbrev_term = get_abbrev_term(term)
     undo_camel_case_term = " ".join(
@@ -328,12 +349,14 @@ def get_entire_prop_family(
 
 
 def detect_lineage(ref_graph: Graph, term_family: set[URIRef], term: URIRef) -> bool:
-    ancestors = list(unique_everseen(
-        chain(
-            ref_graph.transitive_objects(predicate=RDF.type, subject=term),
-            ref_graph.transitive_objects(predicate=RDFS.subClassOf, subject=term),
+    ancestors = list(
+        unique_everseen(
+            chain(
+                ref_graph.transitive_objects(predicate=RDF.type, subject=term),
+                ref_graph.transitive_objects(predicate=RDFS.subClassOf, subject=term),
+            )
         )
-    ))
+    )
     if any([term != ancestor and ancestor in term_family for ancestor in ancestors]):
         return True
     return False

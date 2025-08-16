@@ -18,7 +18,12 @@ from cemento.rdf.preprocessing import (
 from cemento.term_matching.constants import RANK_PROPS
 from cemento.term_matching.transforms import substitute_term_multikey
 from cemento.utils.constants import valid_collection_types
-from cemento.utils.utils import enforce_camel_case, filter_graph, fst, snd
+from cemento.utils.utils import (
+    enforce_camel_case,
+    filter_graph,
+    fst,
+    snd,
+)
 
 
 def construct_term_uri(
