@@ -155,7 +155,7 @@ def test_rdf_graph_generation():
 
     ref_rdf_graph = rdflib.Graph()
     ref_rdf_graph.parse(ref_path, format="turtle")
-    assert isomorphic(rdf_graph, ref_rdf_graph)
+    assert set(rdf_graph) == set(ref_rdf_graph)
 
 
 def test_container_rdf_graph_generation():

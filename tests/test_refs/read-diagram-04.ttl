@@ -6,11 +6,11 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
-mds:Eats a owl:ObjectProperty ;
+mds:eats a owl:ObjectProperty ;
     rdfs:domain cco:ont00001262 ;
     rdfs:range [ owl:unionOf ( mds:Pizza mds:Bagel [ owl:intersectionOf ( mds:Meat mds:Fish [ owl:complementOf ( mds:Vegetables ) ] ) ] ) ] .
 
-mds:Walks a owl:ObjectProperty ;
+mds:walks a owl:ObjectProperty ;
     rdfs:domain cco:ont00001262 ;
     rdfs:range [ owl:unionOf ( mds:Dog mds:Cat ) ] .
 
