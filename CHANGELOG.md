@@ -44,6 +44,7 @@ _[X.X.X] - YYYY-MM-YY_ for version-date header
 - error in iterating over predicate terms
 - diagram iteration overwriting predicate status of a term due to ducktyped class redefinitions
 - unstable label assignment due to duplicates overwriting alias keys
+- camel case enforcement for predicates that were defined but unused
 
 ## [0.11.2] - 2025-08-13
 

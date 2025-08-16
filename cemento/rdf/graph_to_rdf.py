@@ -9,7 +9,6 @@ import rdflib
 from more_itertools import unique_everseen
 from networkx import DiGraph
 from rdflib import OWL, RDF, RDFS, BNode, Graph, Literal, URIRef
-from rdflib.namespace import split_uri
 
 from cemento.rdf.filters import term_in_search_results, term_not_in_default_namespace
 from cemento.rdf.io import (
@@ -28,6 +27,7 @@ from cemento.rdf.transforms import (
     bind_prefixes,
     construct_literal,
     construct_term_uri,
+    enforce_camel_case_in_rdf_graph,
     get_class_terms,
     get_collection_in_edges,
     get_collection_nodes,
@@ -382,6 +382,8 @@ def convert_graph_to_rdf_graph(
         rdf_graph,
     )
 
+    # TODO: decide how to tell algorithm to stop camel case enforcement
+    # enforce camel case for object properties that slipped through
     entire_prop_family = get_entire_prop_family(defaults_folder, inv_prefixes)
     terms_to_replace = set(
         (
@@ -391,9 +393,7 @@ def convert_graph_to_rdf_graph(
             if detect_lineage(rdf_graph, entire_prop_family, term)
         )
     )
-
-    for term in terms_to_replace:
-        all_triples
+    rdf_graph = enforce_camel_case_in_rdf_graph(rdf_graph, terms_to_replace)
 
     return rdf_graph
 
