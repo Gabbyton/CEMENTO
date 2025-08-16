@@ -10,6 +10,7 @@ from more_itertools import unique_everseen
 from networkx import DiGraph
 from rdflib import OWL, RDF, RDFS, BNode, Graph, Literal, URIRef
 from rdflib.namespace import split_uri
+
 from cemento.rdf.filters import term_in_search_results, term_not_in_default_namespace
 from cemento.rdf.io import (
     get_diagram_terms_iter,
@@ -382,22 +383,17 @@ def convert_graph_to_rdf_graph(
     )
 
     entire_prop_family = get_entire_prop_family(defaults_folder, inv_prefixes)
-    to_remove = []
-    to_replace = []
-    for subj, pred, obj in rdf_graph:
-        for idx, term in enumerate((subj, pred, obj)):
-            if detect_lineage(ref_graph, entire_prop_family, term):
-                new_triple = [subj, pred, obj]
-                ns, abbrev_term = split_uri(term)
-                new_term = URIRef(f"{ns}{enforce_camel_case(abbrev_term)}")
-                new_triple[idx] = new_term
-                to_remove.append((subj, pred, obj))
-                to_replace.append(tuple(new_triple))
-                break
-    for triple in to_remove:
-        rdf_graph.remove(triple)
-    for triple in to_replace:
-        rdf_graph.add(triple)
+    terms_to_replace = set(
+        (
+            term
+            for (subj, pred, obj) in rdf_graph
+            for term in (subj, pred, obj)
+            if detect_lineage(rdf_graph, entire_prop_family, term)
+        )
+    )
+
+    for term in terms_to_replace:
+        all_triples
 
     return rdf_graph
 

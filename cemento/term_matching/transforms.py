@@ -328,13 +328,13 @@ def get_entire_prop_family(
 
 
 def detect_lineage(ref_graph: Graph, term_family: set[URIRef], term: URIRef) -> bool:
-    ancestors = unique_everseen(
+    ancestors = list(unique_everseen(
         chain(
-            ref_graph.transitive_subjects(RDF.type, term),
-            ref_graph.transitive_subjects(RDFS.subClassOf, term),
+            ref_graph.transitive_objects(predicate=RDF.type, subject=term),
+            ref_graph.transitive_objects(predicate=RDFS.subClassOf, subject=term),
         )
-    )
-    if any([ancestor in term_family for ancestor in ancestors]):
+    ))
+    if any([term != ancestor and ancestor in term_family for ancestor in ancestors]):
         return True
     return False
 
