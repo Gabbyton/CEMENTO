@@ -3,6 +3,7 @@ from collections import defaultdict
 from collections.abc import Callable, Iterable
 from functools import reduce
 
+import networkx as nx
 from networkx import DiGraph
 
 from cemento.utils.constants import NullTermError
@@ -95,3 +96,18 @@ def filter_graph(
         ]
     )
     return filtered_graph
+
+
+# TODO: move to utils
+def get_subgraphs(graph: DiGraph) -> list[DiGraph]:
+    subgraphs = nx.weakly_connected_components(graph)
+    return [graph.subgraph(subgraph_nodes).copy() for subgraph_nodes in subgraphs]
+
+
+# TODO: move to utils
+def get_graph_root_nodes(graph: DiGraph) -> list[any]:
+    return [
+        node
+        for node in graph.nodes
+        if graph.in_degree(node) == 0 or len(graph.nodes) == 1
+    ]

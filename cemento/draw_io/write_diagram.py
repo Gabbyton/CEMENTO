@@ -20,7 +20,6 @@ from cemento.draw_io.transforms import (
     flip_edges_of_graphs,
     generate_diagram_content,
     get_divider_line_annotations,
-    get_graph_root_nodes,
     get_non_ranked_strat_edges,
     get_predicate_connectors,
     get_rank_connectors_from_trees,
@@ -31,12 +30,12 @@ from cemento.draw_io.transforms import (
     get_shape_positions,
     get_shape_positions_by_id,
     get_shapes_from_trees,
-    get_subgraphs,
     get_tree_dividing_line,
     get_tree_offsets,
     invert_tree,
     split_multiple_inheritances,
 )
+from cemento.utils.utils import get_graph_root_nodes, get_subgraphs
 
 
 def draw_diagram(

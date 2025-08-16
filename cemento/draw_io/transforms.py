@@ -35,7 +35,14 @@ from cemento.draw_io.preprocessing import (
 )
 from cemento.term_matching.constants import RANK_PROPS
 from cemento.term_matching.transforms import substitute_term
-from cemento.utils.utils import filter_graph, fst, snd, trd
+from cemento.utils.utils import (
+    filter_graph,
+    fst,
+    get_graph_root_nodes,
+    get_subgraphs,
+    snd,
+    trd,
+)
 
 
 def clean_element_values(
@@ -364,19 +371,6 @@ def flip_edges_of_graphs(
 
 def get_ranked_subgraph(graph: DiGraph) -> DiGraph:
     return filter_graph(graph, lambda data: data["is_strat"])
-
-
-def get_subgraphs(graph: DiGraph) -> list[DiGraph]:
-    subgraphs = nx.weakly_connected_components(graph)
-    return [graph.subgraph(subgraph_nodes).copy() for subgraph_nodes in subgraphs]
-
-
-def get_graph_root_nodes(graph: DiGraph) -> list[any]:
-    return [
-        node
-        for node in graph.nodes
-        if graph.in_degree(node) == 0 or len(graph.nodes) == 1
-    ]
 
 
 def split_multiple_inheritances(
