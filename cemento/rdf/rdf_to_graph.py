@@ -1,4 +1,4 @@
-from functools import reduce
+from functools import partial, reduce
 from itertools import chain
 from pathlib import Path
 
@@ -17,6 +17,7 @@ from cemento.rdf.transforms import (
     get_literal_format_mapping,
     get_literal_values_with_id,
     rename_edges,
+    term_to_str,
 )
 from cemento.term_matching.io import read_rdf
 from cemento.term_matching.transforms import (
@@ -198,4 +199,37 @@ def convert_rdf_to_graph(
         print("formatting literals...")
         rename_format_literals = get_literal_format_mapping(graph, inv_prefixes)
         graph = nx.relabel_nodes(graph, rename_format_literals)
+
+        # process axioms and restrictions, starting with non-containers
+        axiomatic_predicates = [RDFS.domain, RDFS.range]
+        axiom_triples = list(
+            rdf_graph.triples_choices((None, axiomatic_predicates, None))
+        )
+        print(axiom_triples)
+        add_edges = list()
+        axiom_graph = DiGraph()
+        for subj, pred, obj in axiom_triples:
+            if all(
+                [
+                    term not in default_terms or term in exempted_terms
+                    for term in (subj, obj)
+                ]
+            ):
+                axiom_term_to_str = partial(term_to_str, inv_prefixes=inv_prefixes)
+                add_edges.append(
+                    (
+                        axiom_term_to_str(subj),
+                        axiom_term_to_str(obj),
+                        {
+                            "label": axiom_term_to_str(pred, label_only=True),
+                            "is_strat": True,
+                            "is_rank": False,
+                        },
+                    )
+                )
+        axiom_graph.add_edges_from(add_edges)
+        nx.set_node_attributes(axiom_graph, True, "is_class")
+        print(axiom_graph.nodes(data=True))
+        graph.add_nodes_from(axiom_graph.nodes(data=True))
+        graph.add_edges_from(axiom_graph.edges(data=True))
         return graph

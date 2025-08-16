@@ -216,6 +216,24 @@ def get_graph_relabel_mapping(
     return rename_mapping
 
 
+def term_to_str(
+    term: URIRef | Literal | BNode,
+    inv_prefixes: dict[URIRef | Namespace, str],
+    aliases: dict[URIRef, Literal] = None,
+    label_only: bool = False,
+) -> str:
+    if not isinstance(term, URIRef):
+        return str(term)
+    ns, abbrev_term = split_uri(term)
+    new_name = f"{inv_prefixes[ns]}:{abbrev_term}"
+    if aliases is not None and term in aliases and len(aliases[term]) >= 1:
+        if label_only:
+            new_name = f"{inv_prefixes[ns]}:{aliases[term][0]}"
+        else:
+            new_name += f" ({','.join(aliases[term])})"
+    return new_name
+
+
 def get_literal_prefix(
     literal: Literal, inv_prefixes: dict[URIRef | Namespace, str]
 ) -> str:
