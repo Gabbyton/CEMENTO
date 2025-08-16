@@ -30,6 +30,7 @@ To summarize, the package offers the following features:
 8. Providing a log for substitutions made and suppresing substitutions by adding a key (\*).
 9. Support for Property definitions. Properties that do not have definitions will default as an Object Property type.
 10. Support for multiple pages in a draw.io file, for when you want to organize terms your way.
+11. Support for inputting containers (Container draw outputs coming out soon).
 
 ## Installation
 
