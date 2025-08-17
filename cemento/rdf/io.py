@@ -28,7 +28,11 @@ def get_properties_in_file(
     # partially parse the graph matching subclasses and types to determine if something is an object property
     partially_substituted_values = get_substitute_mapping(
         search_keys=search_keys,
-        search_pool={"rdfs:subClassOf": RDFS.subClassOf, "rdf:type": RDF.type},
+        search_pool={  # TODO: move to constants, unify rank term enumeration
+            "rdfs:subClassOf": RDFS.subClassOf,
+            "rdf:type": RDF.type,
+            "rdfs:subPropertyOf": RDFS.subPropertyOf,
+        },
         terms=terms,
     )
     partial_hierarchy_edges = (

@@ -3,7 +3,7 @@ from rdflib import DCTERMS, OWL, RDF, RDFS, SKOS, Namespace, URIRef
 default_namespaces = [RDF, RDFS, OWL, DCTERMS, SKOS]
 default_namespace_prefixes = ["rdf", "rdfs", "owl", "dcterms", "skos"]
 
-RANK_PROPS = {RDF.type, RDFS.subClassOf}
+RANK_PROPS = {RDF.type, RDFS.subClassOf, RDFS.subPropertyOf}
 FALLBACK_STRAT_TYPES = {
     OWL.bottomDataProperty,
     OWL.topDataProperty,

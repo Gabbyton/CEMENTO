@@ -74,6 +74,17 @@ def draw_tree(
     demarcate_boxes = demarcate_boxes and not classes_only
     # replace quotes to match shape content
     # TODO: prioritize is_rank terms over non-rank predicates when cutting
+    # remove axiom_elements
+    axiom_graph = graph.subgraph(
+        [node for node, attr in graph.nodes(data=True) if attr.get("is_axiom", False)]
+    ).copy()
+    graph = graph.subgraph(
+        [
+            node
+            for node, attr in graph.nodes(data=True)
+            if attr.get("is_in_diagram", False)
+        ]
+    ).copy()
     graph = replace_term_quotes(graph)
     # remove graph cycles from the start
     graph.remove_edges_from(selfloop_edges(graph))

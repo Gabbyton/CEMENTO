@@ -1,10 +1,13 @@
+from collections import defaultdict
 from functools import partial, reduce
 from itertools import chain
 from pathlib import Path
+from uuid import uuid4
 
 import networkx as nx
 from networkx import DiGraph
 from rdflib import OWL, RDF, RDFS, SKOS, Literal, URIRef
+from rdflib.collection import Collection
 
 from cemento.rdf.transforms import (
     add_triples_to_digraph,
@@ -66,6 +69,7 @@ def convert_rdf_to_graph(
     # TODO: find better solution for including these options
     ref_strat_preds.add(RDFS.subClassOf)
     ref_strat_preds.add(RDF.type)
+    ref_strat_preds.add(RDFS.subPropertyOf)
 
     with read_rdf(input_path, file_format=file_format) as rdf_graph:
         prefixes.update({key: value for key, value in rdf_graph.namespaces()})
@@ -81,8 +85,9 @@ def convert_rdf_to_graph(
         all_classes = set(
             filter(
                 lambda x: x in file_uri_refs,
-                chain(
+                chain(  # TODO: unify rank predicate enumeration
                     chain(*rdf_graph.subject_objects(RDFS.subClassOf)),
+                    chain(*rdf_graph.subject_objects(RDFS.subPropertyOf)),
                     rdf_graph.objects(None, RDF.type),
                 ),
             )
@@ -100,6 +105,7 @@ def convert_rdf_to_graph(
             file_self_referentials = {
                 pred for subj, pred, obj in rdf_graph if subj == obj
             }
+            # TODO: put into config ini file
             file_strat_pred_types = {
                 OWL.AnnotationProperty,
                 OWL.DatatypeProperty,
@@ -160,6 +166,7 @@ def convert_rdf_to_graph(
             if (subj in display_terms and obj in display_terms)
             and pred in all_predicates
         ]
+        print(display_terms)
         graph = DiGraph()
         graph = reduce(
             lambda graph, triple: add_triples_to_digraph(*triple, graph),
@@ -186,6 +193,7 @@ def convert_rdf_to_graph(
             graph,
             {node: {"is_instance": node in all_instances} for node in graph.nodes()},
         )
+        nx.set_node_attributes(graph, True, "is_in_diagram")
 
         print("renaming terms...")
         all_terms = all_classes | all_instances | all_predicates
@@ -202,10 +210,10 @@ def convert_rdf_to_graph(
 
         # process axioms and restrictions, starting with non-containers
         axiomatic_predicates = [RDFS.domain, RDFS.range]
+        axiom_term_to_str = partial(term_to_str, inv_prefixes=inv_prefixes)
         axiom_triples = list(
             rdf_graph.triples_choices((None, axiomatic_predicates, None))
         )
-        print(axiom_triples)
         add_edges = list()
         axiom_graph = DiGraph()
         for subj, pred, obj in axiom_triples:
@@ -215,21 +223,76 @@ def convert_rdf_to_graph(
                     for term in (subj, obj)
                 ]
             ):
-                axiom_term_to_str = partial(term_to_str, inv_prefixes=inv_prefixes)
                 add_edges.append(
                     (
                         axiom_term_to_str(subj),
                         axiom_term_to_str(obj),
                         {
                             "label": axiom_term_to_str(pred, label_only=True),
-                            "is_strat": True,
-                            "is_rank": False,
                         },
                     )
                 )
         axiom_graph.add_edges_from(add_edges)
-        nx.set_node_attributes(axiom_graph, True, "is_class")
-        print(axiom_graph.nodes(data=True))
+        nx.set_node_attributes(axiom_graph, True, "is_axiom")
         graph.add_nodes_from(axiom_graph.nodes(data=True))
         graph.add_edges_from(axiom_graph.edges(data=True))
+
+        # process container terms
+        collection_heads = set(rdf_graph.subjects(RDF.first, None))
+        collections = {
+            head: list(Collection(rdf_graph, head)) for head in collection_heads
+        }
+        # process multiple values
+        multiobjects = defaultdict(list)
+        for subj, pred, obj in rdf_graph:
+            multiobjects[
+                f"{axiom_term_to_str(subj)}::{axiom_term_to_str(pred)}"
+            ].append(obj)
+        multiobjects = {
+            key: values for key, values in multiobjects.items() if len(values) > 1
+        }
+        old_ties = []
+        old_nodes = []
+        new_ties = []
+        new_nodes = []
+        for key, values in multiobjects.items():
+            subj, pred = key.split("::")
+            new_key = str(uuid4()).split("-")[-1]
+            collection_heads.add(new_key)
+            collections.update({new_key: values})
+            for value in values:
+                value_str = axiom_term_to_str(value)
+                old_ties.append((subj, value_str))
+                old_nodes.append(value_str)
+                new_ties.append(
+                    (
+                        new_key,
+                        value_str,
+                        {
+                            "label": "mds:hasCollectionMember",
+                            "is_collection": True,
+                        },
+                    )
+                )
+            new_ties.append(
+                (
+                    subj,
+                    new_key,
+                    {
+                        "label": pred,
+                        "is_collection": True,
+                    },
+                )
+            )
+            new_nodes.append((new_key, {"is_collection": True, "is_axiom": True}))
+            old_node_attrs = {
+                node: {"is_collection": True, "is_axiom": True} for node in old_nodes
+            }
+            nx.set_node_attributes(graph, old_node_attrs)
+        graph.remove_edges_from(old_ties)
+        graph.remove_nodes_from(old_nodes)
+        graph.add_nodes_from(new_nodes)
+        graph.add_edges_from(new_ties)
+
+        # print(collections)
         return graph
