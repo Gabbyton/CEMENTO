@@ -19,7 +19,7 @@ from cemento.draw_io.transforms import (
     flip_edges,
     flip_edges_of_graphs,
     generate_diagram_file_content,
-    generate_tree_page,
+    generate_page,
     get_divider_line_annotations,
     get_non_ranked_strat_edges,
     get_predicate_connectors,
@@ -49,7 +49,7 @@ def draw_tree_diagram(
     horizontal_tree: bool = False,
 ) -> None:
     diagram_output_path = Path(diagram_output_path)
-    tree_page = draw_tree(
+    tree_page = draw_tree_page(
         graph,
         translate_x=translate_x,
         translate_y=translate_y,
@@ -58,11 +58,29 @@ def draw_tree_diagram(
         horizontal_tree=horizontal_tree,
     )
     diagram_file_content = generate_diagram_file_content(tree_page)
+    draw_axiom_page(graph)
     with open(diagram_output_path, "w") as write_file:
         write_file.write(diagram_file_content)
 
 
-def draw_tree(
+def draw_axiom_page(graph: DiGraph) -> DiagramPage:
+    axiom_graph = graph.subgraph(
+        [node for node, attr in graph.nodes(data=True) if attr.get("is_axiom", False)]
+    ).copy()
+    print(axiom_graph.nodes)
+    collection_graph = graph.subgraph(
+        [
+            node
+            for subj, obj, data in graph.edges(data=True)
+            if data.get("is_collection", False)
+            for node in (subj, obj)
+        ]
+    ).copy()
+    print(collection_graph.nodes)
+    print(collection_graph.edges)
+
+
+def draw_tree_page(
     graph: DiGraph,
     translate_x: int = 0,
     translate_y: int = 0,
@@ -230,7 +248,7 @@ def draw_tree(
     shapes = map(remove_literal_shape_id, shapes)
     all_connectors = map(remove_literal_connector_id, all_connectors)
 
-    return generate_tree_page(
+    return generate_page(
         "tree page",
         diagram_uid,
         shapes,

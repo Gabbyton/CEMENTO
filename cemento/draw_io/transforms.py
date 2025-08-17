@@ -648,7 +648,7 @@ def generate_diagram_file_content(*pages: list[DiagramPage]) -> str:
     return write_content
 
 
-def generate_tree_page(
+def generate_page(
     page_name: str,
     page_uid: str,
     *diagram_objects: list[DiagramObject],

@@ -241,6 +241,28 @@ def convert_rdf_to_graph(
         collections = {
             head: list(Collection(rdf_graph, head)) for head in collection_heads
         }
+        collection_types = dict()
+        # TODO: use global constant once moved
+        valid_collection_types = [
+            OWL.unionOf,
+            OWL.intersectionOf,
+            OWL.complementOf,
+        ]
+        for head in collection_heads:
+            type_triples = iter(
+                rdf_graph.triples_choices((None, valid_collection_types, head))
+            )
+            _, collection_type, _ = next(type_triples, (None, None, None))
+            collection_types[head] = collection_type
+        for head, collection_type in collection_types.items():
+            if collection_type is not None:
+                graph.add_edge(
+                    axiom_term_to_str(collection_type, label_only=True),
+                    axiom_term_to_str(head),
+                    label="mds:collectionType",
+                    is_axiom=True,
+                    is_collection=True,
+                )
         # process multiple values
         multiobjects = defaultdict(list)
         for subj, pred, obj in rdf_graph:
@@ -292,6 +314,4 @@ def convert_rdf_to_graph(
         graph.remove_nodes_from(old_nodes)
         graph.add_nodes_from(new_nodes)
         graph.add_edges_from(new_ties)
-
-        # print(collections)
         return graph
