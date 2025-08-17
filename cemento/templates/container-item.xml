@@ -1,0 +1,3 @@
+        <mxCell id="${container_item_id}" value="${container_value}" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="${container_parent_id}">
+          <mxGeometry x="${pos_x}" y="${pos_y}" height="${item_height}" as="geometry" />
+        </mxCell>

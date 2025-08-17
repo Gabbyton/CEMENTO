@@ -1,0 +1,3 @@
+        <mxCell id="${container_id}" value="${container_label_value}" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="${container_parent_id}">
+          <mxGeometry y="${pos_y}" width="${pos_x}" height="${container_label_height}" width="${container_width}" as="geometry" />
+        </mxCell>

@@ -65,6 +65,27 @@ class DiagramPage(DiagramInfo):
     template_key: str = "page"
 
 
+@dataclass
+class DiagramContainer(DiagramObject):
+    container_id: str
+    container_parent_id: str = 1
+    container_value: str = ""
+    pos_x: float = 0.0
+    pos_y: float = 0.0
+    container_label_height: int = 60
+    container_width: int = 140
+
+
+@dataclass
+class DiagramContainerItem(DiagramObject):
+    container_item_id: str
+    container_parent_id: str
+    container_value: str = ""
+    pos_x: float = 0.0
+    pos_y: float = 0.0
+    item_height: int = 30
+
+
 class ConnectorType(Enum):
     RANK_CONNECTOR = "rank"
     PROPERTY_CONNECTOR = "property"

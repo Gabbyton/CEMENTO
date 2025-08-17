@@ -232,6 +232,7 @@ def convert_rdf_to_graph(
                     )
                 )
         axiom_graph.add_edges_from(add_edges)
+        # TODO: set is_axiom to True globally to global axiom graph, prior to merge
         nx.set_node_attributes(axiom_graph, True, "is_axiom")
         graph.add_nodes_from(axiom_graph.nodes(data=True))
         graph.add_edges_from(axiom_graph.edges(data=True))
