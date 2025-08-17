@@ -46,18 +46,23 @@ def gen_uuid():
 
 @dataclass
 class DiagramInfo(DiagramObject):
-    diagram_name: int
-    diagram_id: int
+    diagram_id: int = field(default_factory=gen_uuid)
     modify_date: str = field(default_factory=get_timestamp_str)
     grid_dx: int = 1600
     grid_dy: int = 850
     grid_size: int = 10
     page_width: int = 1100
     page_height: int = 850
-    diagram_content: str = None
-    axiom_page_id: str = field(default_factory=gen_uuid)
-    axiom_page_content: str = ""
+    page_contents: str = None
     template_key: str = "scaffold"
+
+
+@dataclass
+class DiagramPage(DiagramInfo):
+    page_name: str = None
+    page_content: str = None
+    page_id: str = field(default_factory=gen_uuid)
+    template_key: str = "page"
 
 
 class ConnectorType(Enum):

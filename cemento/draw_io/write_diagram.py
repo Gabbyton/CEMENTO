@@ -4,7 +4,7 @@ from uuid import uuid4
 
 from networkx import DiGraph, selfloop_edges
 
-from cemento.draw_io.constants import Connector, DiagramObject, Shape
+from cemento.draw_io.constants import DiagramPage
 from cemento.draw_io.preprocessing import (
     escape_shape_content,
     remove_literal_connector_id,
@@ -18,7 +18,8 @@ from cemento.draw_io.transforms import (
     conform_tree_positions,
     flip_edges,
     flip_edges_of_graphs,
-    generate_diagram_content,
+    generate_diagram_file_content,
+    generate_tree_page,
     get_divider_line_annotations,
     get_non_ranked_strat_edges,
     get_predicate_connectors,
@@ -38,30 +39,7 @@ from cemento.draw_io.transforms import (
 from cemento.utils.utils import get_graph_root_nodes, get_subgraphs
 
 
-def draw_diagram(
-    shapes: list[Shape],
-    connectors: list[Connector],
-    diagram_output_path: str | Path,
-    *extra_elements: list[DiagramObject],
-    diagram_uid: str = None,
-) -> None:
-    if diagram_uid is None:
-        diagram_uid = str(uuid4()).split("-")[-1]
-
-    shapes = list(map(escape_shape_content, shapes))
-    shapes = map(remove_literal_shape_id, shapes)
-
-    connectors = map(remove_literal_connector_id, connectors)
-
-    write_content = generate_diagram_content(
-        diagram_output_path.stem, diagram_uid, connectors, shapes, *extra_elements
-    )
-
-    with open(diagram_output_path, "w") as write_file:
-        write_file.write(write_content)
-
-
-def draw_tree(
+def draw_tree_diagram(
     graph: DiGraph,
     diagram_output_path: str | Path,
     translate_x: int = 0,
@@ -71,13 +49,31 @@ def draw_tree(
     horizontal_tree: bool = False,
 ) -> None:
     diagram_output_path = Path(diagram_output_path)
+    tree_page = draw_tree(
+        graph,
+        translate_x=translate_x,
+        translate_y=translate_y,
+        classes_only=classes_only,
+        demarcate_boxes=demarcate_boxes,
+        horizontal_tree=horizontal_tree,
+    )
+    diagram_file_content = generate_diagram_file_content(tree_page)
+    with open(diagram_output_path, "w") as write_file:
+        write_file.write(diagram_file_content)
+
+
+def draw_tree(
+    graph: DiGraph,
+    translate_x: int = 0,
+    translate_y: int = 0,
+    classes_only: bool = False,
+    demarcate_boxes: bool = False,
+    horizontal_tree: bool = False,
+) -> DiagramPage:
     demarcate_boxes = demarcate_boxes and not classes_only
     # replace quotes to match shape content
     # TODO: prioritize is_rank terms over non-rank predicates when cutting
     # remove axiom_elements
-    axiom_graph = graph.subgraph(
-        [node for node, attr in graph.nodes(data=True) if attr.get("is_axiom", False)]
-    ).copy()
     graph = graph.subgraph(
         [
             node
@@ -230,11 +226,15 @@ def draw_tree(
         ]
         divider_annotations = [ann for anns in divider_annotations for ann in anns]
 
-    draw_diagram(
+    shapes = list(map(escape_shape_content, shapes))
+    shapes = map(remove_literal_shape_id, shapes)
+    all_connectors = map(remove_literal_connector_id, all_connectors)
+
+    return generate_tree_page(
+        "tree page",
+        diagram_uid,
         shapes,
         all_connectors,
-        diagram_output_path,
         divider_lines,
         divider_annotations,
-        diagram_uid=diagram_uid,
     )

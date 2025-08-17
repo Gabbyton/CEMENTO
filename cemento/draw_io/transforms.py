@@ -19,6 +19,7 @@ from cemento.draw_io.constants import (
     DiagramInfo,
     DiagramKey,
     DiagramObject,
+    DiagramPage,
     InstanceShape,
     Label,
     Line,
@@ -634,25 +635,36 @@ def translate_coords(
     return ((x_pos + origin_x) * grid_x, (y_pos + origin_y) * grid_y)
 
 
-def generate_diagram_content(
-    diagram_name: str, diagram_uid: str, *diagram_objects: list[DiagramObject]
-) -> str:
-    diagram_info = DiagramInfo(diagram_name, diagram_uid)
-
-    diagram_content = ""
+def generate_diagram_file_content(*pages: list[DiagramPage]) -> str:
+    diagram_info = DiagramInfo()
     templates = get_template_files()
-    diagram_content += "".join(
+    page_contents = ""
+    for page in pages:
+        page_contents += templates[page.template_key].substitute(asdict(page))
+    diagram_info.page_contents = "".join(page_contents)
+    write_content = templates[diagram_info.template_key].substitute(
+        asdict(diagram_info)
+    )
+    return write_content
+
+
+def generate_tree_page(
+    page_name: str,
+    page_uid: str,
+    *diagram_objects: list[DiagramObject],
+) -> DiagramPage:
+    tree_page = DiagramPage(page_name=page_name, page_id=page_uid)
+    templates = get_template_files()
+    page_content = ""
+    page_content += "".join(
         [
             templates[obj.template_key].substitute(asdict(obj))
             for objects in diagram_objects
             for obj in objects
         ]
     )
-    diagram_info.diagram_content = diagram_content
-    write_content = templates[diagram_info.template_key].substitute(
-        asdict(diagram_info)
-    )
-    return write_content
+    tree_page.page_content = page_content
+    return tree_page
 
 
 def get_shape_ids(shapes: list[Shape]) -> dict[str, str]:

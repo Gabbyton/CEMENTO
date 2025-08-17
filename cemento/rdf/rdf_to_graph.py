@@ -166,7 +166,6 @@ def convert_rdf_to_graph(
             if (subj in display_terms and obj in display_terms)
             and pred in all_predicates
         ]
-        print(display_terms)
         graph = DiGraph()
         graph = reduce(
             lambda graph, triple: add_triples_to_digraph(*triple, graph),

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from cemento.draw_io.write_diagram import draw_tree
+from cemento.draw_io.write_diagram import draw_tree_diagram
 from cemento.rdf.rdf_to_graph import convert_rdf_to_graph
 from cemento.utils.constants import RDFFormat
 
@@ -25,7 +25,7 @@ def convert_rdf_to_drawio(
         prefixes_path=prefixes_path,
         set_unique_literals=set_unique_literals,
     )
-    draw_tree(
+    draw_tree_diagram(
         graph,
         output_path,
         classes_only=classes_only,
