@@ -1,13 +1,10 @@
-from collections import defaultdict
-from functools import partial, reduce
+from functools import reduce
 from itertools import chain
 from pathlib import Path
-from uuid import uuid4
 
 import networkx as nx
 from networkx import DiGraph
 from rdflib import OWL, RDF, RDFS, SKOS, Literal, URIRef
-from rdflib.collection import Collection
 
 from cemento.rdf.transforms import (
     add_triples_to_digraph,
@@ -19,8 +16,8 @@ from cemento.rdf.transforms import (
     get_graph_relabel_mapping,
     get_literal_format_mapping,
     get_literal_values_with_id,
+    process_axioms,
     rename_edges,
-    term_to_str,
 )
 from cemento.term_matching.io import read_rdf
 from cemento.term_matching.transforms import (
@@ -206,132 +203,7 @@ def convert_rdf_to_graph(
         print("formatting literals...")
         rename_format_literals = get_literal_format_mapping(graph, inv_prefixes)
         graph = nx.relabel_nodes(graph, rename_format_literals)
-
-        # process axioms and restrictions, starting with non-containers
-        axiomatic_predicates = [RDFS.domain, RDFS.range]
-        axiom_term_to_str = partial(
-            term_to_str, inv_prefixes=inv_prefixes, aliases=aliases
+        graph = process_axioms(
+            rdf_graph, graph, aliases, inv_prefixes, default_terms, exempted_terms
         )
-        axiom_triples = list(
-            rdf_graph.triples_choices((None, axiomatic_predicates, None))
-        )
-        add_edges = list()
-        axiom_graph = DiGraph()
-        for subj, pred, obj in axiom_triples:
-            if all(
-                [
-                    term not in default_terms or term in exempted_terms
-                    for term in (subj, obj)
-                ]
-            ):
-                add_edges.append(
-                    (
-                        axiom_term_to_str(subj),
-                        axiom_term_to_str(obj),
-                        {
-                            "label": axiom_term_to_str(pred, label_only=True),
-                        },
-                    )
-                )
-        axiom_graph.add_edges_from(add_edges)
-        # TODO: set is_axiom to True globally to global axiom graph, prior to merge
-        nx.set_node_attributes(axiom_graph, True, "is_axiom")
-        graph.add_nodes_from(axiom_graph.nodes(data=True))
-        graph.add_edges_from(axiom_graph.edges(data=True))
-
-        # process container terms
-        # TODO: use global constant once moved
-        valid_collection_types = [
-            OWL.unionOf,
-            OWL.intersectionOf,
-            OWL.complementOf,
-        ]
-        from rdflib import BNode
-
-        collection_heads = set(rdf_graph.subjects(RDF.first, None))
-        collection_members_list = {
-            head: list(Collection(rdf_graph, head)) for head in collection_heads
-        }
-        collections = defaultdict(list)
-        for head, members in collection_members_list.items():
-            for member in members:
-                if isinstance(member, BNode):
-                    _, _, member = next(
-                        iter(
-                            rdf_graph.triples_choices(
-                                (member, valid_collection_types, None)
-                            )
-                        ),
-                        (None, None, None),
-                    )
-                if member is not None:
-                    collections[head].append(member)
-        collection_types = dict()
-        for head in collection_heads:
-            type_triples = iter(
-                rdf_graph.triples_choices((None, valid_collection_types, head))
-            )
-            _, collection_type, _ = next(type_triples, (None, None, None))
-            collection_types[head] = collection_type
-        # process multiple values
-        multiobjects = defaultdict(list)
-        for subj, pred, obj in rdf_graph:
-            multiobjects[
-                f"{axiom_term_to_str(subj)}::{axiom_term_to_str(pred)}"
-            ].append(obj)
-        multiobjects = {
-            key: values for key, values in multiobjects.items() if len(values) > 1
-        }
-        old_ties = []
-        old_nodes = []
-        new_ties = []
-        new_nodes = []
-        for key, values in multiobjects.items():
-            subj, pred = key.split("::")
-            new_key = str(uuid4()).split("-")[-1]
-            collection_heads.add(new_key)
-            collections.update({new_key: values})
-            for value in values:
-                value_str = axiom_term_to_str(value)
-                old_ties.append((subj, value_str))
-                old_nodes.append(value_str)
-            new_ties.append(
-                (
-                    subj,
-                    new_key,
-                    {
-                        "label": pred,
-                        "is_collection": True,
-                    },
-                )
-            )
-            collection_types[new_key] = "mds:TripleSyntaxSugar"
-            new_nodes.append((new_key, {"is_collection": True, "is_axiom": True}))
-            old_node_attrs = {
-                node: {"is_collection": True, "is_axiom": True} for node in old_nodes
-            }
-            nx.set_node_attributes(graph, old_node_attrs)
-        graph.remove_edges_from(old_ties)
-        graph.remove_nodes_from(old_nodes)
-        graph.add_nodes_from(new_nodes)
-        graph.add_edges_from(new_ties)
-
-        for head, items in collections.items():
-            for item in items:
-                graph.add_edge(
-                    axiom_term_to_str(head),
-                    axiom_term_to_str(item),
-                    label="mds:hasCollectionMember",
-                    is_collection=True,
-                )
-
-        for head, collection_type in collection_types.items():
-            if collection_type is not None:
-                graph.add_edge(
-                    axiom_term_to_str(collection_type),
-                    axiom_term_to_str(head),
-                    label="mds:CollectionType",
-                    is_axiom=True,
-                    is_collection=True,
-                )
         return graph

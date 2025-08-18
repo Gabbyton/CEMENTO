@@ -1,10 +1,11 @@
 import re
 from collections.abc import Callable, Iterable
-from functools import reduce
+from functools import partial, reduce
 from itertools import groupby
 from uuid import uuid4
 
 import networkx as nx
+from more_itertools import duplicates_everseen, flatten, map_reduce, unique_everseen
 from networkx import DiGraph
 from rdflib import OWL, RDF, RDFS, SKOS, XSD, BNode, Graph, Literal, Namespace, URIRef
 from rdflib.collection import Collection
@@ -18,11 +19,7 @@ from cemento.rdf.preprocessing import (
 from cemento.term_matching.constants import RANK_PROPS
 from cemento.term_matching.transforms import substitute_term_multikey
 from cemento.utils.constants import valid_collection_types
-from cemento.utils.utils import (
-    filter_graph,
-    fst,
-    snd,
-)
+from cemento.utils.utils import filter_graph, fst, snd, trd
 
 
 def construct_term_uri(
@@ -478,4 +475,154 @@ def add_collection_links_to_graph(
                 collection_targets[obj],
                 label=data["label"],
             )
+    return graph
+
+
+def process_axioms(
+    rdf_graph: Graph,
+    graph: DiGraph,
+    aliases: dict[URIRef, Literal],
+    inv_prefixes: [URIRef | Namespace, str],
+    default_terms: set[URIRef],
+    exempted_terms: set[URIRef],
+) -> DiGraph:
+    # process axioms and restrictions, starting with non-containers
+    axiomatic_predicates = [RDFS.domain, RDFS.range]
+    axiom_term_to_str = partial(term_to_str, inv_prefixes=inv_prefixes, aliases=aliases)
+
+    axiom_graph = DiGraph()
+    axiom_triples = rdf_graph.triples_choices((None, axiomatic_predicates, None))
+    add_triples = (
+        triple
+        for triple in axiom_triples
+        if all(
+            term not in default_terms and term not in exempted_terms
+            for term in (fst(triple), trd(triple))
+        )
+    )
+    add_edges = (
+        (
+            axiom_term_to_str(subj),
+            axiom_term_to_str(obj),
+            {"label": axiom_term_to_str(pred, label_only=True)},
+        )
+        for subj, pred, obj in add_triples
+    )
+    axiom_graph.add_edges_from(add_edges)
+    # TODO: set is_axiom to True globally to global axiom graph, prior to merge
+    nx.set_node_attributes(axiom_graph, True, "is_axiom")
+    graph.add_nodes_from(axiom_graph.nodes(data=True))
+    graph.add_edges_from(axiom_graph.edges(data=True))
+
+    # process container terms
+    collection_graph = DiGraph()
+    # TODO: use global constant once moved
+    valid_collection_types = [
+        OWL.unionOf,
+        OWL.intersectionOf,
+        OWL.complementOf,
+    ]
+    collection_heads = set(rdf_graph.subjects(RDF.first, None))
+    collection_members_list = {
+        head: list(Collection(rdf_graph, head)) for head in collection_heads
+    }
+    collection_class_member_substitution = {
+        class_member: trd(
+            next(
+                iter(
+                    rdf_graph.triples_choices(
+                        (class_member, valid_collection_types, None)
+                    )
+                )
+            )
+        )
+        for class_members in collection_members_list.values()
+        for class_member in class_members
+        if isinstance(class_member, BNode)
+    }
+    collections = {
+        axiom_term_to_str(head): [
+            axiom_term_to_str(collection_class_member_substitution.get(member, member))
+            for member in members
+        ]
+        for head, members in collection_members_list.items()
+    }
+    collection_types = {
+        axiom_term_to_str(head): axiom_term_to_str(
+            snd(
+                next(
+                    iter(
+                        rdf_graph.triples_choices((None, valid_collection_types, head))
+                    ),
+                    (None, None, None),
+                )
+            )
+        )
+        for head in collection_heads
+    }
+
+    # process multiple values
+    multiobject_triples = duplicates_everseen(
+        (subj, pred) for subj, pred, obj in rdf_graph if pred in axiomatic_predicates
+    )
+    multiobject_triples = flatten(
+        rdf_graph.triples((subj, pred, None)) for subj, pred in multiobject_triples
+    )
+    multiobject_triples = [
+        (
+            axiom_term_to_str(subj),
+            axiom_term_to_str(obj),
+            axiom_term_to_str(pred, label_only=True),
+        )
+        for subj, pred, obj in multiobject_triples
+    ]
+    old_ties = list(map(lambda t: t[:2], multiobject_triples))
+    old_nodes = list(map(lambda t: t[1], multiobject_triples))
+    new_ties_tuples = unique_everseen(
+        map(lambda t: (fst(t), trd(t)), multiobject_triples)
+    )
+    new_ties = [
+        (subj, str(uuid4()).split("-")[-1], {"label": pred})
+        for subj, pred in new_ties_tuples
+    ]
+    new_ties_dict = {
+        (subj, attr["label"]): collection_id for subj, collection_id, attr in new_ties
+    }
+    new_ties_collection_tuples = (
+        (new_ties_dict[(subj, pred)], obj) for subj, obj, pred in multiobject_triples
+    )
+    new_ties_collections = map_reduce(
+        new_ties_collection_tuples, keyfunc=fst, valuefunc=snd
+    )
+
+    collections.update(new_ties_collections)
+    collection_types.update(
+        {key: "mds:TripleSyntaxSugar" for key in new_ties_collections.keys()}
+    )
+
+    for head, items in collections.items():
+        for item in items:
+            collection_graph.add_edge(
+                head,
+                item,
+                label="mds:hasCollectionMember",
+            )
+
+    for head, collection_type in collection_types.items():
+        if collection_type != "None":
+            collection_graph.add_edge(
+                collection_type,
+                head,
+                label="mds:CollectionType",
+            )
+
+    collection_graph.add_edges_from(new_ties)
+    nx.set_edge_attributes(collection_graph, True, "is_collection")
+    nx.set_node_attributes(collection_graph, True, "is_collection")
+    nx.set_node_attributes(collection_graph, True, "is_axiom")
+
+    graph.remove_edges_from(old_ties)
+    graph.remove_nodes_from(old_nodes)
+    graph.add_edges_from(collection_graph.edges(data=True))
+    graph.add_nodes_from(collection_graph.nodes(data=True))
     return graph
