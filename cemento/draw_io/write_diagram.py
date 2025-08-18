@@ -1,7 +1,5 @@
-from collections import defaultdict
 from itertools import chain
 from pathlib import Path
-from pprint import pprint
 from uuid import uuid4
 
 import networkx as nx
@@ -9,9 +7,11 @@ from more_itertools import flatten, map_reduce
 from networkx import DiGraph, selfloop_edges
 
 from cemento.draw_io.constants import (
+    Connector,
     DiagramContainer,
     DiagramContainerItem,
     DiagramPage,
+    Shape,
 )
 from cemento.draw_io.preprocessing import (
     escape_shape_content,
@@ -73,7 +73,11 @@ def draw_tree_diagram(
 
 def draw_axiom_page(graph: DiGraph) -> DiagramPage:
     axiom_graph = graph.subgraph(
-        [node for node, attr in graph.nodes(data=True) if attr.get("is_axiom", False)]
+        [
+            node
+            for node, attr in graph.nodes(data=True)
+            if attr.get("is_core_axiom", False)
+        ]
     ).copy()
     collection_graph = graph.subgraph(
         [
@@ -141,15 +145,45 @@ def draw_axiom_page(graph: DiGraph) -> DiagramPage:
     for container_diagram_id, parent_diagram_id in container_parents.items():
         container_elements[container_diagram_id].container_parent_id = parent_diagram_id
 
-    # pprint(container_elements)
-    # pprint(container_members)
+    shapes = []
+    inv_container_diagram_ids = {
+        value: key for key, value in container_diagram_ids.items()
+    }
+    shape_ids = dict()
+    pprint(container_diagram_ids)
+    for node in axiom_graph.nodes:
+        if node not in inv_container_diagram_ids.values():
+            shape_id = container_element_idx
+            container_element_idx += 1
+            shape_ids[node] = shape_id
+            new_shape = Shape(shape_id, node, 0, 0)
+            shapes.append(new_shape)
+    edges = []
+    pprint(shape_ids)
+    for subj, obj, data in axiom_graph.edges(data=True):
+        connector_id = container_element_idx
+        connector_label_id = container_element_idx + 1
+        container_element_idx += 2
+        if obj in container_diagram_ids:
+            obj_id = container_diagram_ids[obj]
+        else:
+            obj_id = shape_ids[obj]
+        new_edge = Connector(
+            connector_id,
+            shape_ids[subj],
+            obj_id,
+            connector_label_id,
+            data["label"],
+        )
+        edges.append(new_edge)
+
     # get the root nodes that correspond to the core of each subtree
     # print(get_graph_root_nodes(axiom_graph))
 
     # create layouts for each subtree, ensuring that terms are duplicated
 
     return generate_page(
-        "axioms", graph_uuid, container_elements.values(), container_members
+        "axioms", graph_uuid, container_elements.values(), container_members, shapes, edges
     )
 
 

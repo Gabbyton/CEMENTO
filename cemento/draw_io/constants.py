@@ -180,8 +180,8 @@ class Shape:
     shape_content: str
     x_pos: float
     y_pos: float
-    shape_width: int
-    shape_height: int
+    shape_width: int = SHAPE_WIDTH
+    shape_height: int = SHAPE_HEIGHT
     fill_color: str = FILL_COLOR
     stroke_color: str = STROKE_COLOR
     tree_folding: int = TreeFolding.FOLD.value

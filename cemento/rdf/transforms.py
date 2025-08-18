@@ -496,30 +496,6 @@ def process_axioms(
     axiomatic_predicates = [RDFS.domain, RDFS.range]
     axiom_term_to_str = partial(term_to_str, inv_prefixes=inv_prefixes, aliases=aliases)
 
-    axiom_graph = DiGraph()
-    axiom_triples = rdf_graph.triples_choices((None, axiomatic_predicates, None))
-    add_triples = (
-        triple
-        for triple in axiom_triples
-        if all(
-            term not in default_terms and term not in exempted_terms
-            for term in (fst(triple), trd(triple))
-        )
-    )
-    add_edges = (
-        (
-            axiom_term_to_str(subj),
-            axiom_term_to_str(obj),
-            {"label": axiom_term_to_str(pred, label_only=True)},
-        )
-        for subj, pred, obj in add_triples
-    )
-    axiom_graph.add_edges_from(add_edges)
-    # TODO: set is_axiom to True globally to global axiom graph, prior to merge
-    nx.set_node_attributes(axiom_graph, True, "is_axiom")
-    graph.add_nodes_from(axiom_graph.nodes(data=True))
-    graph.add_edges_from(axiom_graph.edges(data=True))
-
     # process container terms
     collection_graph = DiGraph()
     # TODO: use global constant once moved
@@ -622,6 +598,44 @@ def process_axioms(
     nx.set_node_attributes(collection_graph, True, "is_collection")
     nx.set_node_attributes(collection_graph, True, "is_axiom")
 
+    axiom_graph = DiGraph()
+    axiom_triples = rdf_graph.triples_choices((None, axiomatic_predicates, None))
+    add_triples = [
+        triple
+        for triple in axiom_triples
+        if all(
+            term not in default_terms and term not in exempted_terms
+            for term in (fst(triple), trd(triple))
+        )
+    ]
+    # convert axiom graph triples from pointing to collection class terms into pointing to collection node terms instead
+    axiom_class_to_collection_substitution = {
+        obj: trd(first(rdf_graph.triples_choices((obj, valid_collection_types, None))))
+        for subj, pred, obj in add_triples
+        if isinstance(obj, BNode)
+    }
+    add_triples = (
+        (subj, pred, axiom_class_to_collection_substitution.get(obj, obj))
+        for subj, pred, obj in add_triples
+    )
+    add_edges = (
+        (
+            axiom_term_to_str(subj),
+            axiom_term_to_str(obj),
+            {"label": axiom_term_to_str(pred, label_only=True)},
+        )
+        for subj, pred, obj in add_triples
+    )
+    axiom_graph.add_edges_from(add_edges)
+    # TODO: set is_axiom to True globally to global axiom graph, prior to merge
+    nx.set_node_attributes(axiom_graph, True, "is_axiom")
+    nx.set_node_attributes(axiom_graph, True, "is_core_axiom")
+
+    # add axiom graph triples
+    graph.add_nodes_from(axiom_graph.nodes(data=True))
+    graph.add_edges_from(axiom_graph.edges(data=True))
+
+    # add collection graph triples
     graph.remove_edges_from(old_ties)
     graph.remove_nodes_from(old_nodes)
     graph.add_edges_from(collection_graph.edges(data=True))
