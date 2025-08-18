@@ -1,10 +1,17 @@
+from collections import defaultdict
 from itertools import chain
 from pathlib import Path
+from pprint import pprint
 from uuid import uuid4
 
+import networkx as nx
 from networkx import DiGraph, selfloop_edges
 
-from cemento.draw_io.constants import DiagramPage
+from cemento.draw_io.constants import (
+    DiagramContainer,
+    DiagramContainerItem,
+    DiagramPage,
+)
 from cemento.draw_io.preprocessing import (
     escape_shape_content,
     remove_literal_connector_id,
@@ -57,8 +64,8 @@ def draw_tree_diagram(
         demarcate_boxes=demarcate_boxes,
         horizontal_tree=horizontal_tree,
     )
-    diagram_file_content = generate_diagram_file_content(tree_page)
-    draw_axiom_page(graph)
+    axiom_page = draw_axiom_page(graph)
+    diagram_file_content = generate_diagram_file_content(tree_page, axiom_page)
     with open(diagram_output_path, "w") as write_file:
         write_file.write(diagram_file_content)
 
@@ -67,7 +74,6 @@ def draw_axiom_page(graph: DiGraph) -> DiagramPage:
     axiom_graph = graph.subgraph(
         [node for node, attr in graph.nodes(data=True) if attr.get("is_axiom", False)]
     ).copy()
-    print(axiom_graph.nodes)
     collection_graph = graph.subgraph(
         [
             node
@@ -76,8 +82,76 @@ def draw_axiom_page(graph: DiGraph) -> DiagramPage:
             for node in (subj, obj)
         ]
     ).copy()
-    print(collection_graph.nodes)
-    print(collection_graph.edges)
+
+    # parse collection types and use to filter for containers of interest
+    collection_types = {
+        obj: subj
+        for subj, obj, data in collection_graph.edges(data=True)
+        if data.get("label", "") == "mds:CollectionType"
+    }
+    # parse the collections and build objects
+    collection_member_triples = (
+        (subj, obj)
+        for subj, obj, data in collection_graph.edges(data=True)
+        if subj in collection_types
+        and data.get("label", "") == "mds:hasCollectionMember"
+    )
+    collection_members = defaultdict(list)
+    for head, member in collection_member_triples:
+        collection_members[head].append(member)
+    valid_collection_terms = set(collection_members.keys())
+    valid_collection_terms |= {
+        value for values in collection_members.values() for value in values
+    }
+    parse_collection_subgraph = collection_graph.subgraph(valid_collection_terms).copy()
+    containers = list(
+        filter(
+            lambda x: x in collection_members.keys(),
+            nx.dfs_postorder_nodes(parse_collection_subgraph),
+        )
+    )
+    graph_uuid = str(uuid4()).split("-")[-1]
+    container_elements = dict()
+    container_diagram_ids = dict()
+    container_members = []
+    container_parents = dict()
+    container_element_idx = 2
+    for container_id in containers:
+        container_diagram_id = f"{graph_uuid}-{container_element_idx}"
+        container_diagram_ids[container_id] = container_diagram_id
+        container_element_idx += 1
+        for member in collection_members[container_id]:
+            if member in containers:
+                container_parents[container_diagram_ids[member]] = (
+                    container_diagram_ids[container_id]
+                )
+            else:
+                container_members.append(
+                    DiagramContainerItem(
+                        f"{graph_uuid}-{container_element_idx}",
+                        container_diagram_ids[container_id],
+                        container_value=member,
+                    )
+                )
+                container_element_idx += 1
+        container_elements[container_diagram_id] = DiagramContainer(
+            container_diagram_id,
+            container_label_value=collection_types[container_id],
+        )
+
+    for container_diagram_id, parent_diagram_id in container_parents.items():
+        container_elements[container_diagram_id].container_parent_id = parent_diagram_id
+
+    # pprint(container_elements)
+    # pprint(container_members)
+    # get the root nodes that correspond to the core of each subtree
+    # print(get_graph_root_nodes(axiom_graph))
+
+    # create layouts for each subtree, ensuring that terms are duplicated
+
+    return generate_page(
+        "axioms", graph_uuid, container_elements.values(), container_members
+    )
 
 
 def draw_tree_page(

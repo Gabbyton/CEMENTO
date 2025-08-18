@@ -69,11 +69,12 @@ class DiagramPage(DiagramInfo):
 class DiagramContainer(DiagramObject):
     container_id: str
     container_parent_id: str = 1
-    container_value: str = ""
+    container_label_value: str = ""
     pos_x: float = 0.0
     pos_y: float = 0.0
     container_label_height: int = 60
     container_width: int = 140
+    template_key: str = "container"
 
 
 @dataclass
@@ -84,6 +85,7 @@ class DiagramContainerItem(DiagramObject):
     pos_x: float = 0.0
     pos_y: float = 0.0
     item_height: int = 30
+    template_key: str = "container-item"
 
 
 class ConnectorType(Enum):

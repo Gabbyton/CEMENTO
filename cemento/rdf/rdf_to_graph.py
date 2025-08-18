@@ -209,7 +209,9 @@ def convert_rdf_to_graph(
 
         # process axioms and restrictions, starting with non-containers
         axiomatic_predicates = [RDFS.domain, RDFS.range]
-        axiom_term_to_str = partial(term_to_str, inv_prefixes=inv_prefixes)
+        axiom_term_to_str = partial(
+            term_to_str, inv_prefixes=inv_prefixes, aliases=aliases
+        )
         axiom_triples = list(
             rdf_graph.triples_choices((None, axiomatic_predicates, None))
         )
@@ -238,32 +240,39 @@ def convert_rdf_to_graph(
         graph.add_edges_from(axiom_graph.edges(data=True))
 
         # process container terms
-        collection_heads = set(rdf_graph.subjects(RDF.first, None))
-        collections = {
-            head: list(Collection(rdf_graph, head)) for head in collection_heads
-        }
-        collection_types = dict()
         # TODO: use global constant once moved
         valid_collection_types = [
             OWL.unionOf,
             OWL.intersectionOf,
             OWL.complementOf,
         ]
+        from rdflib import BNode
+
+        collection_heads = set(rdf_graph.subjects(RDF.first, None))
+        collection_members_list = {
+            head: list(Collection(rdf_graph, head)) for head in collection_heads
+        }
+        collections = defaultdict(list)
+        for head, members in collection_members_list.items():
+            for member in members:
+                if isinstance(member, BNode):
+                    _, _, member = next(
+                        iter(
+                            rdf_graph.triples_choices(
+                                (member, valid_collection_types, None)
+                            )
+                        ),
+                        (None, None, None),
+                    )
+                if member is not None:
+                    collections[head].append(member)
+        collection_types = dict()
         for head in collection_heads:
             type_triples = iter(
                 rdf_graph.triples_choices((None, valid_collection_types, head))
             )
             _, collection_type, _ = next(type_triples, (None, None, None))
             collection_types[head] = collection_type
-        for head, collection_type in collection_types.items():
-            if collection_type is not None:
-                graph.add_edge(
-                    axiom_term_to_str(collection_type, label_only=True),
-                    axiom_term_to_str(head),
-                    label="mds:collectionType",
-                    is_axiom=True,
-                    is_collection=True,
-                )
         # process multiple values
         multiobjects = defaultdict(list)
         for subj, pred, obj in rdf_graph:
@@ -286,16 +295,6 @@ def convert_rdf_to_graph(
                 value_str = axiom_term_to_str(value)
                 old_ties.append((subj, value_str))
                 old_nodes.append(value_str)
-                new_ties.append(
-                    (
-                        new_key,
-                        value_str,
-                        {
-                            "label": "mds:hasCollectionMember",
-                            "is_collection": True,
-                        },
-                    )
-                )
             new_ties.append(
                 (
                     subj,
@@ -306,6 +305,7 @@ def convert_rdf_to_graph(
                     },
                 )
             )
+            collection_types[new_key] = "mds:TripleSyntaxSugar"
             new_nodes.append((new_key, {"is_collection": True, "is_axiom": True}))
             old_node_attrs = {
                 node: {"is_collection": True, "is_axiom": True} for node in old_nodes
@@ -315,4 +315,23 @@ def convert_rdf_to_graph(
         graph.remove_nodes_from(old_nodes)
         graph.add_nodes_from(new_nodes)
         graph.add_edges_from(new_ties)
+
+        for head, items in collections.items():
+            for item in items:
+                graph.add_edge(
+                    axiom_term_to_str(head),
+                    axiom_term_to_str(item),
+                    label="mds:hasCollectionMember",
+                    is_collection=True,
+                )
+
+        for head, collection_type in collection_types.items():
+            if collection_type is not None:
+                graph.add_edge(
+                    axiom_term_to_str(collection_type),
+                    axiom_term_to_str(head),
+                    label="mds:CollectionType",
+                    is_axiom=True,
+                    is_collection=True,
+                )
         return graph
