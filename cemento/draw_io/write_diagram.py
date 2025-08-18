@@ -5,6 +5,7 @@ from pprint import pprint
 from uuid import uuid4
 
 import networkx as nx
+from more_itertools import flatten, map_reduce
 from networkx import DiGraph, selfloop_edges
 
 from cemento.draw_io.constants import (
@@ -43,7 +44,7 @@ from cemento.draw_io.transforms import (
     invert_tree,
     split_multiple_inheritances,
 )
-from cemento.utils.utils import get_graph_root_nodes, get_subgraphs
+from cemento.utils.utils import fst, get_graph_root_nodes, get_subgraphs, snd
 
 
 def draw_tree_diagram(
@@ -96,13 +97,11 @@ def draw_axiom_page(graph: DiGraph) -> DiagramPage:
         if subj in collection_types
         and data.get("label", "") == "mds:hasCollectionMember"
     )
-    collection_members = defaultdict(list)
-    for head, member in collection_member_triples:
-        collection_members[head].append(member)
+    collection_members = map_reduce(
+        collection_member_triples, keyfunc=fst, valuefunc=snd
+    )
     valid_collection_terms = set(collection_members.keys())
-    valid_collection_terms |= {
-        value for values in collection_members.values() for value in values
-    }
+    valid_collection_terms |= set(flatten(collection_members.values()))
     parse_collection_subgraph = collection_graph.subgraph(valid_collection_terms).copy()
     containers = list(
         filter(

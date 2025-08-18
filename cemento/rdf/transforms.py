@@ -5,7 +5,13 @@ from itertools import groupby
 from uuid import uuid4
 
 import networkx as nx
-from more_itertools import duplicates_everseen, flatten, map_reduce, unique_everseen
+from more_itertools import (
+    duplicates_everseen,
+    first,
+    flatten,
+    map_reduce,
+    unique_everseen,
+)
 from networkx import DiGraph
 from rdflib import OWL, RDF, RDFS, SKOS, XSD, BNode, Graph, Literal, Namespace, URIRef
 from rdflib.collection import Collection
@@ -528,16 +534,12 @@ def process_axioms(
     }
     collection_class_member_substitution = {
         class_member: trd(
-            next(
-                iter(
-                    rdf_graph.triples_choices(
-                        (class_member, valid_collection_types, None)
-                    )
-                )
+            first(
+                rdf_graph.triples_choices((class_member, valid_collection_types, None)),
+                None,
             )
         )
-        for class_members in collection_members_list.values()
-        for class_member in class_members
+        for class_member in flatten(collection_members_list.values())
         if isinstance(class_member, BNode)
     }
     collections = {
@@ -549,14 +551,13 @@ def process_axioms(
     }
     collection_types = {
         axiom_term_to_str(head): axiom_term_to_str(
-            snd(
-                next(
-                    iter(
-                        rdf_graph.triples_choices((None, valid_collection_types, head))
-                    ),
-                    (None, None, None),
+            (
+                type_triple := first(
+                    rdf_graph.triples_choices((None, valid_collection_types, head)),
+                    None,
                 )
             )
+            and snd(type_triple)
         )
         for head in collection_heads
     }
@@ -576,8 +577,8 @@ def process_axioms(
         )
         for subj, pred, obj in multiobject_triples
     ]
-    old_ties = list(map(lambda t: t[:2], multiobject_triples))
-    old_nodes = list(map(lambda t: t[1], multiobject_triples))
+    old_ties = map(lambda t: t[:2], multiobject_triples)
+    old_nodes = map(lambda t: t[1], multiobject_triples)
     new_ties_tuples = unique_everseen(
         map(lambda t: (fst(t), trd(t)), multiobject_triples)
     )
