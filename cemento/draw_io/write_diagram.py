@@ -149,6 +149,15 @@ def draw_axiom_page(graph: DiGraph) -> DiagramPage:
     for container_diagram_id, parent_diagram_id in container_parents.items():
         container_elements[container_diagram_id].container_parent_id = parent_diagram_id
 
+    # FIXME: if container contains a term that is in another tree, sever the links and duplicate the term into another tree
+    # get the root nodes that correspond to the core of each subtree
+    print(get_graph_root_nodes(axiom_graph))
+    for tree in get_subgraphs(axiom_graph):
+        print(tree.edges)
+    import sys
+
+    sys.exit(0)
+
     shapes = []
     inv_container_diagram_ids = {
         value: key for key, value in container_diagram_ids.items()
@@ -180,9 +189,6 @@ def draw_axiom_page(graph: DiGraph) -> DiagramPage:
             data["label"],
         )
         edges.append(new_edge)
-
-    # get the root nodes that correspond to the core of each subtree
-    # print(get_graph_root_nodes(axiom_graph))
 
     # create layouts for each subtree, ensuring that terms are duplicated
 
