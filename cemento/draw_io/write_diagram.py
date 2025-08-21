@@ -3,7 +3,7 @@ from pathlib import Path
 from uuid import uuid4
 
 import networkx as nx
-from more_itertools import flatten, map_reduce
+from more_itertools import flatten, map_reduce, partition
 from networkx import DiGraph, selfloop_edges
 
 from cemento.draw_io.constants import (
@@ -114,34 +114,38 @@ def draw_axiom_page(graph: DiGraph) -> DiagramPage:
         )
     )
     graph_uuid = str(uuid4()).split("-")[-1]
-    container_elements = dict()
-    container_diagram_ids = dict()
-    container_members = []
-    container_parents = dict()
-    container_element_idx = 2
-    for container_id in containers:
-        container_diagram_id = f"{graph_uuid}-{container_element_idx}"
-        container_diagram_ids[container_id] = container_diagram_id
-        container_element_idx += 1
-        for member in collection_members[container_id]:
-            if member in containers:
-                container_parents[container_diagram_ids[member]] = (
-                    container_diagram_ids[container_id]
-                )
-            else:
-                container_members.append(
-                    DiagramContainerItem(
-                        f"{graph_uuid}-{container_element_idx}",
-                        container_diagram_ids[container_id],
-                        container_value=member,
-                    )
-                )
-                container_element_idx += 1
-        container_elements[container_diagram_id] = DiagramContainer(
+    container_element_idx = 1
+    container_diagram_ids = {
+        container_id: f"{graph_uuid}-{container_element_idx+idx}"
+        for idx, container_id in enumerate(containers)
+    }
+    container_element_idx += len(containers)
+    raw_collection_members = (
+        (key, value) for key, values in collection_members.items() for value in values
+    )
+    term_collection_members, container_collection_members = partition(
+        lambda member: snd(member) in containers, raw_collection_members
+    )
+    container_parents = {
+        container_diagram_ids[member]: container_diagram_ids[container_id]
+        for container_id, member in container_collection_members
+    }
+    container_members = [
+        DiagramContainerItem(
+            f"{graph_uuid}-{container_element_idx + idx}",
+            container_diagram_ids[container_id],
+            container_value=member,
+        )
+        for idx, (container_id, member) in enumerate(term_collection_members)
+    ]
+    container_element_idx += len(container_members)
+    container_elements = {
+        container_diagram_id: DiagramContainer(
             container_diagram_id,
             container_label_value=collection_types[container_id],
         )
-
+        for container_id, container_diagram_id in container_diagram_ids.items()
+    }
     for container_diagram_id, parent_diagram_id in container_parents.items():
         container_elements[container_diagram_id].container_parent_id = parent_diagram_id
 
@@ -150,7 +154,7 @@ def draw_axiom_page(graph: DiGraph) -> DiagramPage:
         value: key for key, value in container_diagram_ids.items()
     }
     shape_ids = dict()
-    pprint(container_diagram_ids)
+    print(container_diagram_ids)
     for node in axiom_graph.nodes:
         if node not in inv_container_diagram_ids.values():
             shape_id = container_element_idx
@@ -159,7 +163,7 @@ def draw_axiom_page(graph: DiGraph) -> DiagramPage:
             new_shape = Shape(shape_id, node, 0, 0)
             shapes.append(new_shape)
     edges = []
-    pprint(shape_ids)
+    print(shape_ids)
     for subj, obj, data in axiom_graph.edges(data=True):
         connector_id = container_element_idx
         connector_label_id = container_element_idx + 1
@@ -183,7 +187,12 @@ def draw_axiom_page(graph: DiGraph) -> DiagramPage:
     # create layouts for each subtree, ensuring that terms are duplicated
 
     return generate_page(
-        "axioms", graph_uuid, container_elements.values(), container_members, shapes, edges
+        "axioms",
+        graph_uuid,
+        container_elements.values(),
+        container_members,
+        shapes,
+        edges,
     )
 
 
