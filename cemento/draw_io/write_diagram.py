@@ -3,7 +3,7 @@ from pathlib import Path
 from uuid import uuid4
 
 import networkx as nx
-from more_itertools import flatten, map_reduce, partition
+from more_itertools import first, flatten, map_reduce, partition
 from networkx import DiGraph, selfloop_edges
 
 from cemento.draw_io.constants import (
@@ -43,6 +43,7 @@ from cemento.draw_io.transforms import (
     get_tree_offsets,
     invert_tree,
     split_multiple_inheritances,
+    translate_coords,
 )
 from cemento.utils.utils import fst, get_graph_root_nodes, get_subgraphs, snd
 
@@ -149,30 +150,70 @@ def draw_axiom_page(graph: DiGraph) -> DiagramPage:
     for container_diagram_id, parent_diagram_id in container_parents.items():
         container_elements[container_diagram_id].container_parent_id = parent_diagram_id
 
-    # FIXME: if container contains a term that is in another tree, sever the links and duplicate the term into another tree
-    # get the root nodes that correspond to the core of each subtree
-    print(get_graph_root_nodes(axiom_graph))
-    for tree in get_subgraphs(axiom_graph):
-        print(tree.edges)
-    import sys
-
-    sys.exit(0)
-
-    shapes = []
     inv_container_diagram_ids = {
         value: key for key, value in container_diagram_ids.items()
     }
-    shape_ids = dict()
-    print(container_diagram_ids)
-    for node in axiom_graph.nodes:
-        if node not in inv_container_diagram_ids.values():
-            shape_id = container_element_idx
-            container_element_idx += 1
-            shape_ids[node] = shape_id
-            new_shape = Shape(shape_id, node, 0, 0)
-            shapes.append(new_shape)
+    container_elements = {
+        inv_container_diagram_ids[key]: value
+        for key, value in container_elements.items()
+    }
+    # get the root nodes that correspond to the core of each subtree
+    # print(container_elements)
+    shapes = []
+    for tree in get_subgraphs(axiom_graph):
+        print("tree:")
+        print(tree.nodes)
+        print(tree.edges)
+        root = first(get_graph_root_nodes(tree), None)
+        tree = compute_grid_allocations(tree, root)
+        tree = compute_draw_positions(tree, root)
+        print(tree.nodes(data=True))
+        draw_nodes, container_nodes = partition(
+            lambda node: node in container_elements, tree.nodes
+        )
+        new_shapes = []
+        for idx, node in enumerate(draw_nodes):
+            draw_x, draw_y = translate_coords(
+                tree.nodes[node].get("draw_x", 0), tree.nodes[node].get("draw_y", 0)
+            )
+            new_shapes.append(
+                Shape(
+                    f"{graph_uuid}-{container_element_idx+idx}",
+                    node,
+                    draw_x,
+                    draw_y,
+                )
+            )
+        shapes.extend(new_shapes)
+        container_element_idx += len(new_shapes)
+
+        for node in container_nodes:
+            draw_x, draw_y = translate_coords(
+                tree.nodes[node].get("draw_x", 0), tree.nodes[node].get("draw_y", 0)
+            )
+            container_elements[node].pos_x = draw_x
+            container_elements[node].pos_y = draw_y
+    shape_ids = {shape.shape_content: shape.shape_id for shape in shapes}
+    # print(shapes)
+    # import sys
+
+    # sys.exit(0)
+
+    # shapes = []
+    # inv_container_diagram_ids = {
+    #     value: key for key, value in container_diagram_ids.items()
+    # }
+    # shape_ids = dict()
+    # print(container_diagram_ids)
+    # for node in axiom_graph.nodes:
+    #     if node not in inv_container_diagram_ids.values():
+    #         shape_id = container_element_idx
+    #         container_element_idx += 1
+    #         shape_ids[node] = shape_id
+    #         new_shape = Shape(shape_id, node, 0, 0)
+    #         shapes.append(new_shape)
+    # print(shape_ids)
     edges = []
-    print(shape_ids)
     for subj, obj, data in axiom_graph.edges(data=True):
         connector_id = container_element_idx
         connector_label_id = container_element_idx + 1
